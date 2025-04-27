@@ -28,17 +28,17 @@ package-lock.json
 yarn.lock         
 
 # local env files
-.env.development  # Ok
-.env.production   # Ok
-.env*.local       # Ok, cubre .env.local
-.env              # Ok, importante ignorar .env general también
+.env.development  
+.env.production   
+.env*.local       
+.env              
 
 # vercel
-.vercel           # Ok
+.vercel           
 
 # typescript
-*.tsbuildinfo     # Ok
-next-env.d.ts     # Ok
+*.tsbuildinfo     
+next-env.d.ts     
 
 # Scripts locales
 # *.sh              <-- Ojo: Esto ignora TODOS los .sh. Si quieres rastrear alguno, quítalo.
@@ -47,8 +47,8 @@ next-env.d.ts     # Ok
 
 # Ignore scripts folder
 # /scripts/         <-- Ojo: Esto ignora TODA la carpeta scripts. Si quieres rastrear scripts específicos dentro, esta línea es demasiado general.
-.codegpt          # Ok
+.codegpt          
 
 # draw.io files
-*.drawio          # Ok
-*.drawio.bkp      # Ok
+*.drawio          
+*.drawio.bkp      
