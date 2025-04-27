@@ -4,7 +4,6 @@
 /node_modules
 /.pnp
 .pnp.js
-# pnpm-lock.yaml  <-- ESTA LÍNEA DEBERÍA ESTAR AUSENTE O COMENTADA
 
 # testing
 /coverage
