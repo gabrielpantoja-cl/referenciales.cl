@@ -1,13 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    // --- Opciones Base (Mantener o ajustar según necesidad) ---
+    "target": "esnext",
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
-    "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -15,46 +11,43 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve", 
+    "jsx": "preserve",
     "incremental": true,
+
+    // --- Opciones Añadidas/Ajustadas para Mejorar Resolución y Consistencia ---
+    "skipLibCheck": true, // Evita la verificación de tipos en node_modules (IMPORTANTE)
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./*"],
+      // Mantener tus otros alias específicos si los necesitas
+      "@/auth": ["lib/auth"],
+      "@/app/lib/zod": ["lib/zod"],
+      "@/components/*": ["components/*"],
+      "@/lib/*": ["lib/*"],
+      "@/utils/*": ["utils/*"]
+    },
+    "typeRoots": [ // Especifica dónde buscar archivos de definición de tipos
+      // Dejar solo la ruta estándar para @types
+      "./node_modules/@types"
+      // Quitar "./node_modules" para evitar conflictos
+    ],
     "plugins": [
       {
         "name": "next"
       }
-    ],
-    "baseUrl": "./",
-    "paths": {
-      "@/*": [
-        "*"
-      ],
-      "@/auth": [
-        "lib/auth"
-      ],
-      "@/app/lib/zod": [
-        "lib/zod"
-      ],
-      "@/components/*": [
-        "components/*"
-      ],
-      "@/lib/*": [
-        "lib/*"
-      ],
-      "@/utils/*": [
-        "utils/*"
-      ]
-    }
+    ]
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "public/service-worker.js",
-    "global.d.ts" // Añadimos esta linea
+    "global.d.ts",
+    "build.sh"
   ],
   "exclude": [
     "node_modules",
     "**/*.cjs"
-
   ]
 }
