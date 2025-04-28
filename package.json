@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "seed": "node prisma/seed.mjs",
-    "build": "pnpm prisma generate && next build",
+    "build": "npx prisma generate && next build",
     "dev": "next dev --turbo",
     "start": "next start",
     "lint": "next lint",
@@ -112,11 +112,9 @@
   },
   "engines": {
     "node": "22.x",
-    "pnpm": ">=9.0.0"
-  },
+    "npm": ">=9.0.0"  },
   "overrides": {
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2"
-  },
-  "packageManager": "pnpm@9.15.9"
+  }
 }
