@@ -49,7 +49,7 @@ self.addEventListener('install', ((event: ExtendableEvent) => {
     (async () => {
       const cache = await caches.open(CACHE_NAME);
       console.log('[Service Worker] Caching app shell');
-      await cache.addAll(URLS_TO_CACHE);
+      await cache.addAll([...URLS_TO_CACHE]); // <-- Añade [... ] alrededor de URLS_TO_CACHE
       await (self as unknown as ServiceWorkerGlobalScope).skipWaiting();
     })()
   );
