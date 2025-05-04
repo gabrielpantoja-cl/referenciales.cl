@@ -51,3 +51,7 @@ next-env.d.ts
 # draw.io files
 *.drawio          
 *.drawio.bkp      
+
+# Archivos de backup de base de datos (¡Importante!)
+*.sql
+*.dump
