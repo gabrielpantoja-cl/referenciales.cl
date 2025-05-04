@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "referenciales" ALTER COLUMN "monto" DROP NOT NULL,
+ALTER COLUMN "monto" SET DATA TYPE BIGINT,
+ALTER COLUMN "updatedAt" DROP DEFAULT;
