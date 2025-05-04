@@ -61,7 +61,7 @@ model referenciales {
   rol            String
   fechaescritura DateTime
   superficie     Float
-  monto          Int
+  monto          BigInt?       // <-- CAMBIO REALIZADO: Int a BigInt.
   observaciones  String?
   userId         String
   conservadorId  String        
