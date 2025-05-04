@@ -39,10 +39,6 @@ yarn.lock
 *.tsbuildinfo     
 next-env.d.ts     
 
-# Scripts locales
-# *.sh              <-- Ojo: Esto ignora TODOS los .sh. Si quieres rastrear alguno, quítalo.
-# migrate.sql       <-- Ojo: Si quieres rastrear este archivo, quítalo.
-# start-db.sh       <-- Ojo: Si quieres rastrear este archivo, quítalo.
 
 # Ignore scripts folder
 # /scripts/         <-- Ojo: Esto ignora TODA la carpeta scripts. Si quieres rastrear scripts específicos dentro, esta línea es demasiado general.
@@ -55,3 +51,4 @@ next-env.d.ts
 # Archivos de backup de base de datos (¡Importante!)
 *.sql
 *.dump
+backup_produccion.sql
