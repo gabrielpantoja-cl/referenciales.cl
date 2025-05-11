@@ -3,6 +3,8 @@ import GoogleProvider from "next-auth/providers/google"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { prisma } from "@/lib/prisma"
 
+// Configuración para NextAuth v4
+
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({

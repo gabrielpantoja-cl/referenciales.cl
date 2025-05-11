@@ -10,6 +10,7 @@ Sistema de gestión para referenciales de tasación inmobiliaria construido con 
 - [Estado del Proyecto](#estado-del-proyecto)
 - [Características Clave](#características-clave)
 - [Tech Stack](#tech-stack)
+- [Sistema de Autenticación](#sistema-de-autenticación)
 - [Prerrequisitos](#prerrequisitos)
 - [Instalación y Configuración](#instalación-y-configuración)
 - [Variables de Entorno](#variables-de-entorno)
@@ -43,8 +44,27 @@ Este proyecto busca crear una base de datos colaborativa 🤝 de referenciales i
 -   **Estilos:** Tailwind CSS
 -   **Base de Datos:** PostgreSQL con extensión PostGIS
 -   **ORM:** Prisma
--   **Autenticación:** NextAuth.js (Google Provider)
+-   **Autenticación:** NextAuth.js v4 (Google Provider)
 -   **UI:** React
+
+## Sistema de Autenticación
+
+El proyecto utiliza **NextAuth.js v4.24.11** para la autenticación, con las siguientes características:
+
+- **Proveedor único:** Google OAuth 2.0 para simplificar el proceso de registro e inicio de sesión
+- **Adaptador de base de datos:** @next-auth/prisma-adapter para persistencia en PostgreSQL
+- **Estrategia de sesión:** JWT para mejor rendimiento
+- **Estado actual:** Configuración estable y funcional en entornos Linux y Windows
+
+### Notas sobre migración futura
+
+Se planea migrar a **Auth.js v5** (NextAuth.js v5) en el futuro para aprovechar:
+
+- Mejor integración con Next.js App Router
+- Mejor soporte para Edge Runtime
+- API más intuitiva con funciones como `signIn` y `signOut` exportadas directamente
+
+Consulta el archivo `auth-notes.md` para obtener detalles completos sobre la configuración actual y el plan de migración.
 
 ## Prerrequisitos
 -   Node.js (v18 o superior recomendado)
