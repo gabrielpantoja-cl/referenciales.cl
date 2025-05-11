@@ -49,6 +49,7 @@ function ReferencialesContent() {
   const [query, setQuery] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [referenciales, setReferenciales] = useState<Referencial[]>([]);
+  const [validReferenciales, setValidReferenciales] = useState<Referencial[]>([]);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -106,9 +107,19 @@ function ReferencialesContent() {
           } : undefined
         }));
         setReferenciales(formattedData as Referencial[]);
+        
+        // Validar referencias para exportación
+        const validRefs = formattedData.filter(ref => {
+          return ref && typeof ref === 'object' && 
+            'id' in ref && 
+            'fechaescritura' in ref &&
+            'lat' in ref && 'lng' in ref;
+        }) as Referencial[];
+        setValidReferenciales(validRefs);
       } else {
         console.error('Datos inválidos:', data);
         setReferenciales([]);
+        setValidReferenciales([]);
         setError('Error en formato de datos');
       }
 
@@ -117,6 +128,7 @@ function ReferencialesContent() {
     } catch (error) {
       console.error('Error:', error);
       setReferenciales([]);
+      setValidReferenciales([]);
       setTotalPages(1);
       setError('Error al cargar datos');
     } finally {
@@ -129,7 +141,8 @@ function ReferencialesContent() {
   }, [fetchData]);
 
   const handleExport = async () => {
-    const exportableData = referenciales.map((ref) => ({
+    // Usar directamente validReferenciales que ya está filtrada
+    const exportableData = validReferenciales.map((ref) => ({
       id: ref.id,
       lat: ref.lat,
       lng: ref.lng,
@@ -207,7 +220,7 @@ function ReferencialesContent() {
       <button
         onClick={handleExport}
         className="fixed bottom-4 right-4 mb-4 rounded bg-primary px-3 py-1 text-xs text-white hover:bg-opacity-80 z-30"
-        disabled={isLoading || referenciales.length === 0}
+        disabled={isLoading || validReferenciales.length === 0}
       >
         Exportar a XLSX
       </button>
