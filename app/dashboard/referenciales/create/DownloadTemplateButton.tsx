@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/primitives/button';
 
-type DownloadFormat = 'csv' | 'excel' | 'csv-semicolon';
+type DownloadFormat = 'windows' | 'mac_linux';
 
 const DownloadTemplateButton = () => {
   const generateCSVTemplate = (delimiter: string = ',') => {
@@ -30,17 +30,12 @@ const DownloadTemplateButton = () => {
     let mimeType = '';
 
     switch (format) {
-      case 'csv':
+      case 'mac_linux':
         content = generateCSVTemplate(',');
         filename = 'plantilla-referenciales.csv';
         mimeType = 'text/csv';
         break;
-      case 'csv-semicolon':
-        content = generateCSVTemplate(';');
-        filename = 'plantilla-referenciales-windows.csv';
-        mimeType = 'text/csv';
-        break;
-      case 'excel':
+      case 'windows':
         // Para Excel, usamos un BOM (Byte Order Mark) UTF-8 para que Excel detecte correctamente la codificación
         // y semicolons como delimitador que es el estándar para Excel en español
         content = '\uFEFF' + generateCSVTemplate(';');
@@ -62,45 +57,33 @@ const DownloadTemplateButton = () => {
   };
 
   return (
-    <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
+    <div className="flex gap-3">
       <Button 
-        onClick={() => downloadTemplate('excel')} 
-        className="w-full sm:w-auto"
+        onClick={() => downloadTemplate('windows')} 
+        className="flex items-center gap-2"
         variant="outline"
       >
-        Descargar plantilla CSV (Windows/Excel)
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+          <line x1="8" y1="21" x2="16" y2="21"></line>
+          <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
+        Descargar para Windows
       </Button>
-      <div className="dropdown dropdown-hover">
-        <Button 
-          className="w-full sm:w-auto"
-          variant="secondary"
-          size="icon"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-            <path d="m6 9 6 6 6-6"/>
-          </svg>
-        </Button>
-        <ul className="dropdown-content z-10 menu p-2 shadow bg-base-200 rounded-box w-52">
-          <li>
-            <Button 
-              variant="ghost" 
-              onClick={() => downloadTemplate('csv')}
-              className="w-full text-left justify-start"
-            >
-              CSV estándar (,)
-            </Button>
-          </li>
-          <li>
-            <Button 
-              variant="ghost" 
-              onClick={() => downloadTemplate('csv-semicolon')}
-              className="w-full text-left justify-start"
-            >
-              CSV con punto y coma (;)
-            </Button>
-          </li>
-        </ul>
-      </div>
+      
+      <Button 
+        onClick={() => downloadTemplate('mac_linux')} 
+        className="flex items-center gap-2"
+        variant="outline"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 3a7 7 0 0 0-7 7v8h14v-8a7 7 0 0 0-7-7Z"></path>
+          <path d="M10 21h4"></path>
+          <path d="M9 17v4"></path>
+          <path d="M15 17v4"></path>
+        </svg>
+        Descargar para Mac/Linux
+      </Button>
     </div>
   );
 };
