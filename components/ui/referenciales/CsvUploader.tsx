@@ -133,34 +133,48 @@ export default function CsvUploader({ users }: CsvUploaderProps) {
   return (
     <div className="p-4 border rounded-lg bg-white shadow-sm">
       <div className="space-y-4">
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-          <input
-            type="file"
-            accept=".csv"
-            onChange={handleFileUpload}
-            className="hidden"
-            id="csv-upload"
-            disabled={isUploading}
-          />
-          <label
-            htmlFor="csv-upload"
-            className={`block cursor-pointer ${isUploading ? 'text-gray-400' : 'text-blue-600 hover:text-blue-800'} mb-4`}
-          >
-            {isUploading ? 'Cargando...' : 'Seleccionar archivo CSV'}
-          </label>
-          
-          <div className="mb-4">
+        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+          <div className="mb-6 flex flex-col items-center">
+            <h3 className="text-lg font-medium mb-2">Paso 1: Descargar plantilla</h3>
+            <p className="text-sm text-gray-600 mb-3 text-center">
+              Descarga la plantilla según tu sistema operativo
+            </p>
             <DownloadTemplateButton />
           </div>
           
-          <p className="mt-2 text-sm text-gray-600">
-            Descarga la plantilla, completa los datos y súbela para registrar múltiples referenciales.
-            Los campos lat y lng son las coordenadas geográficas en grados decimales, mismo formato que usa SII.
-          </p>
-
-          <p className="mt-2 text-sm text-blue-600">
-            Nota: El formato de la fecha de la escritura debe ser YYYY-MM-DD (Ej: &quot;2024-03-16&quot;).
-          </p>
+          <div className="border-t border-gray-200 pt-6 mb-6">
+            <h3 className="text-lg font-medium mb-2 text-center">Paso 2: Subir archivo completado</h3>
+            <input
+              type="file"
+              accept=".csv"
+              onChange={handleFileUpload}
+              className="hidden"
+              id="csv-upload"
+              disabled={isUploading}
+            />
+            <div className="flex justify-center">
+              <label
+                htmlFor="csv-upload"
+                className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm ${
+                  isUploading 
+                    ? 'bg-gray-300 text-gray-700 cursor-not-allowed' 
+                    : 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer'
+                }`}
+              >
+                {isUploading ? 'Cargando...' : 'Seleccionar archivo CSV'}
+              </label>
+            </div>
+          </div>
+          
+          <div className="border-t border-gray-200 pt-4">
+            <h4 className="text-sm font-medium mb-1">Instrucciones:</h4>
+            <ul className="text-xs text-gray-600 list-disc pl-5 space-y-1">
+              <li>Completa todos los campos en la plantilla descargada</li>
+              <li>Los campos lat y lng son coordenadas geográficas en grados decimales (mismo formato del SII)</li>
+              <li>Fecha de escritura debe ser en formato YYYY-MM-DD (Ej: &quot;2024-03-16&quot;)</li>
+              <li>Guarda el archivo y súbelo usando el botón de arriba</li>
+            </ul>
+          </div>
         </div>
 
         {renderSuccessMessage()}
