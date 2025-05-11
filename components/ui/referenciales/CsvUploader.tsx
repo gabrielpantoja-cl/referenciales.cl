@@ -1,8 +1,8 @@
-// components/ui/referenciales/CsvUploader.tsx
 'use client';
 
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import DownloadTemplateButton from '@/app/dashboard/referenciales/create/DownloadTemplateButton';
 
 interface ValidationError {
   row: number;
@@ -93,53 +93,6 @@ export default function CsvUploader({ users }: CsvUploaderProps) {
     }
   };
 
-  const handleDownloadTemplate = () => {
-    const headers = [
-      'lat',
-      'lng',
-      'fojas',
-      'numero',
-      'anio',
-      'cbr',
-      'comprador',
-      'vendedor',
-      'predio',
-      'comuna',
-      'rol',
-      'fechaescritura',
-      'superficie',
-      'monto',
-      'observaciones'
-    ].join(',');
-
-    const exampleRow = [
-      '-39.851241',
-      '-73.215171',
-      '100',
-      '123',
-      '2024',
-      'Nueva Imperial', // Usando nombre del conservador, no su ID
-      'Ana Compradora',
-      'Juan Vendedor',
-      'Fundo El Example',
-      'Nueva Imperial',
-      '123-45',
-      '2024-03-21',
-      '5000',
-      '50000000',
-      'Deslinde Norte: Río Example'
-    ].join(',');
-
-    const csvContent = `${headers}\n${exampleRow}`;
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.setAttribute('download', 'plantilla_referenciales.csv');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
   const renderErrorList = () => {
     if (!uploadErrors || uploadErrors.length === 0) return null;
 
@@ -196,14 +149,9 @@ export default function CsvUploader({ users }: CsvUploaderProps) {
             {isUploading ? 'Cargando...' : 'Seleccionar archivo CSV'}
           </label>
           
-          <button
-            onClick={handleDownloadTemplate}
-            className="text-sm text-gray-600 hover:text-gray-800 underline"
-            type="button"
-            disabled={isUploading}
-          >
-            Descargar plantilla CSV
-          </button>
+          <div className="mb-4">
+            <DownloadTemplateButton />
+          </div>
           
           <p className="mt-2 text-sm text-gray-600">
             Descarga la plantilla, completa los datos y súbela para registrar múltiples referenciales.
