@@ -72,7 +72,6 @@ const DownloadTemplateButton = () => {
       </Button>
       <div className="dropdown dropdown-hover">
         <Button 
-          tabIndex={0} 
           className="w-full sm:w-auto"
           variant="secondary"
           size="icon"
@@ -81,9 +80,25 @@ const DownloadTemplateButton = () => {
             <path d="m6 9 6 6 6-6"/>
           </svg>
         </Button>
-        <ul tabIndex={0} className="dropdown-content z-10 menu p-2 shadow bg-base-200 rounded-box w-52">
-          <li><a onClick={() => downloadTemplate('csv')}>CSV estándar (,)</a></li>
-          <li><a onClick={() => downloadTemplate('csv-semicolon')}>CSV con punto y coma (;)</a></li>
+        <ul className="dropdown-content z-10 menu p-2 shadow bg-base-200 rounded-box w-52">
+          <li>
+            <Button 
+              variant="ghost" 
+              onClick={() => downloadTemplate('csv')}
+              className="w-full text-left justify-start"
+            >
+              CSV estándar (,)
+            </Button>
+          </li>
+          <li>
+            <Button 
+              variant="ghost" 
+              onClick={() => downloadTemplate('csv-semicolon')}
+              className="w-full text-left justify-start"
+            >
+              CSV con punto y coma (;)
+            </Button>
+          </li>
         </ul>
       </div>
     </div>
