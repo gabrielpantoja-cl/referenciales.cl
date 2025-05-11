@@ -71,7 +71,41 @@ function ReferencialesContent() {
       const data = await fetchFilteredReferenciales(queryParam, pageParam);
       
       if (data && Array.isArray(data)) {
-        setReferenciales(data as Referencial[]);
+        // Asegurarse de que los datos se ajustan al tipo Referencial[]
+        const formattedData = data.map(item => ({
+          ...item,
+          // Asegúrate de que todas las propiedades necesarias estén presentes
+          id: item.id,
+          lat: item.lat,
+          lng: item.lng,
+          fojas: item.fojas,
+          numero: item.numero,
+          anio: item.anio,
+          cbr: item.cbr,
+          comprador: item.comprador,
+          vendedor: item.vendedor,
+          predio: item.predio,
+          comuna: item.comuna,
+          rol: item.rol,
+          fechaescritura: item.fechaescritura,
+          monto: item.monto,
+          superficie: item.superficie,
+          observaciones: item.observaciones,
+          userId: item.userId,
+          conservadorId: item.conservadorId,
+          createdAt: item.createdAt,
+          updatedAt: item.updatedAt,
+          user: {
+            name: item.user?.name || null,
+            email: item.user?.email || ''
+          },
+          conservador: item.conservador ? {
+            id: item.conservador.id,
+            nombre: item.conservador.nombre,
+            comuna: item.conservador.comuna
+          } : undefined
+        }));
+        setReferenciales(formattedData as Referencial[]);
       } else {
         console.error('Datos inválidos:', data);
         setReferenciales([]);
