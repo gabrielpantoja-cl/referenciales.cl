@@ -31,9 +31,24 @@ export async function POST(request: NextRequest) {
     }
 
     const csvText = await file.text();
+    
+    // Detectar automáticamente el delimitador (coma o punto y coma)
+    const detectDelimiter = (text: string): string => {
+      const firstLine = text.split('\n')[0];
+      const commaCount = (firstLine.match(/,/g) || []).length;
+      const semicolonCount = (firstLine.match(/;/g) || []).length;
+      
+      return semicolonCount > commaCount ? ';' : ',';
+    };
+    
+    const delimiter = detectDelimiter(csvText);
+    console.log(`Detectado delimitador: ${delimiter}`);
+    
     const records = parse(csvText, {
       columns: true,
       skip_empty_lines: true,
+      delimiter: delimiter,
+      trim: true
     });
 
     if (records.length === 0) {
