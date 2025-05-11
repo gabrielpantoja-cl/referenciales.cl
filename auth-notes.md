@@ -28,6 +28,29 @@ GOOGLE_CLIENT_SECRET="tu_client_secret"
 # NEXT_PUBLIC_CALLBACK_URL="http://localhost:3000/api/auth/callback/google"
 ```
 
+### Limpieza y reconstrucción (solucionar problemas)
+
+Si encuentras problemas con NextAuth.js, especialmente después de cambiar entre entornos o instalar nuevas dependencias, puedes seguir estos pasos para una limpieza completa:
+
+```bash
+# Limpiar caché de Next.js
+rmdir /s /q .next    # Windows
+# rm -rf .next       # Linux/macOS
+
+# Limpiar caché de node_modules
+rmdir /s /q node_modules\.cache    # Windows
+# rm -rf node_modules/.cache       # Linux/macOS
+
+# Reinstalar dependencias (opcionalmente)
+npm ci
+
+# Regenerar cliente Prisma
+npx prisma generate
+
+# Reconstruir el proyecto
+npm run build
+```
+
 ## Plan de Migración Futura a Auth.js v5
 
 En el futuro, se recomienda migrar a **Auth.js v5** (anteriormente NextAuth.js v5) para aprovechar las mejoras de rendimiento, compatibilidad con Edge Runtime y mejor integración con Next.js App Router.
