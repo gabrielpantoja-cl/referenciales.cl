@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@/components/primitives/Button';
+import { Button } from '@/components/ui/primitives/button';
 
 type DownloadFormat = 'csv' | 'excel' | 'csv-semicolon';
 
