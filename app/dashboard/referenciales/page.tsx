@@ -89,7 +89,7 @@ function ReferencialesContent() {
           comuna: item.comuna,
           rol: item.rol,
           fechaescritura: item.fechaescritura,
-          monto: item.monto,
+          monto: item.monto === null ? 0 : typeof item.monto === 'bigint' ? Number(item.monto) : item.monto,
           superficie: item.superficie,
           observaciones: item.observaciones,
           userId: item.userId,
@@ -106,7 +106,9 @@ function ReferencialesContent() {
             comuna: item.conservador.comuna
           } : undefined
         }));
-        setReferenciales(formattedData as Referencial[]);
+        // Seguro de tipo: primero convertimos a unknown y luego a Referencial[]
+        const typeSafeData = formattedData as unknown as Referencial[];
+        setReferenciales(typeSafeData);
         
         // Validar referencias para exportación
         const validRefs = formattedData.filter(ref => {
@@ -114,7 +116,7 @@ function ReferencialesContent() {
             'id' in ref && 
             'fechaescritura' in ref &&
             'lat' in ref && 'lng' in ref;
-        }) as Referencial[];
+        }) as unknown as Referencial[];
         setValidReferenciales(validRefs);
       } else {
         console.error('Datos inválidos:', data);
@@ -157,7 +159,7 @@ function ReferencialesContent() {
       rol: ref.rol,
       fechaescritura: ref.fechaescritura,
       superficie: ref.superficie,
-      monto: ref.monto,
+      monto: ref.monto === null ? 0 : typeof ref.monto === 'bigint' ? Number(ref.monto) : ref.monto,
       observaciones: ref.observaciones,
       userId: ref.userId,
       conservadorId: ref.conservadorId,

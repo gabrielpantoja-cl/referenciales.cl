@@ -12,7 +12,7 @@ export interface Referencial {
   comuna: string;
   rol: string;
   fechaescritura: Date;
-  monto: number;
+  monto: number | bigint | null;
   superficie: number;
   observaciones: string | null;
   userId: string;
