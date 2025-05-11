@@ -1,8 +1,0 @@
-                                                           Listado de base de datos
-  Nombre  |  Dueño  | Codificación | Proveedor de locale | Collate | Ctype | Configuración regional | Reglas ICU: |        Privilegios         
-----------+---------+--------------+---------------------+---------+-------+------------------------+-------------+----------------------------
- verceldb | default | UTF8         | libc                | C       | C     |                        |             | =Tc/default               +
-          |         |              |                     |         |       |                        |             | default=CTc/default       +
-          |         |              |                     |         |       |                        |             | neon_superuser=CTc/default
-(1 fila)
-
