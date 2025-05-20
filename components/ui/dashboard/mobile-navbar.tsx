@@ -52,6 +52,19 @@ export default function MobileNavbar() {
     setMenuOpen(!menuOpen);
   };
 
+  const handleCloseMenu = () => {
+    setMenuOpen(false);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      setMenuOpen(false);
+    }
+    if (event.key === 'Enter' || event.key === ' ') {
+      setMenuOpen(false);
+    }
+  };
+
   return (
     <>
       <div className="fixed top-0 left-0 right-0 z-50 bg-primary shadow-md">
@@ -70,6 +83,7 @@ export default function MobileNavbar() {
             onClick={toggleMenu}
             className="p-2 ml-3 rounded-md text-white hover:bg-primary-dark focus:outline-none"
             aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
+            aria-expanded={menuOpen}
           >
             {menuOpen ? (
               <XMarkIcon className="h-7 w-7" />
@@ -86,6 +100,7 @@ export default function MobileNavbar() {
           fixed top-16 left-0 right-0 z-40 bg-white shadow-lg transform transition-transform duration-300 ease-in-out
           ${menuOpen ? 'translate-y-0' : '-translate-y-full'}
         `}
+        aria-hidden={!menuOpen}
       >
         <nav className="flex flex-col p-4 space-y-2">
           {links.map((link) => {
@@ -154,11 +169,14 @@ export default function MobileNavbar() {
         </nav>
       </div>
 
-      {/* Overlay para cerrar el menú al tocar fuera */}
+      {/* Overlay para cerrar el menú al tocar fuera - Ahora con accesibilidad */}
       {menuOpen && (
-        <div 
-          className="fixed inset-0 z-30 bg-black bg-opacity-50"
-          onClick={() => setMenuOpen(false)}
+        <button 
+          className="fixed inset-0 z-30 bg-black bg-opacity-50 cursor-default"
+          onClick={handleCloseMenu}
+          onKeyDown={handleKeyDown}
+          aria-label="Cerrar menú"
+          tabIndex={0}
         />
       )}
 
