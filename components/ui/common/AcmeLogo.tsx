@@ -7,7 +7,13 @@ import throttle from 'lodash/throttle';
 
 export default function AcmeLogo() {
   const [rotationAngle, setRotationAngle] = useState(0);
+  const [isMounted, setIsMounted] = useState(false);
   const logoContainerRef = useRef<HTMLDivElement>(null);
+
+  // Marcar el componente como montado después de la hidratación
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const calculateAngle = (event: MouseEvent) => {
     if (!logoContainerRef.current) return;
@@ -49,22 +55,29 @@ export default function AcmeLogo() {
     };
   }, [handleMouseMove]);
 
+  // Usamos clases consistentes tanto para el servidor como para el cliente
+  // Las clases deben coincidir con las que el servidor espera
+  const iconClasses = "h-8 w-8 md:h-10 md:w-10 text-white transform transition-transform duration-300 ease-in-out";
+  // Usamos clases actualizadas solo después de la hidratación
+  const iconClassesAfterHydration = isMounted ? "h-10 w-10 md:h-12 md:w-12 text-white transform transition-transform duration-300 ease-in-out" : iconClasses;
+
   return (
     <div
       ref={logoContainerRef}
+      suppressHydrationWarning
       className={`
         ${lusitana.className} 
         flex flex-col items-center justify-center 
-        min-h-[6rem]
-        mt-4 md:mt-0
-        gap-2
+        w-full
+        px-2 py-2 md:py-4
+        gap-1 md:gap-2
       `}
     >
       <GlobeAltIcon 
-        className="h-6 w-6 md:h-10 md:w-10 text-white transform transition-transform duration-300 ease-in-out"
+        className={iconClassesAfterHydration}
         style={{ transform: `rotate(${rotationAngle}deg)` }}
       />
-      <p className="text-sm md:text-lg font-semibold tracking-tight text-white text-center leading-tight">
+      <p className="text-base md:text-lg font-semibold tracking-tight text-white text-center leading-tight">
         referenciales
         <span className="text-white">.cl</span>
       </p>

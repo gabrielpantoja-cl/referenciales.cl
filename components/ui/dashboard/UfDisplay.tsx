@@ -7,6 +7,16 @@ interface UfData {
   fecha: string;
 }
 
+// Función para formatear moneda sin depender de importaciones externas
+const formatCurrency = (value: number): string => {
+  return new Intl.NumberFormat('es-CL', { 
+    style: 'currency',
+    currency: 'CLP',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  }).format(value);
+};
+
 export default function UfDisplay() {
   const [ufData, setUfData] = useState<UfData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -38,37 +48,47 @@ export default function UfDisplay() {
 
   if (isLoading) {
     return (
-      <div className="p-4 bg-gray-50 border border-gray-200 rounded-md animate-pulse">
-        <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+      <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow-sm animate-pulse">
+        <div className="pb-2">
+          <div className="text-lg text-gray-400">Cargando Valor UF...</div>
+        </div>
+        <div className="h-10 w-36 bg-gray-200 rounded-md"></div>
+        <p className="text-sm text-gray-400 mt-2">Actualizando...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="p-4 bg-red-50 border border-red-200 rounded-md">
-        <p className="text-red-600">Error: {error}</p>
+      <div className="w-full p-4 bg-red-50 border border-red-200 rounded-lg shadow-sm">
+        <div className="pb-2">
+          <div className="text-lg text-red-600">Error: Valor UF</div>
+        </div>
+        <p className="text-sm text-red-600">{error}</p>
+        <p className="text-xs text-red-500 mt-2">Intente recargar la página</p>
       </div>
     );
   }
 
   if (!ufData) return null;
 
-  const formattedValue = new Intl.NumberFormat('es-CL', { 
-    style: 'decimal',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(ufData.valor);
-
-  const formattedDate = new Date(ufData.fecha).toLocaleDateString('es-CL');
+  const formattedDate = new Date(ufData.fecha).toLocaleDateString('es-CL', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  });
 
   return (
-    <div className="p-4 bg-gray-50 border border-gray-200 rounded-md">
-      <div className="flex flex-col space-y-1">
-        <h3 className="text-lg font-medium text-primary">Valor UF</h3>
-        <p className="text-2xl font-bold text-primary">$ {formattedValue}</p>
-        <p className="text-sm text-gray-600">Fecha: {formattedDate}</p>
+    <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+      <div className="pb-2">
+        <div className="text-lg font-medium">Valor UF</div>
       </div>
+      <p className="text-3xl font-bold text-primary">
+        {formatCurrency(ufData.valor)}
+      </p>
+      <p className="text-sm text-gray-500 mt-1">
+        Fecha: {formattedDate}
+      </p>
     </div>
   );
 }

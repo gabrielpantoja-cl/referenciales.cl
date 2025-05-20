@@ -2,8 +2,19 @@
 import { CircleMarker, Popup } from 'react-leaflet';
 
 // Función para formatear números
-const formatNumber = (num: number) => {
+const formatNumber = (num: number | null | undefined) => {
+    if (num === null || num === undefined) return 'No disponible';
     return num.toLocaleString('es-CL');
+};
+
+// Función para formatear moneda
+const formatCurrency = (amount: number | null | undefined) => {
+    if (amount === null || amount === undefined) return 'No disponible';
+    return new Intl.NumberFormat('es-CL', { 
+        style: 'currency', 
+        currency: 'CLP',
+        minimumFractionDigits: 0
+    }).format(amount);
 };
 
 // Mapeo de nombres de campos
@@ -19,15 +30,16 @@ export const fieldNames: { [key: string]: string } = {
     rol: 'Rol',
     fechaescritura: 'Fecha Escritura',
     superficie: 'Superficie (m²)',
-    monto: 'Monto ($)',
+    monto: 'Monto',
     observaciones: 'Observaciones'
 };
 
 // Orden de campos
 export const fieldOrder = [
     'cbr', 'fojas', 'numero', 'anio', 'predio',
-    'comuna', 'rol', 'fechaescritura', 'monto',
-    'superficie', 'observaciones'
+    'comuna', 'rol', 'fechaescritura', 'superficie', 
+    'monto', // Aseguramos que monto esté incluido
+    'observaciones'
 ];
 
 const renderField = (key: string, value: any) => {
@@ -44,7 +56,16 @@ const renderField = (key: string, value: any) => {
         );
     }
 
-    if ((key === 'monto' || key === 'superficie') && typeof value === 'number') {
+    if (key === 'monto' && (typeof value === 'number' || typeof value === 'bigint')) {
+        return (
+            <p key={key}>
+                <strong>{fieldNames[key]}:</strong>{' '}
+                {formatCurrency(Number(value))}
+            </p>
+        );
+    }
+
+    if (key === 'superficie' && typeof value === 'number') {
         return (
             <p key={key}>
                 <strong>{fieldNames[key]}:</strong>{' '}
@@ -83,7 +104,7 @@ export type Point = {
     rol?: string;
     fechaescritura?: Date;
     superficie?: number;
-    monto?: number;
+    monto?: number | bigint; // Actualizado para soportar BigInt
     observaciones?: string;
     [key: string]: any;
 };
