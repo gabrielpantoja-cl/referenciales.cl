@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface Referencial {
   id?: string;
@@ -33,42 +32,42 @@ export default function LatestReferenciales({
 
   if (isLoading) {
     return (
-      <Card className="w-full md:col-span-4">
-        <CardHeader>
-          <CardTitle className="text-lg">Últimos agregados a la base de datos</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      <div className="w-full md:col-span-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+        <div className="p-4 border-b">
+          <div className="text-lg font-medium">Últimos agregados a la base de datos</div>
+        </div>
+        <div className="p-4 space-y-4">
           {[1, 2, 3].map((i) => (
             <div key={i} className="animate-pulse">
               <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
               <div className="h-4 bg-gray-200 rounded w-1/2"></div>
             </div>
           ))}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   }
 
   // Caso sin datos
   if (!items || items.length === 0) {
     return (
-      <Card className="w-full md:col-span-4">
-        <CardHeader>
-          <CardTitle className="text-lg">Últimos agregados a la base de datos</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <div className="w-full md:col-span-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+        <div className="p-4 border-b">
+          <div className="text-lg font-medium">Últimos agregados a la base de datos</div>
+        </div>
+        <div className="p-4">
           <p className="text-gray-500 italic">No hay registros disponibles</p>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Card className="w-full md:col-span-4">
-      <CardHeader>
-        <CardTitle className="text-lg">Últimos agregados a la base de datos</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4 divide-y divide-gray-100">
+    <div className="w-full md:col-span-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+      <div className="p-4 border-b">
+        <div className="text-lg font-medium">Últimos agregados a la base de datos</div>
+      </div>
+      <div className="p-4 space-y-4 divide-y divide-gray-100">
         {items.map((ref, index) => (
           <div 
             key={ref.id || index} 
@@ -104,7 +103,7 @@ export default function LatestReferenciales({
             Ver todos los referenciales →
           </Link>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
