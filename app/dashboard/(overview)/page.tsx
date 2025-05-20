@@ -8,7 +8,7 @@ import type { referenciales, User } from '@prisma/client';
 import { Suspense } from 'react';
 
 // Tipos mejorados
-interface LatestReferencial extends Pick<referenciales, 'id' | 'fechaescritura'> {
+interface LatestReferencial extends Pick<referenciales, 'id' | 'fechaescritura' | 'createdAt' | 'fojas' | 'numero' | 'anio' | 'cbr'> {
   user: Pick<User, 'name'>;
 }
 
@@ -42,7 +42,8 @@ export default async function DashboardPage() {
       prisma.referenciales.findMany({
         take: 5,
         orderBy: { 
-          fechaescritura: 'desc' 
+          // Ordenamos por fecha de creación, no por fecha de escritura
+          createdAt: 'desc' 
         },
         select: {
           id: true,
@@ -51,6 +52,7 @@ export default async function DashboardPage() {
           numero: true,
           anio: true,
           cbr: true,
+          createdAt: true, // Añadimos createdAt para usar en la UI
           user: {
             select: { 
               name: true 

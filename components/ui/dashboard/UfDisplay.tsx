@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { formatCurrency } from '@/lib/utils/formatters';
 
 interface UfData {
   valor: number;
@@ -38,37 +40,53 @@ export default function UfDisplay() {
 
   if (isLoading) {
     return (
-      <div className="p-4 bg-gray-50 border border-gray-200 rounded-md animate-pulse">
-        <div className="h-6 bg-gray-200 rounded w-3/4"></div>
-      </div>
+      <Card className="w-full animate-pulse">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg text-gray-400">Cargando Valor UF...</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-10 w-36 bg-gray-200 rounded-md"></div>
+          <p className="text-sm text-gray-400 mt-2">Actualizando...</p>
+        </CardContent>
+      </Card>
     );
   }
 
   if (error) {
     return (
-      <div className="p-4 bg-red-50 border border-red-200 rounded-md">
-        <p className="text-red-600">Error: {error}</p>
-      </div>
+      <Card className="w-full border-red-200 bg-red-50">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg text-red-600">Error: Valor UF</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-red-600">{error}</p>
+          <p className="text-xs text-red-500 mt-2">Intente recargar la página</p>
+        </CardContent>
+      </Card>
     );
   }
 
   if (!ufData) return null;
 
-  const formattedValue = new Intl.NumberFormat('es-CL', { 
-    style: 'decimal',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(ufData.valor);
-
-  const formattedDate = new Date(ufData.fecha).toLocaleDateString('es-CL');
+  const formattedDate = new Date(ufData.fecha).toLocaleDateString('es-CL', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  });
 
   return (
-    <div className="p-4 bg-gray-50 border border-gray-200 rounded-md">
-      <div className="flex flex-col space-y-1">
-        <h3 className="text-lg font-medium text-primary">Valor UF</h3>
-        <p className="text-2xl font-bold text-primary">$ {formattedValue}</p>
-        <p className="text-sm text-gray-600">Fecha: {formattedDate}</p>
-      </div>
-    </div>
+    <Card className="w-full">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-lg">Valor UF</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-3xl font-bold text-primary">
+          {formatCurrency(ufData.valor)}
+        </p>
+        <p className="text-sm text-gray-500 mt-1">
+          Fecha: {formattedDate}
+        </p>
+      </CardContent>
+    </Card>
   );
 }

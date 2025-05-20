@@ -1,82 +1,110 @@
-// components/ui/dashboard/latest-referenciales.tsx
-import { ArrowPathIcon } from '@heroicons/react/24/outline';
-import clsx from 'clsx';
-import { lusitana } from '@/lib/styles/fonts';
+"use client";
 
-type LatestReferencial = {
-  id: string;
-  userId: string;
-  lat: number;
-  lng: number;
+import React from 'react';
+import Link from 'next/link';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
+interface Referencial {
+  id?: string;
   fojas: string;
-  numero: number;
-  anio: number;
+  numero: number | string;
+  anio: number | string;
   cbr: string;
-  monto: number;
-  amount: string;
-  user: {
-    id: string;
-    name: string | null;
-    email: string;
-    password: string | null;
-    emailVerified: Date | null;
-    image: string | null;
-    role: string;
-    createdAt: Date;
-    updatedAt: Date;
+  createdAt?: Date;
+  fechaescritura?: Date;
+  user?: {
+    name?: string;
   };
-};
-
-interface LatestReferencialesProps {
-  data: LatestReferencial[];
 }
 
-const LatestReferenciales: React.FC<LatestReferencialesProps> = ({ data }) => {
+interface LatestReferencialesProps {
+  referenciales?: Referencial[];
+  data?: Referencial[]; // Soporte para 'data' también
+  isLoading?: boolean;
+}
+
+export default function LatestReferenciales({ 
+  referenciales = [], 
+  data = [],
+  isLoading = false 
+}: LatestReferencialesProps) {
+  // Combinamos referenciales y data para soportar ambas props
+  const items = referenciales.length > 0 ? referenciales : data;
+
+  if (isLoading) {
+    return (
+      <Card className="w-full md:col-span-4">
+        <CardHeader>
+          <CardTitle className="text-lg">Últimos agregados a la base de datos</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="animate-pulse">
+              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Caso sin datos
+  if (!items || items.length === 0) {
+    return (
+      <Card className="w-full md:col-span-4">
+        <CardHeader>
+          <CardTitle className="text-lg">Últimos agregados a la base de datos</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-gray-500 italic">No hay registros disponibles</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    <div className="flex w-full flex-col md:col-span-4 lg:col-span-4">
-      <h2 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
-        Últimos agregados a la base de datos:
-      </h2>
-      <div className="flex grow flex-col justify-between rounded-xl bg-gray-50 p-4">
-        <div className="bg-white px-6">
-          {data.map((referencial, i) => {
-            return (
-              <div
-                key={referencial.id}
-                className={clsx(
-                  'flex flex-row items-center justify-between py-4',
-                  {
-                    'border-t': i !== 0,
-                  },
-                )}
-              >
-                <div className="flex items-center">
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold md:text-base">
-                      Fojas: {referencial.fojas}
-                    </p>
-                    <p className="truncate text-sm font-semibold md:text-base">
-                      Número: {referencial.numero}
-                    </p>
-                    <p className="truncate text-sm font-semibold md:text-base">
-                      Año: {referencial.anio}
-                    </p>
-                    <p className="truncate text-sm font-semibold md:text-base">
-                      CBR: {referencial.cbr}
-                    </p>
-                  </div>
+    <Card className="w-full md:col-span-4">
+      <CardHeader>
+        <CardTitle className="text-lg">Últimos agregados a la base de datos</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4 divide-y divide-gray-100">
+        {items.map((ref, index) => (
+          <div 
+            key={ref.id || index} 
+            className={`pt-4 pb-2 ${index === 0 ? 'pt-0 border-t-0' : ''}`}
+          >
+            <div className="space-y-2">
+              {/* CBR en negrita en la parte superior */}
+              <div className="font-bold text-primary">
+                CBR: {ref.cbr}
+              </div>
+              
+              {/* Datos básicos de la inscripción agrupados */}
+              <div className="flex flex-wrap gap-x-4 text-sm">
+                <div>
+                  <span className="font-medium">Fojas:</span> {ref.fojas}
+                </div>
+                <div>
+                  <span className="font-medium">Número:</span> {ref.numero}
+                </div>
+                <div>
+                  <span className="font-medium">Año:</span> {ref.anio}
                 </div>
               </div>
-            );
-          })}
+            </div>
+          </div>
+        ))}
+        
+        <div className="pt-6">
+          <Link 
+            href="/dashboard/referenciales" 
+            className="text-sm text-primary hover:text-primary-dark hover:underline"
+          >
+            Ver todos los referenciales →
+          </Link>
         </div>
-        <div className="flex items-center pb-2 pt-6">
-          <ArrowPathIcon className="h-5 w-5 text-gray-500" />
-          <h3 className="ml-2 text-sm text-gray-500 ">Actualizado justo ahora</h3>
-        </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
-};
-
-export default LatestReferenciales;
+}
