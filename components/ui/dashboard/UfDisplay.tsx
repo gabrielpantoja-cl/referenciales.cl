@@ -1,13 +1,21 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatCurrency } from '@/lib/utils/formatters';
 
 interface UfData {
   valor: number;
   fecha: string;
 }
+
+// Función para formatear moneda sin depender de importaciones externas
+const formatCurrency = (value: number): string => {
+  return new Intl.NumberFormat('es-CL', { 
+    style: 'currency',
+    currency: 'CLP',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  }).format(value);
+};
 
 export default function UfDisplay() {
   const [ufData, setUfData] = useState<UfData | null>(null);
@@ -40,29 +48,25 @@ export default function UfDisplay() {
 
   if (isLoading) {
     return (
-      <Card className="w-full animate-pulse">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg text-gray-400">Cargando Valor UF...</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="h-10 w-36 bg-gray-200 rounded-md"></div>
-          <p className="text-sm text-gray-400 mt-2">Actualizando...</p>
-        </CardContent>
-      </Card>
+      <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow-sm animate-pulse">
+        <div className="pb-2">
+          <div className="text-lg text-gray-400">Cargando Valor UF...</div>
+        </div>
+        <div className="h-10 w-36 bg-gray-200 rounded-md"></div>
+        <p className="text-sm text-gray-400 mt-2">Actualizando...</p>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <Card className="w-full border-red-200 bg-red-50">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg text-red-600">Error: Valor UF</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-red-600">{error}</p>
-          <p className="text-xs text-red-500 mt-2">Intente recargar la página</p>
-        </CardContent>
-      </Card>
+      <div className="w-full p-4 bg-red-50 border border-red-200 rounded-lg shadow-sm">
+        <div className="pb-2">
+          <div className="text-lg text-red-600">Error: Valor UF</div>
+        </div>
+        <p className="text-sm text-red-600">{error}</p>
+        <p className="text-xs text-red-500 mt-2">Intente recargar la página</p>
+      </div>
     );
   }
 
@@ -75,18 +79,16 @@ export default function UfDisplay() {
   });
 
   return (
-    <Card className="w-full">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg">Valor UF</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-3xl font-bold text-primary">
-          {formatCurrency(ufData.valor)}
-        </p>
-        <p className="text-sm text-gray-500 mt-1">
-          Fecha: {formattedDate}
-        </p>
-      </CardContent>
-    </Card>
+    <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+      <div className="pb-2">
+        <div className="text-lg font-medium">Valor UF</div>
+      </div>
+      <p className="text-3xl font-bold text-primary">
+        {formatCurrency(ufData.valor)}
+      </p>
+      <p className="text-sm text-gray-500 mt-1">
+        Fecha: {formattedDate}
+      </p>
+    </div>
   );
 }
