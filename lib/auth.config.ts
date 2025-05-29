@@ -27,42 +27,35 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async session({ session, token }) {
-      return {
-        ...session,
-        user: {
-          id: token.sub,
-          role: token.role || "USER",
-          email: token.email,
-          name: session.user?.name
-        }
+      // Extender la sesión con información adicional del token
+      if (session?.user && token?.sub) {
+        session.user.id = token.sub;
+        session.user.role = token.role || "USER";
       }
+      return session;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
+      // En el primer login, agregar información del usuario al token
       if (user) {
-        token.role = user.role || "USER"
+        token.role = user.role || "USER"; // Usar rol del usuario o por defecto
       }
-      return token
+      return token;
     },
     async signIn({ user, account, profile }) {
-      // Log exitoso de signIn
-      if (process.env.NODE_ENV === 'production') {
-        console.log('✅ [AUTH] SignIn successful', {
-          userId: user.id,
-          provider: account?.provider,
-          timestamp: new Date().toISOString()
-        });
+      try {
+        // Log exitoso de signIn
+        if (process.env.NODE_ENV === 'production') {
+          console.log('✅ [AUTH] SignIn successful', {
+            userId: user.id,
+            provider: account?.provider,
+            timestamp: new Date().toISOString()
+          });
+        }
+        return true;
+      } catch (error) {
+        console.error('❌ [AUTH] SignIn error:', error);
+        return false;
       }
-      return true;
-    },
-    async signOut({ token }) {
-      // Log exitoso de signOut
-      if (process.env.NODE_ENV === 'production') {
-        console.log('✅ [AUTH] SignOut successful', {
-          userId: token?.sub,
-          timestamp: new Date().toISOString()
-        });
-      }
-      return true;
     }
   },
   pages: {
