@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { signOut } from 'next-auth/react';
 import {
   HomeIcon,
   DocumentDuplicateIcon,
@@ -17,6 +16,7 @@ import {
 import AcmeLogo from '@/components/ui/common/AcmeLogo';
 import { useDeleteAccount } from '@/lib/hooks/useDeleteAccount';
 import { Dialog } from '@/components/ui/dialog';
+import { robustSignOut } from '@/lib/auth-utils';
 
 const links = [
   { name: 'Inicio', href: '/dashboard', icon: HomeIcon },
@@ -35,12 +35,23 @@ export default function MobileNavbar() {
     handleConfirmDelete 
   } = useDeleteAccount();
 
+  const [isSigningOut, setIsSigningOut] = useState(false);
+
   const handleSignOut = async () => {
+    if (isSigningOut) return;
+    
+    setIsSigningOut(true);
     try {
-      await signOut({ callbackUrl: '/' });
-      console.log("✅ Sesión cerrada exitosamente");
-    } catch (error) {
-      console.warn("⚠️ Error al cerrar sesión:", error);
+      await robustSignOut({
+        callbackUrl: '/',
+        redirect: true,
+        source: 'mobile-navbar'
+      });
+    } catch (error: any) {
+      // El error ya está loggeado por robustSignOut
+      console.error('SignOut failed in mobile navbar:', error);
+    } finally {
+      setIsSigningOut(false);
     }
   };
 
@@ -141,14 +152,14 @@ export default function MobileNavbar() {
               handleSignOut();
               setMenuOpen(false);
             }}
-            disabled={isDeleting}
+            disabled={isDeleting || isSigningOut}
             className={`
               flex items-center space-x-3 p-3 rounded-md bg-gray-50 text-sm font-medium
-              ${isDeleting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-sky-100 hover:text-blue-600'}
+              ${(isDeleting || isSigningOut) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-sky-100 hover:text-blue-600'}
             `}
           >
-            <PowerIcon className="w-5 h-5" />
-            <span>Cerrar Sesión</span>
+            <PowerIcon className={`w-5 h-5 ${isSigningOut ? 'animate-spin' : ''}`} />
+            <span>{isSigningOut ? 'Cerrando...' : 'Cerrar Sesión'}</span>
           </button>
 
           {/* Botón de Eliminar Cuenta */}
