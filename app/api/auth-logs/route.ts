@@ -7,6 +7,30 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth.config';
 
+/**
+ * Extrae la IP del cliente desde los headers HTTP
+ * Considera proxies, CDNs y load balancers
+ */
+function getClientIP(request: NextRequest): string {
+  // Vercel y la mayoría de CDNs usan estos headers
+  const forwardedFor = request.headers.get('x-forwarded-for');
+  const realIP = request.headers.get('x-real-ip');
+  const clientIP = request.headers.get('x-client-ip');
+  const cfConnectingIP = request.headers.get('cf-connecting-ip'); // Cloudflare
+  
+  if (forwardedFor) {
+    // x-forwarded-for puede contener múltiples IPs separadas por comas
+    return forwardedFor.split(',')[0].trim();
+  }
+  
+  if (realIP) return realIP;
+  if (clientIP) return clientIP;
+  if (cfConnectingIP) return cfConnectingIP;
+  
+  // Fallback - en desarrollo puede ser undefined
+  return 'unknown';
+}
+
 export async function POST(request: NextRequest) {
   try {
     // Verificar que sea una solicitud válida
@@ -41,7 +65,7 @@ export async function POST(request: NextRequest) {
       ...logData,
       sessionExists: !!session,
       userId: session?.user?.id || 'anonymous',
-      ip: request.ip || 'unknown',
+      ip: getClientIP(request),
       userAgent: request.headers.get('user-agent') || 'unknown'
     });
 
