@@ -1,5 +1,6 @@
 import React from 'react';
 import SideNav from '@/components/ui/dashboard/sidenav';
+import SignOutTestComponent from '@/components/ui/common/SignOutTestComponent';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -23,6 +24,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </div>
+      
+      {/* Componente de test solo en desarrollo */}
+      <SignOutTestComponent />
     </div>
   );
 }

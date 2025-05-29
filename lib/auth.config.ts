@@ -23,7 +23,7 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
-    maxAge: 24 * 60 * 60,
+    maxAge: 24 * 60 * 60, // 24 horas
   },
   callbacks: {
     async session({ session, token }) {
@@ -42,11 +42,49 @@ export const authOptions: NextAuthOptions = {
         token.role = user.role || "USER"
       }
       return token
+    },
+    async signIn({ user, account, profile }) {
+      // Log exitoso de signIn
+      if (process.env.NODE_ENV === 'production') {
+        console.log('✅ [AUTH] SignIn successful', {
+          userId: user.id,
+          provider: account?.provider,
+          timestamp: new Date().toISOString()
+        });
+      }
+      return true;
+    },
+    async signOut({ token }) {
+      // Log exitoso de signOut
+      if (process.env.NODE_ENV === 'production') {
+        console.log('✅ [AUTH] SignOut successful', {
+          userId: token?.sub,
+          timestamp: new Date().toISOString()
+        });
+      }
+      return true;
     }
   },
   pages: {
     signIn: "/login",
+    signOut: "/", // Redirigir al home tras signOut
     error: "/error",
+  },
+  events: {
+    async signOut(message) {
+      console.log('📤 [AUTH-EVENT] User signed out', {
+        token: message.token?.sub,
+        session: message.session?.user?.id,
+        timestamp: new Date().toISOString()
+      });
+    },
+    async signIn(message) {
+      console.log('📥 [AUTH-EVENT] User signed in', {
+        user: message.user.id,
+        account: message.account?.provider,
+        timestamp: new Date().toISOString()
+      });
+    }
   },
   debug: process.env.NODE_ENV === "development"
 }

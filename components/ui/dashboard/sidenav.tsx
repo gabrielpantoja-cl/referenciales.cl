@@ -1,11 +1,12 @@
 "use client";
 
-import { signOut } from 'next-auth/react';
+import { useState } from 'react';
 import NavLinks from '@/components/ui/dashboard/nav-links';
 import AcmeLogo from '@/components/ui/common/AcmeLogo';
 import { PowerIcon, ExclamationTriangleIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 import { useDeleteAccount } from '@/lib/hooks/useDeleteAccount';
 import { Dialog } from '@/components/ui/dialog';
+import { robustSignOut } from '@/lib/auth-utils';
 
 export default function SideNav() {
   const { 
@@ -16,12 +17,23 @@ export default function SideNav() {
     handleConfirmDelete 
   } = useDeleteAccount();
 
+  const [isSigningOut, setIsSigningOut] = useState(false);
+
   const handleSignOut = async () => {
+    if (isSigningOut) return;
+    
+    setIsSigningOut(true);
     try {
-      await signOut({ callbackUrl: '/' });
-      console.log("✅ Sesión cerrada exitosamente");
-    } catch (error) {
-      console.warn("⚠️ Error al cerrar sesión:", error);
+      await robustSignOut({
+        callbackUrl: '/',
+        redirect: true,
+        source: 'desktop-sidenav'
+      });
+    } catch (error: any) {
+      // El error ya está loggeado por robustSignOut
+      console.error('SignOut failed in desktop sidenav:', error);
+    } finally {
+      setIsSigningOut(false);
     }
   };
 
@@ -56,14 +68,14 @@ export default function SideNav() {
           {/* Botón de Cerrar Sesión */}
           <button
             onClick={handleSignOut}
-            disabled={isDeleting}
-            aria-label="Cerrar sesión"
+            disabled={isDeleting || isSigningOut}
+            aria-label={isSigningOut ? "Cerrando sesión..." : "Cerrar sesión"}
             className={`flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium 
-              ${isDeleting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-sky-100 hover:text-blue-600'} 
+              ${(isDeleting || isSigningOut) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-sky-100 hover:text-blue-600'} 
               md:flex-none md:justify-start md:p-2 md:px-3`}
           >
-            <PowerIcon className="w-6" />
-            <div className="hidden md:block">Cerrar Sesión</div>
+            <PowerIcon className={`w-6 ${isSigningOut ? 'animate-spin' : ''}`} />
+            <div className="hidden md:block">{isSigningOut ? 'Cerrando...' : 'Cerrar Sesión'}</div>
           </button>
 
           {/* Botón de Eliminar Cuenta */}
