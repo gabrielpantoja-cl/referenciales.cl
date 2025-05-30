@@ -1,0 +1,3 @@
+@echo off
+echo Ejecutando test unitario del formulario...
+npm test -- __tests__/components/ui/referenciales/create-form.test.tsx --verbose --no-coverage
