@@ -36,10 +36,7 @@ const customJestConfig = {
   ],
   verbose: true,
   testTimeout: 30000,
-  // Remover configuración de transform para permitir que Next.js maneje TypeScript
-  // transform: {
-  //   '^.+\\.(js|jsx|ts|tsx)$': 'ts-jest',
-  // },
+  // Next.js con next/jest maneja automáticamente TypeScript y JSX
   transformIgnorePatterns: [
     'node_modules/(?!(.*\\.mjs$))',
   ],
