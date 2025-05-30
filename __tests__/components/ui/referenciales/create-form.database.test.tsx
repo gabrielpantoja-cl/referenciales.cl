@@ -10,7 +10,7 @@ import {
   createTestUser, 
   findReferencialByTestData,
   prismaForTests 
-} from '@/tests/__helpers__/database-helper';
+} from '../../__helpers__/database-helper';
 
 // Solo mock de autenticación y navegación, NO mock de las acciones de base de datos
 jest.mock('next-auth/react');

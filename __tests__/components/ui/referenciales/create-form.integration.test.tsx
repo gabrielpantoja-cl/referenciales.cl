@@ -12,7 +12,7 @@ import {
   cleanupTestDatabase, 
   createTestUser, 
   findReferencialByTestData 
-} from '@/tests/__helpers__/database-helper';
+} from '../../__helpers__/database-helper';
 
 // Mocks
 jest.mock('next-auth/react');
