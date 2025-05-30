@@ -81,9 +81,9 @@ export default function ConservadoresPage() {
         <h1 className={`${lusitana.className} text-2xl`}>Conservadores de Bienes Raíces</h1>
       </div>
 
-      <div className="mb-4 p-4 bg-blue-50 text-blue-700 rounded-md">
-        <p className="text-sm">
-          Directorio completo de Conservadores de Bienes Raíces en Chile. 
+      <div className="mb-4 p-4 bg-blue-50 text-blue-700 rounded-md"> 
+        <p className="text-sm"> 
+          Directorio de Conservadores de Bienes Raíces en Chile. 
           Aquí encontrarás la información de contacto y ubicación de cada conservador.
         </p>
       </div>
