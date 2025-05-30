@@ -15,21 +15,24 @@ const Footer: React.FC = () => {
     // Aumentado margen superior (mt-16) y padding vertical (py-12) para más "aire"
     <footer className="mt-16 py-12 border-t border-gray-200">
       {/* Contenedor principal con padding horizontal y más gap vertical en móvil (gap-y-8) */}
-      {/* Alineación vertical centrada en desktop (md:items-center) */}
-      <div className="container mx-auto px-4 flex flex-col items-center gap-y-8 md:flex-row md:justify-between md:items-center md:gap-x-8">
+      {/* Nuevo layout: grid para mejor control de columnas en desktop */}
+      <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 items-center gap-y-8 md:gap-x-8">
+        {/* Columna 1: Botón/Enlace a inicio */}
+        <div className="flex justify-center md:justify-start">
+          <Link href="/" className="text-lg font-semibold text-blue-700 hover:text-blue-900 transition-colors">
+            referenciales.cl
+          </Link>
+        </div>
 
-        {/* Lado Izquierdo/Arriba: Enlaces de Contacto/Comunidad */}
-        {/* Aumentado gap entre links en desktop (md:gap-x-10) */}
-        {/* items-start en desktop para alinear textos descriptivos bajo cada enlace */}
-        <div className="flex flex-col items-center gap-y-5 md:flex-row md:items-start md:justify-start md:gap-x-10">
+        {/* Columna 2: Enlaces de Contacto/Comunidad */}
+        <div className="flex flex-col items-center gap-y-5 md:flex-row md:items-start md:justify-center md:gap-x-10">
           {/* Bloque GitHub Discussions */}
           <div className="text-center md:text-left">
             <a
               href={githubDiscussionsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              title="GitHub Discussions (Consultas públicas/técnicas)" // Tooltip útil
-              // Estilos mantenidos: underline, gray/black hover
+              title="GitHub Discussions (Consultas públicas/técnicas)"
               className="text-sm font-medium text-gray-700 hover:text-black underline inline-flex items-center"
             >
               {/* <FaGithub className="h-4 w-4 mr-1" /> Opcional Icono */}
@@ -60,9 +63,8 @@ const Footer: React.FC = () => {
           </div>
         </div>
 
-        {/* Lado Derecho/Abajo: Enlaces Legales */}
-        {/* Aumentado gap entre links (gap-x-6) */}
-        <div className="flex items-center justify-center md:justify-end gap-x-6 text-center md:text-right">
+        {/* Columna 3: Enlaces Legales agrupados en columna */}
+        <div className="flex flex-col items-center md:items-end justify-center gap-y-1 text-center md:text-right">
           <Link href="/terms" className="text-sm text-gray-600 hover:text-gray-900">
             Términos
           </Link>
@@ -70,9 +72,6 @@ const Footer: React.FC = () => {
             Privacidad
           </Link>
         </div>
-
-        {/* El Copyright fue eliminado según tu solicitud */}
-
       </div>
     </footer>
   );
