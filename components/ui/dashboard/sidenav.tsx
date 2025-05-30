@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import Link from 'next/link';
 import NavLinks from '@/components/ui/dashboard/nav-links';
 import AcmeLogo from '@/components/ui/common/AcmeLogo';
 import { PowerIcon, ExclamationTriangleIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
@@ -37,25 +38,25 @@ export default function SideNav() {
     }
   };
 
-  const handleOpenChatbot = () => {
-    window.open('/chatbot', '_blank', 'width=800,height=600');
-  };
+  // const handleOpenChatbot = () => {
+  //   window.open('/chatbot', '_blank', 'width=800,height=600');
+  // };
 
   return (
     <>
       <div className="flex h-full flex-col px-3 py-4 md:px-2">
-        <div
-          className="mb-2 flex h-20 items-end justify-start rounded-md bg-primary p-4 md:h-40 group cursor-default"
-        >
+        <div className="mb-2 flex h-20 items-end justify-start rounded-md bg-primary p-4 md:h-40 group cursor-default">
           <div className="w-32 text-white md:w-40">
             <AcmeLogo />
           </div>
         </div>
+        
         <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
           <NavLinks />
           <div className="hidden h-auto w-full grow rounded-md bg-gray-50 md:block"></div>
           
-          {/* Botón de Ayuda */}
+          {/* Botón de Ayuda - Chatbot (Comentado por decisión de no incluir IA por ahora) */}
+          {/* 
           <button
             onClick={handleOpenChatbot}
             aria-label="Ayuda IA"
@@ -64,6 +65,7 @@ export default function SideNav() {
             <QuestionMarkCircleIcon className="w-6" />
             <div className="hidden md:block">Ayuda</div>
           </button>
+          */}
 
           {/* Botón de Cerrar Sesión */}
           <button
@@ -75,7 +77,9 @@ export default function SideNav() {
               md:flex-none md:justify-start md:p-2 md:px-3`}
           >
             <PowerIcon className={`w-6 ${isSigningOut ? 'animate-spin' : ''}`} />
-            <div className="hidden md:block">{isSigningOut ? 'Cerrando...' : 'Cerrar Sesión'}</div>
+            <div className="hidden md:block">
+              {isSigningOut ? 'Cerrando...' : 'Cerrar Sesión'}
+            </div>
           </button>
 
           {/* Botón de Eliminar Cuenta */}
@@ -88,8 +92,26 @@ export default function SideNav() {
               md:flex-none md:justify-start md:p-2 md:px-3`}
           >
             <ExclamationTriangleIcon className={`w-6 ${isDeleting ? 'animate-pulse' : ''}`} />
-            <div className="hidden md:block">{isDeleting ? 'Eliminando...' : 'Eliminar Cuenta'}</div>
+            <div className="hidden md:block">
+              {isDeleting ? 'Eliminando...' : 'Eliminar Cuenta'}
+            </div>
           </button>
+        </div>
+        
+        {/* Enlaces Legales */}
+        <div className="hidden md:flex md:flex-col md:gap-1 md:px-2 md:py-2 md:border-t md:border-gray-200">
+          <Link 
+            href="/terms" 
+            className="text-xs text-gray-500 hover:text-gray-700 hover:underline transition-colors duration-200"
+          >
+            Términos de Servicio
+          </Link>
+          <Link 
+            href="/privacy" 
+            className="text-xs text-gray-500 hover:text-gray-700 hover:underline transition-colors duration-200"
+          >
+            Política de Privacidad
+          </Link>
         </div>
       </div>
 
