@@ -45,13 +45,12 @@ export default function SideNav() {
   return (
     <>
       <div className="flex h-full flex-col px-3 py-4 md:px-2">
-        <div
-          className="mb-2 flex h-20 items-end justify-start rounded-md bg-primary p-4 md:h-40 group cursor-default"
-        >
+        <div className="mb-2 flex h-20 items-end justify-start rounded-md bg-primary p-4 md:h-40 group cursor-default">
           <div className="w-32 text-white md:w-40">
             <AcmeLogo />
           </div>
         </div>
+        
         <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
           <NavLinks />
           <div className="hidden h-auto w-full grow rounded-md bg-gray-50 md:block"></div>
@@ -66,7 +65,7 @@ export default function SideNav() {
             <QuestionMarkCircleIcon className="w-6" />
             <div className="hidden md:block">Ayuda</div>
           </button>
-          */
+          */}
 
           {/* Botón de Cerrar Sesión */}
           <button
@@ -78,7 +77,9 @@ export default function SideNav() {
               md:flex-none md:justify-start md:p-2 md:px-3`}
           >
             <PowerIcon className={`w-6 ${isSigningOut ? 'animate-spin' : ''}`} />
-            <div className="hidden md:block">{isSigningOut ? 'Cerrando...' : 'Cerrar Sesión'}</div>
+            <div className="hidden md:block">
+              {isSigningOut ? 'Cerrando...' : 'Cerrar Sesión'}
+            </div>
           </button>
 
           {/* Botón de Eliminar Cuenta */}
@@ -91,7 +92,9 @@ export default function SideNav() {
               md:flex-none md:justify-start md:p-2 md:px-3`}
           >
             <ExclamationTriangleIcon className={`w-6 ${isDeleting ? 'animate-pulse' : ''}`} />
-            <div className="hidden md:block">{isDeleting ? 'Eliminando...' : 'Eliminar Cuenta'}</div>
+            <div className="hidden md:block">
+              {isDeleting ? 'Eliminando...' : 'Eliminar Cuenta'}
+            </div>
           </button>
         </div>
         
