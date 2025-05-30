@@ -4,6 +4,7 @@ import {
   HomeIcon,
   DocumentDuplicateIcon,
   MapPinIcon,
+  BuildingOfficeIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -14,6 +15,11 @@ const links = [
     name: 'Referenciales',
     href: '/dashboard/referenciales',
     icon: DocumentDuplicateIcon,
+  },
+  {
+    name: 'Conservadores',
+    href: '/dashboard/conservadores',
+    icon: BuildingOfficeIcon,
   },
   { name: 'Mapa', href: '/dashboard/mapa', icon: MapPinIcon },
 ];

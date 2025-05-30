@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import Link from 'next/link';
 import NavLinks from '@/components/ui/dashboard/nav-links';
 import AcmeLogo from '@/components/ui/common/AcmeLogo';
 import { PowerIcon, ExclamationTriangleIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
@@ -37,9 +38,9 @@ export default function SideNav() {
     }
   };
 
-  const handleOpenChatbot = () => {
-    window.open('/chatbot', '_blank', 'width=800,height=600');
-  };
+  // const handleOpenChatbot = () => {
+  //   window.open('/chatbot', '_blank', 'width=800,height=600');
+  // };
 
   return (
     <>
@@ -55,7 +56,8 @@ export default function SideNav() {
           <NavLinks />
           <div className="hidden h-auto w-full grow rounded-md bg-gray-50 md:block"></div>
           
-          {/* Botón de Ayuda */}
+          {/* Botón de Ayuda - Chatbot (Comentado por decisión de no incluir IA por ahora) */}
+          {/* 
           <button
             onClick={handleOpenChatbot}
             aria-label="Ayuda IA"
@@ -64,6 +66,7 @@ export default function SideNav() {
             <QuestionMarkCircleIcon className="w-6" />
             <div className="hidden md:block">Ayuda</div>
           </button>
+          */
 
           {/* Botón de Cerrar Sesión */}
           <button
@@ -90,6 +93,22 @@ export default function SideNav() {
             <ExclamationTriangleIcon className={`w-6 ${isDeleting ? 'animate-pulse' : ''}`} />
             <div className="hidden md:block">{isDeleting ? 'Eliminando...' : 'Eliminar Cuenta'}</div>
           </button>
+        </div>
+        
+        {/* Enlaces Legales */}
+        <div className="hidden md:flex md:flex-col md:gap-1 md:px-2 md:py-2 md:border-t md:border-gray-200">
+          <Link 
+            href="/terms" 
+            className="text-xs text-gray-500 hover:text-gray-700 hover:underline transition-colors duration-200"
+          >
+            Términos de Servicio
+          </Link>
+          <Link 
+            href="/privacy" 
+            className="text-xs text-gray-500 hover:text-gray-700 hover:underline transition-colors duration-200"
+          >
+            Política de Privacidad
+          </Link>
         </div>
       </div>
 
