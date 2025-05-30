@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Obtener todos los conservadores
-    const conservadores = await prisma.conservador.findMany({
+    const conservadores = await prisma.conservadores.findMany({
       orderBy: [
         { region: 'asc' },
         { comuna: 'asc' },
