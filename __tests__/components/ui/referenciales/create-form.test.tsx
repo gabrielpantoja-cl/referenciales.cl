@@ -15,13 +15,14 @@ jest.mock('next/navigation', () => ({
   })
 }))
 
-// Mock de fetch
-global.fetch = jest.fn(() =>
+// Mock de fetch - Corregida la sintaxis
+const mockFetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ success: true })
   })
-) as jest.Mock
+);
+global.fetch = mockFetch;
 
 describe('Form Component', () => {
   const mockUsers = [{ id: '1', name: 'Test User' }]
