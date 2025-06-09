@@ -5,8 +5,8 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { signIn, useSession, signOut } from 'next-auth/react';
-import AcmeLogo from '@/components/ui/common/AcmeLogo';
-import { lusitana } from '@/lib/styles/fonts';
+import AcmeLogo from '../components/ui/common/AcmeLogo';
+import { lusitana } from '../lib/styles/fonts';
 import Image from 'next/image';
 import Link from 'next/link';
 

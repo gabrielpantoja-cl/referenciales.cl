@@ -1,6 +1,6 @@
 "use client";
 
-import { lusitana } from '@/lib/styles/fonts';
+import { lusitana } from '../../../lib/styles/fonts';
 import { useState, useEffect } from 'react';
 import { BuildingOfficeIcon, MapPinIcon, EnvelopeIcon, PhoneIcon } from '@heroicons/react/24/outline';
 

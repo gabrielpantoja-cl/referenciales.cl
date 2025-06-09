@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { GlobeAltIcon } from '@heroicons/react/24/outline';
-import { lusitana } from '@/lib/styles/fonts';
+import { lusitana } from '../../../lib/styles/fonts';
 import throttle from 'lodash/throttle';
 
 export default function AcmeLogo() {

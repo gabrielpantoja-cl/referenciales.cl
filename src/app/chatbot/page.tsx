@@ -1,6 +1,6 @@
 "use client";
 
-import Chatbot from '@/components/ui/common/Chatbot';
+import Chatbot from '../../components/ui/common/Chatbot';
 
 export default function ChatbotPage() {
   const handleClose = () => {
