@@ -11,7 +11,7 @@ export default async function TermsPage() {
   const currentDate = new Date().toLocaleDateString('es-CL');
 
   // Leer archivo markdown
-  const contentPath = path.join(process.cwd(), 'app/terms/content.md');
+  const contentPath = path.join(process.cwd(), 'src/app/terms/content.md');
   const content = await fs.readFile(contentPath, 'utf8');
 
   // Convertir markdown a HTML

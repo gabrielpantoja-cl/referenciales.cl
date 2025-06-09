@@ -11,7 +11,7 @@ export default async function PrivacyPolicyPage() {
   const currentDate = new Date().toLocaleDateString('es-CL');
 
   // Leer archivo markdown
-  const contentPath = path.join(process.cwd(), 'app/privacy/content.md');
+  const contentPath = path.join(process.cwd(), 'src/app/privacy/content.md');
   const content = await fs.readFile(contentPath, 'utf8');
 
   // Convertir markdown a HTML
