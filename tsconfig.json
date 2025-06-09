@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    /* Configuración Base */
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "es6"],
     "allowJs": true,
+    "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -13,40 +15,71 @@
     "jsx": "preserve",
     "incremental": true,
 
-    // --- Opciones Añadidas/Ajustadas para Mejorar Resolución y Consistencia ---
-    "skipLibCheck": true, // Evita la verificación de tipos en node_modules (IMPORTANTE)
-    "forceConsistentCasingInFileNames": true,
-    "baseUrl": "./",
+    /* Path Aliases - Configuración Gradual */
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-      // Mantener tus otros alias específicos si los necesitas
-      "@/auth": ["lib/auth"],
-      "@/app/lib/zod": ["lib/zod"],
-      "@/components/*": ["components/*"],
-      "@/lib/*": ["lib/*"],
-      "@/utils/*": ["utils/*"]
+      /* Alias actuales - mantener compatibilidad */
+      "@/*": ["./src/*", "./*"],
+      "@/components/*": ["./src/components/*", "./components/*"],
+      "@/lib/*": ["./src/lib/*", "./lib/*"],
+      "@/app/*": ["./src/app/*", "./app/*"],
+      
+      /* Nuevos alias para migración gradual */
+      "@/ui/*": ["./src/components/ui/*", "./components/ui/*"],
+      "@/features/*": ["./src/components/features/*", "./components/features/*"],
+      "@/layout/*": ["./src/components/layout/*", "./components/layout/*"],
+      "@/common/*": ["./src/components/common/*", "./components/common/*"],
+      
+      /* Utilidades y lógica de negocio */
+      "@/hooks/*": ["./src/hooks/*", "./hooks/*"],
+      "@/utils/*": ["./src/utils/*", "./utils/*"],
+      "@/types/*": ["./src/types/*", "./types/*"],
+      "@/constants/*": ["./src/constants/*", "./constants/*"],
+      
+      /* Configuraciones específicas */
+      "@/auth/*": ["./src/lib/auth/*", "./lib/auth/*"],
+      "@/database/*": ["./src/lib/database/*", "./lib/database/*"],
+      "@/scraper/*": ["./src/lib/scraper/*", "./lib/scraper/*"],
+      "@/ai/*": ["./src/lib/ai/*", "./lib/ai/*"],
+      
+      /* APIs y configuración */
+      "@/api/*": ["./src/app/api/*", "./app/api/*"],
+      "@/config/*": ["./config/*", "./src/config/*"],
+      
+      /* Assets y estilos */
+      "@/styles/*": ["./src/styles/*", "./styles/*"],
+      "@/public/*": ["./public/*"]
     },
-    "typeRoots": [ // Especifica dónde buscar archivos de definición de tipos
-      // Dejar solo la ruta estándar para @types
-      "./node_modules/@types"
-      // Quitar "./node_modules" para evitar conflictos
-    ],
+
+    /* Plugin de Next.js */
     "plugins": [
       {
         "name": "next"
       }
     ]
   },
+  
+  /* Archivos incluidos */
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "global.d.ts",
-    "build.sh"
+    "src/**/*",
+    "app/**/*",
+    "components/**/*",
+    "lib/**/*",
+    "hooks/**/*",
+    "utils/**/*",
+    "types/**/*"
   ],
+  
+  /* Archivos excluidos */
   "exclude": [
     "node_modules",
-    "**/*.cjs"
+    ".next",
+    "out",
+    "dist",
+    "build"
   ]
 }
