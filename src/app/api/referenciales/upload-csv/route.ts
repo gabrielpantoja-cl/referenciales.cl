@@ -10,6 +10,15 @@ type ValidationError = {
   message: string;
 };
 
+// Extraemos el nombre del conservador de la columna 'cbr'
+// Ejemplo típico: si el CSV tiene 'cbr=Nueva Imperial', extraer 'Nueva Imperial'
+function extractConservadorName(cbrValue: string): string {
+  if (cbrValue.includes('=')) {
+    return cbrValue.split('=')[1].trim();
+  }
+  return cbrValue.trim();
+}
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
@@ -156,12 +165,6 @@ export async function POST(request: NextRequest) {
 
     // Extraemos el nombre del conservador de la columna 'cbr'
     // Ejemplo típico: si el CSV tiene 'cbr=Nueva Imperial', extraer 'Nueva Imperial'
-    function extractConservadorName(cbrValue: string): string {
-      if (cbrValue.includes('=')) {
-        return cbrValue.split('=')[1].trim();
-      }
-      return cbrValue.trim();
-    }
 
     try {
       // Execute transaction manually to handle each record individually

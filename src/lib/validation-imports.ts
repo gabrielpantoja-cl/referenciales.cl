@@ -20,7 +20,7 @@ import TimeStamp from '@/components/ui/common/TimeStamp';
 
 // ✅ Validación de tipos
 import type { Referencial } from '@/types/referenciales';
-import type { User } from '@/types/types';
+import type { ValidationResult } from '@/types/types';
 
 // ✅ Validación de utilidades
 import { cn } from '@/lib/utils';

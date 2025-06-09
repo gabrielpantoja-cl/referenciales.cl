@@ -1,7 +1,7 @@
 "use client";
 
 import { formatDateToLocal } from '@/lib/utils';
-import { Referencial } from '@/src/types/referenciales';
+import { Referencial } from '@/types/referenciales';
 
 const SENSITIVE_FIELDS = ['comprador', 'vendedor'];
 const isSensitiveField = (key: string) => SENSITIVE_FIELDS.includes(key);
@@ -47,7 +47,7 @@ const ALL_TABLE_HEADERS: { key: DisplayKeys, label: string }[] = [
 ];
 
 const VISIBLE_HEADERS = ALL_TABLE_HEADERS.filter(
-  header => !SENSITIVE_FIELDS.includes(header.key)
+  header => !SENSITIVE_FIELDS.includes(header.key as string)
 );
 
 export default function ReferencialesTable({
@@ -78,11 +78,11 @@ export default function ReferencialesTable({
                     <div className="flex items-center justify-between border-b pb-4">
                       <div>
                         {VISIBLE_HEADERS.map(({ key, label }) => (
-                          <p key={key} className={key === 'cbr' ? 'font-medium' : ''}>
+                          <p key={String(key)} className={key === 'cbr' ? 'font-medium' : ''}>
                             {label}: {
                               key === 'conservador' 
                                 ? (referencial.conservador?.nombre || '-') 
-                                : formatFieldValue(key, (referencial as any)[key], referencial)
+                                : formatFieldValue(key as string, (referencial as any)[key], referencial)
                             }
                           </p>
                         ))}
@@ -98,7 +98,7 @@ export default function ReferencialesTable({
                   <thead className="rounded-lg text-left text-sm font-normal">
                     <tr>
                       {VISIBLE_HEADERS.map(({ key, label }) => (
-                        <th key={key} scope="col" className="px-3 py-5 font-medium">
+                        <th key={String(key)} scope="col" className="px-3 py-5 font-medium">
                           {label}
                         </th>
                       ))}
@@ -109,10 +109,10 @@ export default function ReferencialesTable({
                       <tr key={referencial.id} 
                           className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
                         {VISIBLE_HEADERS.map(({ key }) => (
-                          <td key={key} className="whitespace-nowrap px-3 py-3">
+                          <td key={String(key)} className="whitespace-nowrap px-3 py-3">
                             {key === 'conservador' 
                               ? (referencial.conservador?.nombre || '-') 
-                              : formatFieldValue(key, (referencial as any)[key], referencial)
+                              : formatFieldValue(key as string, (referencial as any)[key], referencial)
                             }
                           </td>
                         ))}
