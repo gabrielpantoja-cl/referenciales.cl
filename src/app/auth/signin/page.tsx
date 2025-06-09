@@ -4,6 +4,7 @@ import { signIn, getSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import AcmeLogo from '@/components/ui/common/AcmeLogo';
+import Link from 'next/link';
 
 export default function SignInPage() {
   const router = useRouter();
@@ -119,9 +120,9 @@ export default function SignInPage() {
 
         {/* Footer */}
         <div className="text-center border-t border-gray-200 pt-6">
-          <a href="/" className="text-sm text-gray-600 hover:text-gray-900 transition-colors duration-200">
+          <Link href="/" className="text-sm text-gray-600 hover:text-gray-900 transition-colors duration-200">
             ← Volver al inicio
-          </a>
+          </Link>
         </div>
       </div>
     </div>
