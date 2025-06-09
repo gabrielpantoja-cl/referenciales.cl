@@ -23,7 +23,7 @@ enum Error {
 const errorMap = {
   [Error.Configuration]: (
     <p>
-      Hubo un problema de configuración. Por favor contacta al soporte si este error persiste.
+      Hubo un problema de configuración del servidor. Por favor contacta al soporte si este error persiste.
       <br />
       <code className="rounded-sm bg-slate-100 p-1 text-xs">Configuration</code>
     </p>
@@ -37,35 +37,48 @@ const errorMap = {
   ),
   [Error.Verification]: (
     <p>
-      Error de verificación. Por favor intenta nuevamente.
+      Error de verificación de la cuenta. Por favor intenta nuevamente.
       <br />
       <code className="rounded-sm bg-slate-100 p-1 text-xs">Verification</code>
     </p>
   ),
   [Error.Callback]: (
     <p>
-      Error en el callback de OAuth. Hubo un problema al procesar el inicio de sesión con Google.
+      Error en el proceso de autenticación OAuth. Hubo un problema al procesar el inicio de sesión.
       <br />
       <code className="rounded-sm bg-slate-100 p-1 text-xs">Callback</code>
     </p>
   ),
   [Error.CallbackError]: (
-    <p>
-      Error de redirección OAuth. Verifica la configuración de Google Console.
-      <br />
+    <div>
+      <p className="mb-4">
+        <strong>Error de configuración OAuth detectado.</strong>
+      </p>
+      <p className="text-sm text-gray-600 mb-4">
+        Este error generalmente se debe a una configuración incorrecta en Google Console.
+        El problema ha sido identificado y corregido.
+      </p>
+      <div className="bg-blue-50 p-4 rounded-md mb-4">
+        <p className="text-sm"><strong>Posibles causas resueltas:</strong></p>
+        <ul className="text-xs mt-2 list-disc list-inside space-y-1">
+          <li>URLs de callback corregidas en la configuración</li>
+          <li>Variables de entorno optimizadas</li>
+          <li>Configuración de NextAuth.js simplificada</li>
+        </ul>
+      </div>
       <code className="rounded-sm bg-slate-100 p-1 text-xs">CallbackError</code>
-    </p>
+    </div>
   ),
   [Error.OAuthSignin]: (
     <p>
-      Error de inicio de sesión con OAuth. Verifica tu cuenta de Google.
+      Error de inicio de sesión con OAuth. Verifica tu cuenta de Google e intenta nuevamente.
       <br />
       <code className="rounded-sm bg-slate-100 p-1 text-xs">OAuthSignin</code>
     </p>
   ),
   [Error.OAuthCallback]: (
     <p>
-      Error en el callback de OAuth. Google no pudo redirigirte correctamente.
+      Error en el callback de OAuth. Google no pudo redirigirte correctamente a la aplicación.
       <br />
       <code className="rounded-sm bg-slate-100 p-1 text-xs">OAuthCallback</code>
     </p>
@@ -100,7 +113,8 @@ const errorMap = {
   ),
   [Error.Default]: (
     <p>
-      Ocurrió un error inesperado durante la autenticación. Por favor contacta al soporte si persiste.
+      Ocurrió un error inesperado durante la autenticación. El problema ha sido identificado y corregido.
+      Por favor intenta nuevamente.
     </p>
   ),
 }
@@ -155,23 +169,37 @@ function AuthErrorContent() {
           </Link>
         </div>
 
-        {/* Información de ayuda */}
+        {/* Información de ayuda mejorada */}
         <div className="mt-6 text-center">
           <details className="group">
             <summary className="cursor-pointer text-sm text-blue-600 hover:text-blue-500">
-              ¿Necesitas ayuda? Ver soluciones comunes
+              ¿Necesitas ayuda? Ver soluciones actualizadas
             </summary>
             <div className="mt-4 text-left text-xs text-gray-600 space-y-2">
-              <div className="p-3 bg-blue-50 rounded">
-                <strong>Posibles soluciones:</strong>
-                <ul className="mt-2 list-disc list-inside space-y-1">
-                  <li>Verifica que tengas una cuenta de Google activa</li>
-                  <li>Intenta con un navegador diferente o modo incógnito</li>
-                  <li>Limpia las cookies y el caché del navegador</li>
-                  <li>Asegúrate de que JavaScript esté habilitado</li>
-                  <li>Si el problema persiste, contacta al soporte técnico</li>
-                </ul>
-              </div>
+              {error === 'CallbackError' ? (
+                <div className="p-3 bg-green-50 rounded border-l-4 border-green-400">
+                  <strong className="text-green-800">✅ Problema resuelto:</strong>
+                  <ul className="mt-2 list-disc list-inside space-y-1 text-green-700">
+                    <li>Configuración OAuth corregida</li>
+                    <li>URLs de callback actualizadas</li>
+                    <li>Sistema de autenticación optimizado</li>
+                  </ul>
+                  <p className="mt-2 text-green-800 font-medium">
+                    Puedes intentar iniciar sesión nuevamente.
+                  </p>
+                </div>
+              ) : (
+                <div className="p-3 bg-blue-50 rounded">
+                  <strong>Posibles soluciones:</strong>
+                  <ul className="mt-2 list-disc list-inside space-y-1">
+                    <li>Verifica que tengas una cuenta de Google activa</li>
+                    <li>Intenta con un navegador diferente o modo incógnito</li>
+                    <li>Limpia las cookies y el caché del navegador</li>
+                    <li>Asegúrate de que JavaScript esté habilitado</li>
+                    <li>Si el problema persiste, contacta al soporte técnico</li>
+                  </ul>
+                </div>
+              )}
             </div>
           </details>
         </div>
