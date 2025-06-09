@@ -1,4 +1,4 @@
-// app/page.tsx
+// app/page.tsx - Versión final con componente optimizado
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -6,8 +6,8 @@ import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { signIn, useSession, signOut } from 'next-auth/react';
 import AcmeLogo from '../components/ui/common/AcmeLogo';
+import OptimizedHeroImage from '../components/ui/common/OptimizedHeroImage';
 import { lusitana } from '../lib/styles/fonts';
-import Image from 'next/image';
 import Link from 'next/link';
 
 export default function Page() {
@@ -15,7 +15,6 @@ export default function Page() {
   const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
-  const [imageError, setImageError] = useState(false);
 
   // Manejar redirección y mensajes
   useEffect(() => {
@@ -82,11 +81,6 @@ export default function Page() {
       console.error('Error al cerrar sesión:', error);
       toast.error('Error al cerrar sesión');
     }
-  };
-
-  // Manejar errores de imagen
-  const handleImageError = () => {
-    setImageError(true);
   };
 
   // Mostrar loading mientras se verifica la sesión
@@ -165,55 +159,26 @@ export default function Page() {
           </div>
         </div>
         
-        {/* Panel de Imagen */}
+        {/* Panel de Imagen Optimizado */}
         <div className="flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12">
           <div className="relative w-full max-w-4xl">
-            {!imageError ? (
-              <>
-                {/* Versión Desktop */}
-                <div className="relative hidden md:block aspect-[1000/760] rounded-lg overflow-hidden shadow-2xl border border-gray-200">
-                  <Image
-                    src="/images/hero-desktop.png"
-                    alt="Panel de control versión escritorio - Dashboard de referenciales.cl"
-                    fill
-                    quality={85}
-                    priority
-                    style={{ objectFit: 'cover' }}
-                    sizes="(min-width: 768px) 1000px, 100vw"
-                    onError={handleImageError}
-                    className="transition-transform duration-300 hover:scale-105"
-                  />
-                </div>
-                
-                {/* Versión Mobile */}
-                <div className="relative block md:hidden aspect-[560/620] rounded-lg overflow-hidden shadow-2xl border border-gray-200">
-                  <Image
-                    src="/images/hero-mobile.png"
-                    alt="Panel de control versión móvil - Dashboard de referenciales.cl"
-                    fill
-                    quality={85}
-                    priority
-                    style={{ objectFit: 'cover' }}
-                    sizes="(max-width: 768px) 560px, 100vw"
-                    onError={handleImageError}
-                    className="transition-transform duration-300 hover:scale-105"
-                  />
-                </div>
-              </>
-            ) : (
-              /* Fallback cuando las imágenes fallan */
-              <div className="relative aspect-[1000/760] md:block hidden bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg border-2 border-dashed border-primary/20 flex items-center justify-center shadow-lg">
-                <div className="text-center p-8">
-                  <div className="text-primary/60 mb-4">
-                    <svg className="w-16 h-16 mx-auto" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-700 mb-2">Vista Previa del Dashboard</h3>
-                  <p className="text-gray-500">Sistema de tasaciones inmobiliarias</p>
-                </div>
-              </div>
-            )}
+            {/* Versión Desktop */}
+            <div className="hidden md:block">
+              <OptimizedHeroImage 
+                isMobile={false}
+                priority={true}
+                className=""
+              />
+            </div>
+            
+            {/* Versión Mobile */}
+            <div className="block md:hidden">
+              <OptimizedHeroImage 
+                isMobile={true}
+                priority={true}
+                className=""
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -224,6 +189,18 @@ export default function Page() {
           Base de datos colaborativa y open-source para tasaciones inmobiliarias en Chile
         </p>
       </div>
+
+      {/* CSS adicional para el shimmer effect */}
+      <style jsx>{`
+        @keyframes shimmer {
+          0% {
+            background-position: -200% 0;
+          }
+          100% {
+            background-position: 200% 0;
+          }
+        }
+      `}</style>
     </main>
   );
 }
