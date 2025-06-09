@@ -51,15 +51,14 @@ export default function AcmeLogo() {
     return () => {
       element.removeEventListener('mousemove', handleMouseMove);
       element.removeEventListener('mouseleave', () => setRotationAngle(0));
-      handleMouseMove.cancel(); // Limpiar el throttle al desmontar
+      handleMouseMove.cancel();
     };
   }, [handleMouseMove]);
 
-  // Usamos clases consistentes tanto para el servidor como para el cliente
-  // Las clases deben coincidir con las que el servidor espera
-  const iconClasses = "h-8 w-8 md:h-10 md:w-10 text-white transform transition-transform duration-300 ease-in-out";
-  // Usamos clases actualizadas solo después de la hidratación
-  const iconClassesAfterHydration = isMounted ? "h-10 w-10 md:h-12 md:w-12 text-white transform transition-transform duration-300 ease-in-out" : iconClasses;
+  // Clases de icono optimizadas para prevenir cambios de layout
+  const iconClasses = isMounted 
+    ? "w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-white transform transition-transform duration-300 ease-in-out flex-shrink-0" 
+    : "w-8 h-8 sm:w-10 sm:h-10 text-white transform transition-transform duration-300 ease-in-out flex-shrink-0";
 
   return (
     <div
@@ -68,19 +67,36 @@ export default function AcmeLogo() {
       className={`
         ${lusitana.className} 
         flex flex-col items-center justify-center 
-        w-full
-        px-2 py-2 md:py-4
-        gap-1 md:gap-2
+        w-full max-w-xs mx-auto
+        px-3 py-3 sm:px-4 sm:py-4 md:px-6 md:py-6
+        gap-2 sm:gap-3 md:gap-4
+        text-center
+        cursor-pointer
+        select-none
       `}
+      role="banner"
+      aria-label="Logo de referenciales.cl"
     >
-      <GlobeAltIcon 
-        className={iconClassesAfterHydration}
-        style={{ transform: `rotate(${rotationAngle}deg)` }}
-      />
-      <p className="text-base md:text-lg font-semibold tracking-tight text-white text-center leading-tight">
-        referenciales
-        <span className="text-white">.cl</span>
-      </p>
+      <div className="flex-shrink-0">
+        <GlobeAltIcon 
+          className={iconClasses}
+          style={{ 
+            transform: `rotate(${rotationAngle}deg)`,
+            willChange: 'transform'
+          }}
+          aria-hidden="true"
+        />
+      </div>
+      
+      <div className="flex flex-col items-center leading-tight">
+        <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-white">
+          <span className="whitespace-nowrap">referenciales</span>
+          <span className="text-white/90">.cl</span>
+        </h1>
+        <p className="text-xs sm:text-sm text-white/80 font-normal mt-1 hidden sm:block">
+          Base de datos colaborativa
+        </p>
+      </div>
     </div>
   );
 }

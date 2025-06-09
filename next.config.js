@@ -1,17 +1,27 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Aquí pueden ir otras configuraciones que ya tengas (reactStrictMode, images, etc.)
-  // ...
+  // Configuración de imágenes para optimización
+  images: {
+    // Permitir optimización de imágenes locales y externas
+    domains: ['localhost', 'referenciales.cl', 'vercel.app'],
+    // Formatos soportados para optimización
+    formats: ['image/webp', 'image/avif'],
+    // Configuraciones adicionales para desarrollo
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    // Configuración de tamaños de imagen
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+  },
 
-  // Configuración de Headers para añadir la CSP
+  // Configuración de Headers para CSP (actualizada)
   async headers() {
-    // Define las directivas de la Política de Seguridad de Contenido (CSP)
     const cspHeader = `
       default-src 'self';
       script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://vercel.live/ https://va.vercel-scripts.com;
       style-src 'self' 'unsafe-inline';
-      img-src 'self' blob: data: https://*.googleusercontent.com https://*.tile.openstreetmap.org;
-      font-src 'self';
+      img-src 'self' blob: data: https://*.googleusercontent.com https://*.tile.openstreetmap.org https://_next/ https://vercel.app https://referenciales.cl;
+      font-src 'self' data:;
       object-src 'none';
       base-uri 'self';
       form-action 'self';
@@ -20,28 +30,15 @@ const nextConfig = {
       block-all-mixed-content;
       upgrade-insecure-requests;
     `;
-    /*
-      Explicación de las directivas corregidas/añadidas:
-      - img-src:
-        - 'self': Permite imágenes del mismo origen.
-        - blob:: Permite imágenes creadas como Blobs.
-        - data:: Permite imágenes como Data URIs.
-        - https://*.googleusercontent.com: Permite avatares de usuarios de Google.
-        - https://*.tile.openstreetmap.org: Añadido para permitir las teselas de OpenStreetMap (usadas comúnmente por Leaflet).
-      - ... (otras directivas explicadas anteriormente) ...
-    */
 
     return [
       {
-        // Aplica estos headers a todas las rutas de la aplicación
         source: '/(.*)',
         headers: [
           {
             key: 'Content-Security-Policy',
-            // Limpia espacios extra y saltos de línea de la cadena CSP
             value: cspHeader.replace(/\s{2,}/g, ' ').trim(),
           },
-          // Otros Headers de Seguridad (Buenas prácticas)
           {
             key: 'X-Content-Type-Options',
             value: 'nosniff',
@@ -57,6 +54,23 @@ const nextConfig = {
         ],
       },
     ];
+  },
+
+  // Configuración adicional para desarrollo
+  experimental: {
+    optimizePackageImports: ['@heroicons/react'],
+  },
+
+  // Configuración de webpack para desarrollo
+  webpack: (config, { dev, isServer }) => {
+    if (dev && !isServer) {
+      // Mejoras para desarrollo local
+      config.watchOptions = {
+        poll: 1000,
+        aggregateTimeout: 300,
+      };
+    }
+    return config;
   },
 };
 

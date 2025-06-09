@@ -3,123 +3,163 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Espacio seguro para móviles */
-.mobile-safe-padding {
-  padding-top: max(env(safe-area-inset-top), 1rem);
-}
-
-/* Estilos específicos para Markdown */
-.markdown-content {
-  /* Espaciado general */
-  line-height: 1.8;
-  
-  /* Títulos */
-  & h1 {
-    @apply text-3xl font-bold mb-8 mt-6;
-    line-height: 1.3;
-  }
-  
-  & h2 {
-    @apply text-2xl font-semibold mb-6 mt-8;
-    line-height: 1.4;
-  }
-  
-  & h3 {
-    @apply text-xl font-medium mb-4 mt-6;
-    line-height: 1.5;
-  }
-  
-  /* Párrafos y listas */
-  & p {
-    margin: 1.5em 0;
-  }
-
-  & ul, & ol {
-    margin: 1.5em 0;
-    padding-left: 1.5em;
-    line-height: 1.4; /* Ajuste del interlineado para listas */
-  }
-
-  & li {
-    margin: 0.25em 0; /* Reducir el margen entre los elementos de la lista */
-  }
-
-  & li > p {
-    margin-top: 0.25em; /* Reducir el margen superior para descripciones */
-    margin-bottom: 0.25em; /* Reducir el margen inferior para descripciones */
-  }
-  
-  /* Blockquotes */
-  & blockquote {
-    @apply pl-4 py-2 my-4 border-l-4 border-green-500 bg-green-50;
-    line-height: 1.6;
-  }
-  
-  /* Tablas */
-  & table {
-    @apply w-full my-6;
-    border-collapse: collapse;
-  }
-  
-  & th, & td {
-    @apply border p-2;
-  }
-  
-  & th {
-    @apply bg-gray-50;
-  }
-  
-  /* Separadores */
-  & hr {
-    @apply my-8 border-t-2 border-gray-200;
-  }
-  
-  /* Enlaces */
-  & a {
-    @apply text-blue-600 hover:text-blue-800 underline;
-  }
-}
-
-/* Root adjustments for better text rendering */
+/* Variables CSS personalizadas */
 :root {
-  text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-  -moz-text-size-adjust: 100%;
+  --primary: #00204A;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f172a;
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #f1f5f9;
+  --accent-foreground: #0f172a;
+  --destructive: #ef4444;
+  --destructive-foreground: #fef2f2;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #00204A;
+  --radius: 0.5rem;
 }
 
-/* Universal selector for box-sizing and resetting padding/margin */
+/* Base styles */
 * {
   box-sizing: border-box;
-  /* padding: 0; */ /* Removed */
-  /* margin: 0; */ /* Removed */
 }
 
-/* Timestamp comment style */
-.timestampComment {
-  color: #4b5563; /* Gris oscuro */
-  font-style: italic;
-}
-
-/* Prevent horizontal overflow */
 html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+  font-family: 'Inter', system-ui, sans-serif;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
 }
 
-/* Custom styles for number input fields */
+/* Prevenir flash of unstyled content */
+body {
+  opacity: 0;
+  animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Espacio seguro para móviles */
+.mobile-safe-padding {
+  padding-top: max(env(safe-area-inset-top), 1rem);
+  padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+}
+
+/* Estilos para el contenedor principal */
+.main-container {
+  min-height: 100vh;
+  min-height: 100dvh; /* Soporte para altura dinámica en móviles */
+}
+
+/* Estilos específicos para Markdown */
+.markdown-content {
+  line-height: 1.8;
+  
+  & h1 {
+    @apply text-3xl font-bold mb-8 mt-6 text-gray-900;
+    line-height: 1.3;
+  }
+  
+  & h2 {
+    @apply text-2xl font-semibold mb-6 mt-8 text-gray-800;
+    line-height: 1.4;
+  }
+  
+  & h3 {
+    @apply text-xl font-medium mb-4 mt-6 text-gray-700;
+    line-height: 1.5;
+  }
+  
+  & p {
+    @apply text-gray-600 leading-relaxed;
+    margin: 1.5em 0;
+  }
+
+  & ul, & ol {
+    @apply text-gray-600;
+    margin: 1.5em 0;
+    padding-left: 1.5em;
+    line-height: 1.6;
+  }
+
+  & li {
+    margin: 0.5em 0;
+  }
+
+  & li > p {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+  }
+  
+  & blockquote {
+    @apply pl-4 py-3 my-6 border-l-4 border-primary bg-primary/5 rounded-r-lg;
+    line-height: 1.6;
+  }
+  
+  & table {
+    @apply w-full my-6 border-collapse;
+  }
+  
+  & th, & td {
+    @apply border border-gray-300 p-3;
+  }
+  
+  & th {
+    @apply bg-gray-100 font-semibold text-gray-900;
+  }
+  
+  & td {
+    @apply text-gray-600;
+  }
+  
+  & hr {
+    @apply my-8 border-t-2 border-gray-200;
+  }
+  
+  & a {
+    @apply text-primary hover:text-primary/80 underline transition-colors;
+  }
+
+  & code {
+    @apply bg-gray-100 px-2 py-1 rounded text-sm font-mono text-gray-800;
+  }
+
+  & pre {
+    @apply bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto my-4;
+  }
+}
+
+/* Timestamp comment style */
+.timestampComment {
+  @apply text-gray-500 italic;
+}
+
+/* Mejoras para inputs numéricos */
 input[type='number'] {
-  -moz-appearance: textfield; /* Firefox */
-  appearance: textfield; /* Standard */
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
-  -webkit-appearance: none; /* Chrome, Safari */
+  -webkit-appearance: none;
   margin: 0;
 }
 
-/* Additional styles for file input compatibility with Firefox */
+/* Estilos para file inputs */
 .file\:border-0::file-selector-button {
   border-width: 0;
 }
@@ -137,33 +177,134 @@ input[type='number']::-webkit-outer-spin-button {
   font-weight: 500;
 }
 
-/* General element styles - REMOVED BLOCK */
-/* 
-   The block from abbr[title] down to ::-webkit-search-decoration 
-   has been removed to rely on Tailwind's Preflight (@tailwind base)
-*/
+/* Estilos específicos para Leaflet */
+.leaflet-container {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  width: 100%;
+}
 
-/* Estilos específicos para los iconos de Leaflet */
 .leaflet-marker-icon,
 .leaflet-marker-shadow {
   display: block;
-  text-indent: -9999px; /* Oculta cualquier texto */
-  overflow: hidden; /* Asegura que no haya contenido adicional visible */
+  text-indent: -9999px;
+  overflow: hidden;
 }
 
-/* Configuración para modales usando portales */
+/* Configuración para modales */
 body.dialog-open .leaflet-container,
 body.dialog-open [class^="leaflet-"] {
   z-index: 0 !important;
 }
 
-/* Garantizar que el contenido renderizado con portales aparezca por encima */
 #__next ~ div[role="dialog"] {
   z-index: 9000;
 }
 
-/* Asegurar que el contenedor del mapa tenga un z-index bajo */
-.leaflet-container {
+/* Estilos para botones de carga */
+.loading-button {
+  @apply relative overflow-hidden;
+}
+
+.loading-button:disabled {
+  @apply cursor-not-allowed;
+}
+
+/* Estilos para animaciones de carga */
+.loading-spinner {
+  @apply inline-block animate-spin rounded-full border-2 border-solid border-current border-r-transparent;
+}
+
+/* Optimizaciones de rendimiento para imágenes */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Estilos para el componente Image de Next.js */
+.next-image-container {
   position: relative;
-  z-index: 1;
+  overflow: hidden;
+}
+
+.next-image-container img {
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Estilos para focus accesible */
+:focus-visible {
+  @apply outline-2 outline-primary outline-offset-2;
+}
+
+/* Mejoras para el modo oscuro (opcional, preparado para futuro) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+/* Utilidades personalizadas */
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Mejoras para la accesibilidad */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Animaciones suaves para elementos interactivos */
+.interactive-element {
+  @apply transition-all duration-200 ease-in-out;
+}
+
+.interactive-element:hover {
+  @apply transform -translate-y-0.5 shadow-lg;
+}
+
+/* Clases utilitarias adicionales */
+.glass-effect {
+  @apply bg-white/80 backdrop-blur-sm border border-white/20;
+}
+
+.gradient-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, #0369a1 100%);
+}
+
+.shadow-primary {
+  box-shadow: 0 4px 20px rgba(0, 32, 74, 0.15);
 }
