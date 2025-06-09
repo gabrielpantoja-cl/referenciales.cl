@@ -14,12 +14,13 @@
     "test:ci": "jest --ci --coverage",
     "clean": "rimraf .next",
     "clean:cache": "rimraf .next && rimraf node_modules/.cache",
+    "clean:full": "rimraf .next && rimraf node_modules && rimraf package-lock.json",
+    "prisma:reset": "npx prisma generate && npx prisma db push",
     "optimize:images": "node scripts/optimize-images.js",
     "check:images": "node scripts/check-images.js"
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.3.9",
-    "@auth/prisma-adapter": "^2.7.3",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@heroicons/react": "^2.0.18",
@@ -38,7 +39,6 @@
     "@vercel/speed-insights": "^1.1.0",
     "ai": "^4.3.4",
     "ajv": "^6.12.4",
-    "auth": "^1.1.1",
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
