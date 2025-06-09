@@ -1,7 +1,7 @@
-// app/page.tsx - Versión final con componente optimizado
+// app/page.tsx - VERSIÓN CORREGIDA SIN REDIRECTS AUTOMÁTICOS
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { signIn, useSession, signOut } from 'next-auth/react';
@@ -16,31 +16,8 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
 
-  // Manejar redirección y mensajes
-  useEffect(() => {
-    // Si hay sesión activa, redirigir al dashboard
-    if (session) {
-      router.push('/dashboard');
-      return;
-    }
-
-    // Verificar mensaje de cierre de sesión
-    const signOutMessage = localStorage.getItem('signOutMessage');
-    if (signOutMessage) {
-      toast.success(signOutMessage, { 
-        duration: 5000,
-        position: 'bottom-center'
-      });
-      localStorage.removeItem('signOutMessage');
-      
-      // Limpiar cookies y estado local
-      document.cookie.split(';').forEach(cookie => {
-        document.cookie = cookie
-          .replace(/^ +/, '')
-          .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
-      });
-    }
-  }, [session, router]);
+  // ✅ ELIMINADO: useEffect que causaba redirects automáticos
+  // Ya no redirigimos automáticamente al dashboard, el usuario debe hacer clic
 
   // Manejar autenticación
   const handleAuth = async () => {
@@ -59,8 +36,12 @@ export default function Page() {
         return;
       }
 
+      // ✅ SIMPLIFICADO: Si hay URL, navegar allí
       if (result?.url) {
-        router.push(result.url);
+        window.location.href = result.url;
+      } else {
+        // Si no hay URL pero el signIn fue exitoso, ir al dashboard
+        router.push('/dashboard');
       }
     } catch (error) {
       console.error('Error en inicio de sesión:', error);
@@ -68,6 +49,11 @@ export default function Page() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Manejar navegación manual al dashboard
+  const handleGoToDashboard = () => {
+    router.push('/dashboard');
   };
 
   // Manejar cierre de sesión
@@ -117,45 +103,77 @@ export default function Page() {
             </p>
           </div>
           
+          {/* ✅ NUEVO: Mostrar diferentes opciones según el estado de sesión */}
           <div className="flex flex-col gap-4">
-            <div className="flex items-start gap-3">
-              <input
-                type="checkbox"
-                id="acceptTerms"
-                checked={acceptedTerms}
-                onChange={(e) => setAcceptedTerms(e.target.checked)}
-                className="mt-1 w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary focus:ring-2"
-              />
-              <label htmlFor="acceptTerms" className="text-sm text-gray-600 leading-relaxed">
-                He leído y acepto los{' '}
-                <Link href="/terms" className="text-primary underline hover:text-primary/80 transition-colors">
-                  Términos de Servicio
-                </Link>{' '}
-                y{' '}
-                <Link href="/privacy" className="text-primary underline hover:text-primary/80 transition-colors">
-                  Política de Privacidad
-                </Link>
-              </label>
-            </div>
-            
-            <button
-              onClick={session ? handleSignOut : handleAuth}
-              className={`flex items-center justify-center gap-3 self-start rounded-lg px-8 py-4 text-sm font-medium transition-all duration-200 md:text-base min-w-[200px] ${
-                !acceptedTerms && !session || isLoading 
-                  ? 'bg-gray-300 cursor-not-allowed text-gray-600 shadow-none' 
-                  : 'bg-primary hover:bg-primary/90 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
-              }`}
-              disabled={!acceptedTerms && !session || isLoading}
-            >
-              {isLoading ? (
-                <>
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
-                  <span>Procesando...</span>
-                </>
-              ) : (
-                <span>{session ? 'Cerrar sesión' : 'Iniciar sesión con Google'}</span>
-              )}
-            </button>
+            {session ? (
+              // Usuario autenticado - mostrar opciones
+              <div className="space-y-4">
+                <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                  <p className="text-green-800 font-medium">
+                    ¡Hola, {session.user?.name}!
+                  </p>
+                  <p className="text-green-600 text-sm">
+                    Ya tienes sesión iniciada.
+                  </p>
+                </div>
+                
+                <button
+                  onClick={handleGoToDashboard}
+                  className="flex items-center justify-center gap-3 self-start rounded-lg bg-primary hover:bg-primary/90 px-8 py-4 text-sm font-medium text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 md:text-base min-w-[200px]"
+                >
+                  <span>Ir al Dashboard</span>
+                </button>
+                
+                <button
+                  onClick={handleSignOut}
+                  className="flex items-center justify-center gap-3 self-start rounded-lg bg-gray-600 hover:bg-gray-700 px-8 py-4 text-sm font-medium text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 md:text-base min-w-[200px]"
+                >
+                  <span>Cerrar Sesión</span>
+                </button>
+              </div>
+            ) : (
+              // Usuario no autenticado - mostrar formulario de login
+              <>
+                <div className="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    id="acceptTerms"
+                    checked={acceptedTerms}
+                    onChange={(e) => setAcceptedTerms(e.target.checked)}
+                    className="mt-1 w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary focus:ring-2"
+                  />
+                  <label htmlFor="acceptTerms" className="text-sm text-gray-600 leading-relaxed">
+                    He leído y acepto los{' '}
+                    <Link href="/terms" className="text-primary underline hover:text-primary/80 transition-colors">
+                      Términos de Servicio
+                    </Link>{' '}
+                    y{' '}
+                    <Link href="/privacy" className="text-primary underline hover:text-primary/80 transition-colors">
+                      Política de Privacidad
+                    </Link>
+                  </label>
+                </div>
+                
+                <button
+                  onClick={handleAuth}
+                  className={`flex items-center justify-center gap-3 self-start rounded-lg px-8 py-4 text-sm font-medium transition-all duration-200 md:text-base min-w-[200px] ${
+                    !acceptedTerms || isLoading 
+                      ? 'bg-gray-300 cursor-not-allowed text-gray-600 shadow-none' 
+                      : 'bg-primary hover:bg-primary/90 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
+                  }`}
+                  disabled={!acceptedTerms || isLoading}
+                >
+                  {isLoading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
+                      <span>Procesando...</span>
+                    </>
+                  ) : (
+                    <span>Iniciar sesión con Google</span>
+                  )}
+                </button>
+              </>
+            )}
           </div>
         </div>
         
