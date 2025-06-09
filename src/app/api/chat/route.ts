@@ -1,3 +1,4 @@
+/*
 // app/api/chat/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { createOpenAI } from '@ai-sdk/openai';
@@ -127,3 +128,4 @@ export async function POST(req: NextRequest) {
 }
 
 // export const runtime = 'edge';
+*/
