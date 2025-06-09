@@ -16,8 +16,8 @@ export async function fetchLatestReferenciales() {
         fechaescritura: 'desc',
       },
       include: {
-        user: true,
-        conservador: true, // Incluir relación con conservadores
+        User: true,
+        conservadores: true, // Incluir relación con conservadores
       },
     });
 
@@ -85,13 +85,13 @@ export async function fetchFilteredReferenciales(query: string | null | undefine
         conservadorId: true,
         createdAt: true,  // Añadido
         updatedAt: true,  // Añadido
-        user: {
+        User: {
           select: {
             name: true,
             email: true,
           },
         },
-        conservador: {
+        conservadores: {
           select: {
             id: true,
             nombre: true,
@@ -157,8 +157,8 @@ export async function fetchReferencialById(id: string | null | undefined) {
         id: id,
       },
       include: {
-        conservador: true, // Incluir la relación con conservador
-        user: true
+        conservadores: true, // Incluir la relación con conservador
+        User: true
       }
     });
 

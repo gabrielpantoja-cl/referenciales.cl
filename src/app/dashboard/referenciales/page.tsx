@@ -97,13 +97,13 @@ function ReferencialesContent() {
           createdAt: item.createdAt,
           updatedAt: item.updatedAt,
           user: {
-            name: item.user?.name || null,
-            email: item.user?.email || ''
+            name: item.User?.name || null,
+            email: item.User?.email || ''
           },
-          conservador: item.conservador ? {
-            id: item.conservador.id,
-            nombre: item.conservador.nombre,
-            comuna: item.conservador.comuna
+          conservador: item.conservadores ? {
+            id: item.conservadores.id,
+            nombre: item.conservadores.nombre,
+            comuna: item.conservadores.comuna
           } : undefined
         }));
         // Seguro de tipo: primero convertimos a unknown y luego a Referencial[]

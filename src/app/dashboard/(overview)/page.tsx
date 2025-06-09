@@ -53,7 +53,7 @@ export default async function DashboardPage() {
           anio: true,
           cbr: true,
           createdAt: true, // Añadimos createdAt para usar en la UI
-          user: {
+          User: {
             select: { 
               name: true 
             }
@@ -69,7 +69,10 @@ export default async function DashboardPage() {
         <Suspense fallback={<div>Cargando panel de control...</div>}>
           <DashboardContent 
             session={session}
-            latestReferenciales={latestReferenciales as LatestReferencial[]}
+            latestReferenciales={latestReferenciales.map(r => ({
+              ...r,
+              user: r.User
+            }))}
             totalReferenciales={totalReferenciales}
           />
         </Suspense>

@@ -104,6 +104,7 @@ export async function createReferencial(formData: FormData) {
     // Crear el referencial con el ID del conservador
     await prisma.referenciales.create({
       data: {
+        id: `ref_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         userId,
         fojas,
         numero,
@@ -121,6 +122,7 @@ export async function createReferencial(formData: FormData) {
         rol: rolAvaluo,
         observaciones,
         conservadorId: conservador.id, // Usamos el ID del conservador que encontramos o creamos
+        updatedAt: new Date(),
       },
     });
 
@@ -302,10 +304,12 @@ export async function findOrCreateConservadorByName(nombre: string, comuna: stri
     if (!conservador) {
       conservador = await prisma.conservadores.create({
         data: {
+          id: `conservador_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           nombre,
           direccion: 'Por definir',
           comuna,
-          region
+          region,
+          updatedAt: new Date()
         }
       });
     }
