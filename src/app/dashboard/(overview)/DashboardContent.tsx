@@ -1,7 +1,7 @@
 'use client';
 
 import LatestReferenciales from '@/components/ui/dashboard/latest-referenciales';
-import { lusitana } from '../../../lib/styles/fonts';
+import { lusitana } from '@/src/lib/styles/fonts';
 import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { CardsSkeleton, LatestReferencialesSkeleton } from '@/components/ui/primitives/skeletons';

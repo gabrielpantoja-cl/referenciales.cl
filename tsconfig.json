@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    // --- Opciones Base (Mantener o ajustar según necesidad) ---
     "target": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
