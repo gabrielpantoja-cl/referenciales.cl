@@ -63,10 +63,11 @@ export default function EditReferencialForm({
     updatedAt: new Date(),
   });
 
+  // ✅ CORREGIDO: Redirect a la página correcta, no a la API
   useEffect(() => {
     if (status === 'unauthenticated') {
       toast.error('No estás autenticado');
-      router.push('/api/auth/signin');
+      router.push('/auth/signin'); // ✅ CORREGIDO: /auth/signin en lugar de /api/auth/signin
     }
   }, [status, router]);
 

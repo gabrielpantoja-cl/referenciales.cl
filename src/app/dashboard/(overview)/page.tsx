@@ -1,6 +1,6 @@
 import { getServerSession } from 'next-auth/next';
 import { redirect } from 'next/navigation';
-import { authOptions } from '@/lib/auth.config'; // Importa authOptions desde auth.config.ts
+import { authOptions } from '@/lib/auth.config';
 import DashboardContent from './DashboardContent';
 import DisclaimerPopup from '@/components/ui/dashboard/DisclaimerPopup';
 import { prisma } from '@/lib/prisma';
@@ -33,8 +33,9 @@ function ErrorMessage({ message }: { message: string }) {
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
 
+  // ✅ CORREGIDO: Redirigir a la página de signin, NO a la API
   if (!session) {
-    redirect('/api/auth/signin');
+    redirect('/auth/signin');
   }
 
   try {

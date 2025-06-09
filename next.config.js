@@ -128,11 +128,19 @@ const nextConfig = {
   // Configuración de transpile para módulos específicos
   transpilePackages: ['@ai-sdk/openai', 'ai'],
 
-  // Configuración de redirecciones
+  // ✅ CONFIGURACIÓN DE REDIRECCIONES CORREGIDA
   async redirects() {
     return [
+      // ✅ CORREGIDO: Solo redirigir /login a /auth/signin
+      // Eliminados otros redirects que podrían causar bucles
       {
         source: '/login',
+        destination: '/auth/signin',
+        permanent: false,
+      },
+      // ✅ AGREGADO: Redirigir también /signin por consistencia
+      {
+        source: '/signin',
         destination: '/auth/signin',
         permanent: false,
       },

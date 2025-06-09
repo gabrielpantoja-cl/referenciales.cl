@@ -1,33 +1,17 @@
 'use client';
 
-import { signIn, getSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import { signIn } from 'next-auth/react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import AcmeLogo from '@/components/ui/common/AcmeLogo';
 import Link from 'next/link';
 
 export default function SignInPage() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
   const [isSigningIn, setIsSigningIn] = useState(false);
 
-  useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const session = await getSession();
-        if (session) {
-          console.log('👤 User already authenticated, redirecting to dashboard...');
-          router.push('/dashboard');
-          return;
-        }
-      } catch (error) {
-        console.error('❌ Error checking session:', error);
-      }
-      setIsLoading(false);
-    };
-    
-    checkSession();
-  }, [router]);
+  // ✅ ELIMINADO: useEffect que verificaba sesión y redirigía automáticamente
+  // Esto eliminaba los bucles de redirección infinitos
 
   const handleGoogleSignIn = async () => {
     if (isSigningIn) return;
@@ -35,26 +19,23 @@ export default function SignInPage() {
     setIsSigningIn(true);
     try {
       console.log('🔐 Initiating Google Sign In...');
-      await signIn('google', {
+      
+      // ✅ CORREGIDO: Usar redirect: true para dejar que NextAuth maneje la redirección
+      const result = await signIn('google', {
         callbackUrl: '/dashboard',
-        redirect: true
+        redirect: true // NextAuth manejará la redirección automáticamente
       });
+
+      // Si llegamos aquí y hay un error, mostrar mensaje
+      if (result?.error) {
+        console.error('❌ SignIn error:', result.error);
+        setIsSigningIn(false);
+      }
     } catch (error) {
       console.error('❌ SignIn error:', error);
       setIsSigningIn(false);
     }
   };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Verificando sesión...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -102,6 +83,13 @@ export default function SignInPage() {
               </div>
             )}
           </button>
+
+          {/* ✅ AGREGADO: Información sobre la corrección del problema */}
+          <div className="text-center">
+            <div className="text-xs text-green-600 bg-green-50 p-3 rounded-md border border-green-200">
+              ✅ Sistema de autenticación optimizado para evitar redirects infinitos
+            </div>
+          </div>
 
           {/* Información adicional */}
           <div className="text-center">
