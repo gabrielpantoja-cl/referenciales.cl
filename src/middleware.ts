@@ -6,14 +6,18 @@ import type { NextRequest } from "next/server";
 // Rutas públicas y de autenticación
 const publicRoutes = [
   '/',
-  '/auth/signin',
+  '/auth/signin',        // ✅ Añadir nueva ruta
   '/auth/signout',
   '/auth/error',
+  '/login',              // ✅ Añadir redirect route
+  '/error',              // ✅ Añadir nueva ruta
   '/api/auth/signin',
   '/api/auth/signout',
   '/api/auth/callback/google',
   '/api/auth/csrf',
   '/api/auth/session',
+  '/terms',              // ✅ Páginas legales
+  '/privacy',            // ✅ Páginas legales
 ];
 
 const authRoutes = [

@@ -59,9 +59,9 @@ export const authOptions: NextAuthOptions = {
     }
   },
   pages: {
-    signIn: "/login",
-    signOut: "/", // Redirigir al home tras signOut
-    error: "/error",
+    signIn: "/auth/signin",      // ✅ Ruta que SÍ existe
+    signOut: "/",               // ✅ Mantener
+    error: "/error",             // ✅ Ruta que SÍ existe
   },
   events: {
     async signOut(message) {
