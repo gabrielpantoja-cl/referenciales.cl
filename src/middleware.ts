@@ -6,14 +6,18 @@ import type { NextRequest } from "next/server";
 // Rutas públicas y de autenticación
 const publicRoutes = [
   '/',
-  '/auth/signin',
+  '/auth/signin',        // ✅ Añadir nueva ruta
   '/auth/signout',
   '/auth/error',
+  '/login',              // ✅ Añadir redirect route
+  '/error',              // ✅ Añadir nueva ruta
   '/api/auth/signin',
   '/api/auth/signout',
   '/api/auth/callback/google',
   '/api/auth/csrf',
   '/api/auth/session',
+  '/terms',              // ✅ Páginas legales
+  '/privacy',            // ✅ Páginas legales
 ];
 
 const authRoutes = [
@@ -110,7 +114,10 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
+  // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
+  // Se excluyen las rutas de la API, las de Next.js (_next/static, _next/image)
+  // y la página de inicio de sesión para evitar el bucle de redirección.
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|public/|assets/).*)',
+    '/((?!api|_next/static|_next/image|auth/signin|favicon.ico|.*\\.png$).*)',
   ],
 };
