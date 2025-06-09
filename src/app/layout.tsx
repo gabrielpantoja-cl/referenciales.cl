@@ -117,7 +117,9 @@ export default function RootLayout({
 
   return (
     <html lang="es" suppressHydrationWarning={true}>
-      {/* Next.js maneja la etiqueta <head> automáticamente con los metadatos exportados */}
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+      </head>
       <body className="antialiased"> {/* Aplica estilos base o fuentes aquí si es necesario */}
         <SessionProviderClient> {/* Proveedor para NextAuth.js */}
           {children} {/* Contenido de la página actual */}
