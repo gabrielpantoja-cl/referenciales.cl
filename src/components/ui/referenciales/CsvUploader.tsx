@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import DownloadTemplateButton from '@/src/app/dashboard/referenciales/create/DownloadTemplateButton';
+import DownloadTemplateButton from '@/app/dashboard/referenciales/create/DownloadTemplateButton';
 
 interface ValidationError {
   row: number;

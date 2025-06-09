@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    // --- Opciones Base (Mantener o ajustar según necesidad) ---
-    "target": "esnext",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "es6"],
     "allowJs": true,
+    "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -13,41 +13,30 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-
-    // --- Opciones Añadidas/Ajustadas para Mejorar Resolución y Consistencia ---
-    "skipLibCheck": true, // Evita la verificación de tipos en node_modules (IMPORTANTE)
-    "forceConsistentCasingInFileNames": true,
-    "baseUrl": "./",
-    "paths": {
-      "@/*": ["./*"],
-      // Mantener tus otros alias específicos si los necesitas
-      "@/auth": ["lib/auth"],
-      "@/app/lib/zod": ["lib/zod"],
-      "@/components/*": ["components/*"],
-      "@/lib/*": ["lib/*"],
-      "@/utils/*": ["utils/*"]
-    },
-    "typeRoots": [ // Especifica dónde buscar archivos de definición de tipos
-      // Dejar solo la ruta estándar para @types
-      "./node_modules/@types"
-      // Quitar "./node_modules" para evitar conflictos
-    ],
     "plugins": [
       {
         "name": "next"
       }
-    ]
+    ],
+    "baseUrl": "src/",
+    "paths": {
+      "@/*": ["./*"],
+      "@/components/*": ["./components/*"],
+      "@/lib/*": ["./lib/*"],
+      "@/app/*": ["./app/*"],
+      "@/types/*": ["./types/*"],
+      "@/constants/*": ["./constants/*"],
+      "@/hooks/*": ["./hooks/*"],
+      "@/utils/*": ["./lib/utils/*"]
+    }
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "global.d.ts",
-    "build.sh"
+    "src/**/*.ts", 
+    "src/**/*.tsx",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules",
-    "**/*.cjs"
+    "node_modules"
   ]
 }

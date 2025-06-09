@@ -1,11 +1,11 @@
 import React from 'react';
-import '@/app/globals.css';
+import './globals.css';
 import { Metadata, Viewport } from 'next';
 import { Toaster } from 'react-hot-toast';
-import SessionProviderClient from '@/src/app/dashboard/SessionProviderClient';
+import SessionProviderClient from '@/app/dashboard/SessionProviderClient';
 import { Analytics } from '@vercel/analytics/react'; 
 import { SpeedInsights } from '@vercel/speed-insights/next'; 
-import { GoogleAnalytics } from '@next/third-parties/google'; // Importar Google Analytics
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 // Configuración del Viewport
 export const viewport: Viewport = {
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     default: 'referenciales.cl',
   },
   description: 'Base de datos colaborativa.',
-  metadataBase: new URL('https://next14-postgres.vercel.app/'), // Reemplaza con tu URL de producción
+  metadataBase: new URL('https://referenciales.cl/'),
   applicationName: 'referenciales.cl',
   appleWebApp: {
     capable: true,
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  authors: [{ name: 'referenciales.cl', url: 'https://www.referenciales.cl/' }], // Reemplaza con tu URL
+  authors: [{ name: 'referenciales.cl', url: 'https://www.referenciales.cl/' }], 
   creator: 'referenciales.cl',
   publisher: 'referenciales.cl',
   keywords: ['Next.js 15', 'referenciales.cl', 'Dashboard', 'nextjs.org/learn', 'Server Actions', 'tasaciones', 'inmobiliarias', 'Chile'],

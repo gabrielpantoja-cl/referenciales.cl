@@ -4,7 +4,7 @@ import { createOpenAI } from '@ai-sdk/openai';
 import { streamText, CoreMessage, StreamTextResult } from 'ai';
 import { db } from '@/lib/prisma';
 import { MessageRole } from '@prisma/client';
-import { auth } from '@/auth';
+import { auth } from '@/lib/auth';
 
 // Interfaz para las FAQs (sin cambios)
 interface FAQs {

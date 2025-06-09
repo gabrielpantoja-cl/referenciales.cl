@@ -9,7 +9,7 @@ import { ReferencialesTableSkeleton } from '@/components/ui/primitives/skeletons
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { fetchReferencialesPages, fetchFilteredReferenciales } from '@/lib/referenciales';
 import { exportReferencialesToXlsx } from '@/lib/exportToXlsx';
-import { Referencial } from '@/src/types/referenciales';
+import { Referencial } from '@/types/referenciales';
 import { useSearchParams } from 'next/navigation';
 import { saveAs } from 'file-saver';
 import toast from 'react-hot-toast';
