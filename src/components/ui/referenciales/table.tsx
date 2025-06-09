@@ -1,7 +1,7 @@
 "use client";
 
 import { formatDateToLocal } from '@/lib/utils';
-import { Referencial } from '@/types/referenciales';
+import { Referencial } from '@/src/types/referenciales';
 
 const SENSITIVE_FIELDS = ['comprador', 'vendedor'];
 const isSensitiveField = (key: string) => SENSITIVE_FIELDS.includes(key);

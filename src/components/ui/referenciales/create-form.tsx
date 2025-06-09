@@ -9,7 +9,7 @@ import { createReferencial } from '@/lib/actions';
 import { useSession, SessionProvider } from 'next-auth/react';
 import { validateReferencial } from '@/lib/validation';
 import FormFields from './FormFields';
-import { ValidationResult } from '@/types/types';
+import { ValidationResult } from '@/src/types/types';
 
 interface FormState {
   errors: { [key: string]: string[] };
