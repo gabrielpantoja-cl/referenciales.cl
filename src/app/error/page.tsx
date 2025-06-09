@@ -1,24 +1,36 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import AcmeLogo from '@/components/ui/common/AcmeLogo';
 
-export default function AuthErrorPage() {
+function ErrorContent() {
   const searchParams = useSearchParams();
   const error = searchParams.get('error');
 
   const errorMessages = {
-    Configuration: 'Error de configuración del servidor. Por favor, contacta al soporte.',
-    AccessDenied: 'Acceso denegado. No tienes permisos para acceder a esta aplicación.',
-    Verification: 'Error de verificación. El enlace puede haber expirado.',
+    Configuration: 'Error de configuración del servidor. Por favor, contacta al soporte. Es posible que la configuración de autenticación esté incompleta o mal configurada.',
+    AccessDenied: 'Acceso denegado. No tienes permisos para acceder a esta aplicación. Asegúrate de iniciar sesión con una cuenta autorizada.',
+    Verification: 'Error de verificación. El enlace de autenticación puede haber expirado o ya fue utilizado. Solicita uno nuevo.',
+    OAuthSignin: 'No se pudo iniciar sesión con el proveedor seleccionado. Intenta nuevamente o usa otro método.',
+    OAuthCallback: 'Hubo un problema al procesar la respuesta del proveedor de autenticación. Intenta de nuevo.',
+    OAuthCreateAccount: 'No se pudo crear la cuenta con el proveedor seleccionado. Es posible que tu cuenta ya exista.',
+    EmailCreateAccount: 'No se pudo crear la cuenta con el correo electrónico proporcionado.',
+    Callback: 'Ocurrió un error inesperado durante el proceso de autenticación.',
+    OAuthAccountNotLinked: 'Esta cuenta ya está asociada a otro método de inicio de sesión. Usa el método original para acceder.',
+    EmailSignin: 'No se pudo enviar el enlace de inicio de sesión por correo electrónico. Verifica tu dirección e inténtalo de nuevo.',
+    CredentialsSignin: 'Credenciales incorrectas. Verifica tu usuario y contraseña.',
+    SessionRequired: 'Debes iniciar sesión para acceder a esta página.',
     Default: 'Ha ocurrido un error durante la autenticación. Por favor, inténtalo de nuevo.'
   };
 
   const errorMessage = errorMessages[error as keyof typeof errorMessages] || errorMessages.Default;
 
   // Log del error para debugging
-  console.error('🚨 Auth Error:', { error, timestamp: new Date().toISOString() });
+  if (typeof window !== 'undefined') {
+    console.error('🚨 Auth Error:', { error, timestamp: new Date().toISOString() });
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -96,5 +108,13 @@ export default function AuthErrorPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AuthErrorPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Cargando error...</div>}>
+      <ErrorContent />
+    </Suspense>
   );
 }
