@@ -15,7 +15,10 @@
     "clean": "rimraf .next",
     "clean:cache": "rimraf .next && rimraf node_modules/.cache",
     "clean:full": "rimraf .next && rimraf node_modules && rimraf package-lock.json",
+    "prisma:generate": "npx prisma generate",
+    "prisma:push": "npx prisma db push",
     "prisma:reset": "npx prisma generate && npx prisma db push",
+    "prisma:studio": "npx prisma studio",
     "optimize:images": "node scripts/optimize-images.js",
     "check:images": "node scripts/check-images.js"
   },
