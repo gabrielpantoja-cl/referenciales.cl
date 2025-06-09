@@ -114,7 +114,10 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
+  // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
+  // Se excluyen las rutas de la API, las de Next.js (_next/static, _next/image)
+  // y la página de inicio de sesión para evitar el bucle de redirección.
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|public/|assets/).*)',
+    '/((?!api|_next/static|_next/image|auth/signin|favicon.ico|.*\\.png$).*)',
   ],
 };
