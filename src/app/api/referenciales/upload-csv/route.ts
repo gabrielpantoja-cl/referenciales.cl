@@ -185,10 +185,12 @@ export async function POST(request: NextRequest) {
             if (!conservador) {
               conservador = await tx.conservadores.create({
                 data: {
+                  id: `conservador_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
                   nombre: conservadorName,
                   direccion: 'Por definir',
                   comuna: record.comuna || 'Por definir',
-                  region: 'Por definir'
+                  region: 'Por definir',
+                  updatedAt: new Date()
                 }
               });
             }
@@ -196,6 +198,7 @@ export async function POST(request: NextRequest) {
             // Create the referencial
             const referencial = await tx.referenciales.create({
               data: {
+                id: `ref_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
                 lat: parseFloat(record.lat),
                 lng: parseFloat(record.lng),
                 fojas: record.fojas,
@@ -212,7 +215,8 @@ export async function POST(request: NextRequest) {
                 monto: parseInt(record.monto),
                 observaciones: record.observaciones || null,
                 userId: userId,
-                conservadorId: conservador.id
+                conservadorId: conservador.id,
+                updatedAt: new Date()
               }
             });
             

@@ -23,7 +23,7 @@ model Account {
   id_token          String?
   session_state     String?
   createdAt         DateTime @default(now())
-  updatedAt         DateTime
+  updatedAt         DateTime @updatedAt
   id                String   @id
   User              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -66,7 +66,7 @@ model User {
   emailVerified DateTime?
   image         String?
   createdAt     DateTime        @default(now())
-  updatedAt     DateTime
+  updatedAt     DateTime        @updatedAt
   role          Role            @default(user)
   Account       Account[]
   AuditLog      AuditLog[]
@@ -93,7 +93,7 @@ model conservadores {
   email         String?
   sitioWeb      String?
   createdAt     DateTime        @default(now())
-  updatedAt     DateTime
+  updatedAt     DateTime        @updatedAt
   referenciales referenciales[]
 }
 
@@ -118,7 +118,7 @@ model referenciales {
   conservadorId  String
   geom           Unsupported("geometry")?
   createdAt      DateTime                 @default(now())
-  updatedAt      DateTime
+  updatedAt      DateTime                 @updatedAt
   conservadores  conservadores            @relation(fields: [conservadorId], references: [id])
   User           User                     @relation(fields: [userId], references: [id])
 }
