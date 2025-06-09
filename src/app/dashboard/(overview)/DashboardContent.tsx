@@ -1,15 +1,15 @@
 'use client';
 
-import LatestReferenciales from '@/components/ui/dashboard/latest-referenciales';
+import LatestReferenciales from '@/src/components/ui/dashboard/latest-referenciales';
 import { lusitana } from '@/src/lib/styles/fonts';
 import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import { CardsSkeleton, LatestReferencialesSkeleton } from '@/components/ui/primitives/skeletons';
+import { CardsSkeleton, LatestReferencialesSkeleton } from '@/src/components/ui/primitives/skeletons';
 import { Session } from 'next-auth';
-import UfDisplay from '@/components/ui/dashboard/UfDisplay';
+import UfDisplay from '@/src/components/ui/dashboard/UfDisplay';
 
 const TopCommunesChart = dynamic(
-  () => import('@/components/ui/dashboard/TopComunasChart'),
+  () => import('@/src/components/ui/dashboard/TopComunasChart'),
   { ssr: false }
 );
 

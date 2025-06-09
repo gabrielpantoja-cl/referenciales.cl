@@ -1,14 +1,14 @@
 "use client";
 
-import Pagination from '@/components/ui/referenciales/pagination';
-import Search from '@/components/ui/primitives/search';
-import Table from '@/components/ui/referenciales/table';
-import { CreateReferencial } from '@/components/ui/referenciales/buttons';
+import Pagination from '@/src/components/ui/referenciales/pagination';
+import Search from '@/src/components/ui/primitives/search';
+import Table from '@/src/components/ui/referenciales/table';
+import { CreateReferencial } from '@/src/components/ui/referenciales/buttons';
 import { lusitana } from '../../../lib/styles/fonts';
-import { ReferencialesTableSkeleton } from '@/components/ui/primitives/skeletons';
+import { ReferencialesTableSkeleton } from '@/src/components/ui/primitives/skeletons';
 import { useState, useEffect, useCallback, Suspense } from 'react';
-import { fetchReferencialesPages, fetchFilteredReferenciales } from '@/lib/referenciales';
-import { exportReferencialesToXlsx } from '@/lib/exportToXlsx';
+import { fetchReferencialesPages, fetchFilteredReferenciales } from '@/src/lib/referenciales';
+import { exportReferencialesToXlsx } from '@/src/lib/exportToXlsx';
 import { Referencial } from '@/src/types/referenciales';
 import { useSearchParams } from 'next/navigation';
 import { saveAs } from 'file-saver';

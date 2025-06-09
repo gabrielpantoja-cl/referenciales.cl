@@ -1,8 +1,8 @@
 import React from 'react';
-import '@/app/globals.css';
+import './globals.css';
 import { Metadata, Viewport } from 'next';
 import { Toaster } from 'react-hot-toast';
-import SessionProviderClient from '@/src/app/dashboard/SessionProviderClient';
+import SessionProviderClient from '@/app/dashboard/SessionProviderClient';
 import { Analytics } from '@vercel/analytics/react'; 
 import { SpeedInsights } from '@vercel/speed-insights/next'; 
 import { GoogleAnalytics } from '@next/third-parties/google';
