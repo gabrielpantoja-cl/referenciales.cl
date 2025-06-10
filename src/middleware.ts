@@ -1,4 +1,4 @@
-// src/middleware.ts - SIMPLIFICADO PARA EVITAR CALLBACKERROR
+// src/middleware.ts - CORREGIDO PARA ELIMINAR BUCLE INFINITO
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
@@ -6,58 +6,69 @@ import { getToken } from 'next-auth/jwt';
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // ✅ PASO 1: IGNORAR RUTAS ESENCIALES - MÁS AMPLIO
+  console.log(`🛡️ [MIDDLEWARE] ${req.method} ${pathname}`);
+
+  // ✅ PASO 1: IGNORAR RUTAS ESENCIALES - EXPANDIDO PARA EVITAR CONFLICTOS
   const ignoredPaths = [
-    '/api/auth/',     // Todas las rutas de NextAuth
-    '/_next/',        // Next.js internals
-    '/favicon.ico',   
-    '/robots.txt',    
-    '/sitemap.xml',   
-    '/_vercel/',      
-    '/api/',          // Todas las APIs
-    '/auth/error',    // Página de error - IMPORTANTE
+    '/api/auth/',           // Todas las rutas de NextAuth
+    '/_next/',              // Next.js internals
+    '/favicon.ico',         
+    '/robots.txt',          
+    '/sitemap.xml',         
+    '/_vercel/',            
+    '/api/',                // Todas las APIs
+    '/auth/error',          // Página de error - CRÍTICO
+    '/opengraph-image.png', // OpenGraph image
+    '/static/',             // Archivos estáticos
+    '/.well-known/',        // Well-known URIs
   ];
 
   if (ignoredPaths.some(path => pathname.startsWith(path))) {
+    console.log(`🛡️ [MIDDLEWARE] Ignored path: ${pathname}`);
     return NextResponse.next();
   }
 
-  // ✅ PASO 2: OBTENER TOKEN CON MANEJO SIMPLE DE ERRORES
+  // ✅ PASO 2: OBTENER TOKEN CON MANEJO ROBUSTO DE ERRORES
   let token = null;
   try {
     token = await getToken({ 
       req, 
       secret: process.env.NEXTAUTH_SECRET 
     });
+    console.log(`🛡️ [MIDDLEWARE] Token status: ${token ? 'VALID' : 'NONE'}`);
   } catch (error) {
-    console.error('[MIDDLEWARE] Token error:', error);
-    // En caso de error, continuar sin token
+    console.error('🛡️ [MIDDLEWARE] Token error:', error);
+    // En caso de error, permitir continuar para evitar bloqueos
   }
 
   // ✅ PASO 3: LÓGICA SIMPLIFICADA DE REDIRECCIÓN
-  const isAuthPage = pathname.startsWith('/auth/signin');
-  const isProtectedPage = pathname.startsWith('/dashboard');
   const isHomePage = pathname === '/';
+  const isProtectedPage = pathname.startsWith('/dashboard');
+  const isChatbotPage = pathname.startsWith('/chatbot');
 
-  // Usuario autenticado en página de login -> redirigir a dashboard
-  if (token && isAuthPage) {
-    console.log('[MIDDLEWARE] Authenticated user on login -> redirect to dashboard');
-    return NextResponse.redirect(new URL('/dashboard', req.url));
-  }
-
-  // Usuario no autenticado en página protegida -> redirigir a login
-  if (!token && isProtectedPage) {
-    console.log('[MIDDLEWARE] Unauthenticated user on protected page -> redirect to login');
+  // ✅ REGLA 1: Páginas protegidas requieren autenticación
+  if (!token && (isProtectedPage || isChatbotPage)) {
+    console.log(`🛡️ [MIDDLEWARE] Unauthenticated access to protected page: ${pathname}`);
     const loginUrl = new URL('/auth/signin', req.url);
     loginUrl.searchParams.set('callbackUrl', req.url);
     return NextResponse.redirect(loginUrl);
   }
 
-  // ✅ PASO 4: CONTINUAR PARA TODO LO DEMÁS
+  // ✅ REGLA 2: Usuario autenticado en home -> sugerir dashboard
+  // NOTA: Comentado para evitar redirecciones automáticas que pueden causar problemas
+  /*
+  if (token && isHomePage) {
+    console.log(`🛡️ [MIDDLEWARE] Authenticated user on home page`);
+    // return NextResponse.redirect(new URL('/dashboard', req.url));
+  }
+  */
+
+  // ✅ PASO 4: PERMITIR ACCESO A TODO LO DEMÁS
+  console.log(`🛡️ [MIDDLEWARE] Allowing access to: ${pathname}`);
   return NextResponse.next();
 }
 
-// ✅ MATCHER SIMPLIFICADO
+// ✅ MATCHER SIMPLIFICADO Y ESPECÍFICO
 export const config = {
   matcher: [
     /*
@@ -66,7 +77,8 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
+     * But include all other API routes and pages
      */
-    '/((?!api/auth|_next/static|_next/image|favicon.ico).*)',
+    '/((?!api/auth|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)',
   ],
 };

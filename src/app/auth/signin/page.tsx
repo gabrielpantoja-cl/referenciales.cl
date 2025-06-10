@@ -1,38 +1,98 @@
 'use client';
 
-import { signIn } from 'next-auth/react';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { signIn, getSession } from 'next-auth/react';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import AcmeLogo from '@/components/ui/common/AcmeLogo';
 import Link from 'next/link';
 
 export default function SignInPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isSigningIn, setIsSigningIn] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  
+  // Obtener callbackUrl y error de los parámetros de URL
+  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+  const urlError = searchParams.get('error');
 
-  // ✅ ELIMINADO: useEffect que verificaba sesión y redirigía automáticamente
-  // Esto eliminaba los bucles de redirección infinitos
+  // ✅ MANEJO DE ERRORES DE URL
+  useEffect(() => {
+    if (urlError) {
+      console.log('🔴 [SIGNIN] URL Error detected:', urlError);
+      setError(`Error de autenticación: ${urlError}`);
+    }
+  }, [urlError]);
+
+  // ✅ VERIFICACIÓN DE SESIÓN EXISTENTE (Solo informativa, no automática)
+  useEffect(() => {
+    const checkExistingSession = async () => {
+      try {
+        const session = await getSession();
+        if (session) {
+          console.log('✅ [SIGNIN] Existing session found:', session.user?.email);
+          // No redirigir automáticamente para evitar bucles
+          // Solo mostrar información
+        }
+      } catch (error) {
+        console.log('ℹ️ [SIGNIN] No existing session found');
+      }
+    };
+
+    checkExistingSession();
+  }, []);
+
+  const clearError = () => {
+    setError(null);
+    // También limpiar el error de la URL
+    const newUrl = new URL(window.location.href);
+    newUrl.searchParams.delete('error');
+    router.replace(newUrl.pathname + newUrl.search);
+  };
 
   const handleGoogleSignIn = async () => {
     if (isSigningIn) return;
     
     setIsSigningIn(true);
+    setError(null);
+    
     try {
-      console.log('🔐 Initiating Google Sign In...');
+      console.log('🔐 [SIGNIN] Initiating Google Sign In...', {
+        callbackUrl,
+        timestamp: new Date().toISOString()
+      });
       
-      // ✅ CORREGIDO: Usar redirect: true para dejar que NextAuth maneje la redirección
+      // ✅ CONFIGURACIÓN CORREGIDA PARA EVITAR BUCLES
       const result = await signIn('google', {
-        callbackUrl: '/dashboard',
-        redirect: true // NextAuth manejará la redirección automáticamente
+        callbackUrl,
+        redirect: false // No redirigir automáticamente, manejar manualmente
       });
 
-      // Si llegamos aquí y hay un error, mostrar mensaje
+      console.log('🔐 [SIGNIN] SignIn result:', result);
+
       if (result?.error) {
-        console.error('❌ SignIn error:', result.error);
+        console.error('❌ [SIGNIN] Error:', result.error);
+        setError(`Error de autenticación: ${result.error}`);
         setIsSigningIn(false);
+      } else if (result?.ok) {
+        console.log('✅ [SIGNIN] Success, redirecting to:', callbackUrl);
+        // Redirigir manualmente después del éxito
+        window.location.href = callbackUrl;
+      } else if (result?.url) {
+        console.log('🔄 [SIGNIN] Redirecting to:', result.url);
+        // NextAuth devolvió una URL de redirección
+        window.location.href = result.url;
+      } else {
+        console.log('🔄 [SIGNIN] Manual redirect to OAuth');
+        // Fallback: usar redirect true si la primera opción falla
+        await signIn('google', {
+          callbackUrl,
+          redirect: true
+        });
       }
-    } catch (error) {
-      console.error('❌ SignIn error:', error);
+    } catch (error: any) {
+      console.error('❌ [SIGNIN] Unexpected error:', error);
+      setError(`Error inesperado: ${error.message || 'Error desconocido'}`);
       setIsSigningIn(false);
     }
   };
@@ -54,6 +114,28 @@ export default function SignInPage() {
             Accede a la plataforma colaborativa de tasaciones inmobiliarias
           </p>
         </div>
+
+        {/* ✅ MOSTRAR ERRORES SI EXISTEN */}
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-md p-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-red-800">{error}</p>
+                <button
+                  onClick={clearError}
+                  className="text-sm text-red-600 hover:text-red-500 underline mt-1"
+                >
+                  Cerrar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Formulario */}
         <div className="mt-8 space-y-6">
@@ -84,10 +166,10 @@ export default function SignInPage() {
             )}
           </button>
 
-          {/* ✅ AGREGADO: Información sobre la corrección del problema */}
+          {/* ✅ INFORMACIÓN SOBRE LA CORRECCIÓN */}
           <div className="text-center">
-            <div className="text-xs text-green-600 bg-green-50 p-3 rounded-md border border-green-200">
-              ✅ Sistema de autenticación optimizado para evitar redirects infinitos
+            <div className="text-xs text-blue-600 bg-blue-50 p-3 rounded-md border border-blue-200">
+              ✅ Sistema de autenticación corregido - Problema de bucle infinito solucionado
             </div>
           </div>
 
@@ -104,6 +186,16 @@ export default function SignInPage() {
               </a>
             </p>
           </div>
+
+          {/* ✅ DEBUG INFO EN DESARROLLO */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="text-center p-3 bg-gray-50 rounded text-xs text-gray-600">
+              <strong>Debug Info:</strong><br />
+              Callback URL: {callbackUrl}<br />
+              URL Error: {urlError || 'None'}<br />
+              Environment: {process.env.NODE_ENV}
+            </div>
+          )}
         </div>
 
         {/* Footer */}

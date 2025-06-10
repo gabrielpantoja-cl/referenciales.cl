@@ -3,7 +3,7 @@ import GoogleProvider from "next-auth/providers/google"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { prisma } from "@/lib/prisma"
 
-// ✅ CONFIGURACIÓN CORREGIDA PARA NEXTAUTH V4 - RESUELVE CALLBACKERROR
+// ✅ CONFIGURACIÓN CORREGIDA PARA NEXTAUTH V4 - RESUELVE BUCLE INFINITO OAUTH
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -14,6 +14,7 @@ export const authOptions: NextAuthOptions = {
       authorization: {
         params: {
           prompt: "select_account", // Permite al usuario elegir cuenta
+          scope: "openid email profile" // Explícito para evitar problemas
         }
       }
     }),
@@ -27,7 +28,7 @@ export const authOptions: NextAuthOptions = {
     maxAge: 24 * 60 * 60, // 24 horas
   },
 
-  // ✅ COOKIES SIMPLIFICADAS - Evita conflictos
+  // ✅ COOKIES SIMPLIFICADAS - CORRIGE PROBLEMAS DE DOMINIO
   cookies: {
     sessionToken: {
       name: process.env.NODE_ENV === "production" 
@@ -38,28 +39,41 @@ export const authOptions: NextAuthOptions = {
         sameSite: "lax",
         path: "/",
         secure: process.env.NODE_ENV === "production",
-        domain: process.env.NODE_ENV === "production" ? ".referenciales.cl" : undefined
+        // ✅ REMOVIDO DOMINIO ESPECÍFICO - Causa problemas en producción
+        // domain: process.env.NODE_ENV === "production" ? ".referenciales.cl" : undefined
       }
     }
   },
 
   callbacks: {
-    // ✅ REDIRECT CALLBACK SIMPLIFICADO - Evita bucles infinitos
+    // ✅ REDIRECT CALLBACK CORREGIDO - ELIMINA BUCLES INFINITOS
     async redirect({ url, baseUrl }) {
-      console.log('🔄 [AUTH-REDIRECT]', { url, baseUrl });
+      console.log('🔄 [AUTH-REDIRECT]', { url, baseUrl, NODE_ENV: process.env.NODE_ENV });
       
-      // Si es una URL relativa, usar baseUrl
+      // Si la URL es relativa, construir URL completa
       if (url.startsWith("/")) {
-        return `${baseUrl}${url}`
+        const fullUrl = `${baseUrl}${url}`;
+        console.log('🔄 [AUTH-REDIRECT] Relative URL converted:', fullUrl);
+        return fullUrl;
       }
       
-      // Si es del mismo dominio, permitir
-      if (new URL(url).origin === baseUrl) {
-        return url
+      // Si es del mismo origen, permitir
+      try {
+        const urlObj = new URL(url);
+        const baseUrlObj = new URL(baseUrl);
+        
+        if (urlObj.origin === baseUrlObj.origin) {
+          console.log('🔄 [AUTH-REDIRECT] Same origin allowed:', url);
+          return url;
+        }
+      } catch (error) {
+        console.error('🔄 [AUTH-REDIRECT] URL parsing error:', error);
       }
       
-      // ✅ REDIRECCIÓN POR DEFECTO SIEMPRE AL DASHBOARD
-      return `${baseUrl}/dashboard`
+      // ✅ REDIRECCIÓN POR DEFECTO AL DASHBOARD
+      const defaultUrl = `${baseUrl}/dashboard`;
+      console.log('🔄 [AUTH-REDIRECT] Default redirect:', defaultUrl);
+      return defaultUrl;
     },
     
     // ✅ SESSION CALLBACK SIMPLIFICADO
@@ -78,13 +92,21 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     
-    // ✅ SIGNIN CALLBACK - Logging simple
+    // ✅ SIGNIN CALLBACK - LOGGING Y VALIDACIÓN
     async signIn({ user, account, profile }) {
       console.log('✅ [AUTH-SIGNIN]', {
         userId: user.id,
         email: user.email,
-        provider: account?.provider
+        provider: account?.provider,
+        timestamp: new Date().toISOString()
       });
+      
+      // Validar que tenemos los datos mínimos necesarios
+      if (!user.email) {
+        console.error('❌ [AUTH-SIGNIN] No email provided');
+        return false;
+      }
+      
       return true;
     }
   },
@@ -93,22 +115,26 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/auth/signin",
     signOut: "/", 
-    error: "/auth/error", // ✅ Mantener tu página custom de error
+    error: "/auth/error",
   },
   
   // ✅ EVENTOS SIMPLIFICADOS
   events: {
     async signOut({ token }) {
-      console.log('📤 [AUTH-SIGNOUT]', { tokenId: token?.sub });
+      console.log('📤 [AUTH-SIGNOUT]', { 
+        tokenId: token?.sub,
+        timestamp: new Date().toISOString() 
+      });
     },
     async signIn({ user, account }) {
       console.log('📥 [AUTH-SIGNIN-EVENT]', { 
         userId: user.id, 
-        provider: account?.provider 
+        provider: account?.provider,
+        timestamp: new Date().toISOString()
       });
     }
   },
   
-  // ✅ DEBUG SOLO EN DESARROLLO
-  debug: process.env.NODE_ENV === "development"
+  // ✅ DEBUG HABILITADO PARA IDENTIFICAR PROBLEMAS
+  debug: true // Habilitado tanto en dev como en producción para diagnosticar
 }
