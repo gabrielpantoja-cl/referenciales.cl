@@ -16,8 +16,8 @@ export async function fetchLatestReferenciales() {
         fechaescritura: 'desc',
       },
       include: {
-        User: true,
-        conservadores: true, // Incluir relación con conservadores
+        user: true, // ✅ CORREGIDO: User -> user (minúscula)
+        conservadores: true,
       },
     });
 
@@ -83,9 +83,9 @@ export async function fetchFilteredReferenciales(query: string | null | undefine
         observaciones: true,
         userId: true,
         conservadorId: true,
-        createdAt: true,  // Añadido
-        updatedAt: true,  // Añadido
-        User: {
+        createdAt: true,
+        updatedAt: true,
+        user: { // ✅ CORREGIDO: User -> user (minúscula)
           select: {
             name: true,
             email: true,
@@ -116,11 +116,9 @@ export async function fetchFilteredReferenciales(query: string | null | undefine
   }
 }
 
-
 export async function fetchReferencialesPages(query: string | null | undefined = '') {
   noStore();
 
-  // Validación adicional para el argumento query
   const safeQuery = query != null && typeof query === 'string' ? query : '';
 
   try {
@@ -136,17 +134,16 @@ export async function fetchReferencialesPages(query: string | null | undefined =
     });
 
     const totalPages = Math.ceil(count / ITEMS_PER_PAGE);
-    return totalPages || 1; // Asegurar que siempre hay al menos 1 página
+    return totalPages || 1;
   } catch (error) {
     console.error('Database Error:', error);
-    return 1; // Devolver 1 página en caso de error
+    return 1;
   }
 }
 
 export async function fetchReferencialById(id: string | null | undefined) {
   noStore();
   
-  // Validación del id
   if (!id) {
     throw new Error('ID no proporcionado');
   }
@@ -157,8 +154,8 @@ export async function fetchReferencialById(id: string | null | undefined) {
         id: id,
       },
       include: {
-        conservadores: true, // Incluir la relación con conservador
-        User: true
+        conservadores: true,
+        user: true // ✅ CORREGIDO: User -> user (minúscula)
       }
     });
 
@@ -206,12 +203,11 @@ export async function fetchTopComunas() {
       take: 4,
       where: {
         comuna: {
-          not: ''  // Filtrar comunas vacías
+          not: ''
         }
       }
     });
 
-    // Formatear datos para el gráfico con tipos seguros
     const formattedData = comunasData.map((item: ComunaGroupResult): FormattedComuna => ({
       comuna: item.comuna,
       count: item._count?.comuna ?? 0
@@ -221,6 +217,6 @@ export async function fetchTopComunas() {
 
   } catch (error) {
     console.error('Error al obtener top comunas:', error);
-    return []; // Devolver array vacío en caso de error para evitar problemas de renderizado
+    return [];
   }
 }

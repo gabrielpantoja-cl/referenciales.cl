@@ -97,8 +97,8 @@ function ReferencialesContent() {
           createdAt: item.createdAt,
           updatedAt: item.updatedAt,
           user: {
-            name: item.User?.name || null,
-            email: item.User?.email || ''
+            name: item.user?.name || null,
+            email: item.user?.email || ''
           },
           conservador: item.conservadores ? {
             id: item.conservadores.id,
