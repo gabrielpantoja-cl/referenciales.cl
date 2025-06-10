@@ -11,6 +11,7 @@ Sistema de gestión para referenciales de tasación inmobiliaria construido con 
 - [Características Clave](#características-clave)
 - [Tech Stack](#tech-stack)
 - [Sistema de Autenticación](#sistema-de-autenticación)
+- [Guía Definitiva de Autenticación](#guía-definitiva-de-autenticación)
 - [Prerrequisitos](#prerrequisitos)
 - [Instalación y Configuración](#instalación-y-configuración)
 - [Variables de Entorno](#variables-de-entorno)
@@ -65,6 +66,12 @@ Se planea migrar a **Auth.js v5** (NextAuth.js v5) en el futuro para aprovechar:
 - API más intuitiva con funciones como `signIn` y `signOut` exportadas directamente
 
 Consulta el archivo `auth-notes.md` para obtener detalles completos sobre la configuración actual y el plan de migración.
+
+## Guía Definitiva de Autenticación
+
+> **¿Problemas con el login, bucles infinitos o errores de OAuth?**
+>
+> Consulta la [Guía Definitiva para la Prevención y Solución de Bucles de Autenticación](docs/GUIA-DEFINITIVA-AUTENTICACION.md) para diagnóstico, checklist y buenas prácticas. Es el manual oficial para debugging y referencia de autenticación en este proyecto.
 
 ## Prerrequisitos
 -   Node.js (v18 o superior recomendado)
