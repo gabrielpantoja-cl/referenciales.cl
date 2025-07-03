@@ -16,3 +16,12 @@ El objetivo principal es crear una plataforma centralizada donde los usuarios pu
 - **Chatbot Asistente:** Un chatbot basado en IA para ayudar a los usuarios.
 - **Auditoría:** Registro de las acciones importantes realizadas por los usuarios.
 - **Exportación de Datos:** Funcionalidad para exportar datos a formato XLSX.
+
+## Documentación Adicional
+
+Para más detalles sobre el proyecto, consulta los siguientes documentos:
+
+*   **Resumen de Fixes Críticos:** [CRITICAL_FIXES_SUMMARY.md](./CRITICAL_FIXES_SUMMARY.md)
+*   **Guía de la API Pública:** [PUBLIC_API_GUIDE.md](./PUBLIC_API_GUIDE.md)
+*   **Guía de Desarrollo:** [DEVELOPMENT_GUIDE.md](./DEVELOPMENT_GUIDE.md)
+*   **Guía de Autenticación:** [AUTHENTICATION_GUIDE.md](./AUTHENTICATION_GUIDE.md)
