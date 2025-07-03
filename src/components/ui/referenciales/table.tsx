@@ -56,14 +56,14 @@ export default function ReferencialesTable({
   referenciales, 
 }: ReferencialTableProps) {
   return (
-    <div className="mt-6 flow-root">
-      <div className="inline-block min-w-full align-middle">
+    <div className="mt-6 flow-root w-full">
+      <div className="w-full">
         {/* Mostrar información de la página actual */}
         <div className="text-sm text-gray-500 mb-2">
-          Mostrando página {currentPage} {query ? `con filtro "${query}"` : ""}
+          Mostrando página {currentPage} {query ? `con filtro "${query}"` : ""} • Total: {referenciales.length} referenciales
         </div>
         
-        <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
+        <div className="rounded-lg bg-gray-50 p-2 md:pt-0 w-full">
           {referenciales.length === 0 ? (
             <div className="text-center py-10">
               <p className="text-gray-500">No hay resultados para mostrar</p>

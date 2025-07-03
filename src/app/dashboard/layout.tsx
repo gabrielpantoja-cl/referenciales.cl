@@ -1,29 +1,23 @@
 import React from 'react';
-import SideNav from '@/components/ui/dashboard/sidenav';
+import Navbar from '@/components/ui/dashboard/navbar';
 import SignOutTestComponent from '@/components/ui/common/SignOutTestComponent';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-screen flex-col md:flex-row md:overflow-hidden bg-gray-50">
-      {/* Navegación lateral */}
-      <div className="w-full flex-none md:w-64 border-r border-gray-200 bg-white shadow-sm">
-        <div className="sticky top-0 w-64 h-full">
-          <SideNav />
-        </div>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      {/* Navegación superior */}
+      <Navbar />
 
-      {/* Contenedor principal */}
-      <div className="flex-grow flex flex-col min-h-screen">
-        {/* Área de contenido scrolleable */}
-        <div className="flex-grow p-6 md:p-12 overflow-y-auto">
-          <div className="max-w-7xl mx-auto">
-            {/* Grid system para mejor organización */}
-            <div className="grid gap-6">
-              {children}
-            </div>
+      {/* Contenedor principal - Ahora con ancho completo */}
+      <main className="flex-1">
+        {/* Área de contenido con máximo aprovechamiento del ancho */}
+        <div className="w-full px-4 py-6 sm:px-6 lg:px-8">
+          <div className="w-full max-w-none">
+            {/* Sin restricción de max-width para aprovechar pantalla completa */}
+            {children}
           </div>
         </div>
-      </div>
+      </main>
       
       {/* Componente de test solo en desarrollo */}
       <SignOutTestComponent />

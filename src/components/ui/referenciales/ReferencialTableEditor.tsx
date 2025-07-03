@@ -313,20 +313,35 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
         </p>
       </div>
 
-      {/* Tabla */}
-      <div className="overflow-x-auto border rounded-lg">
-        <table className="min-w-full bg-white">
+      {/* Tabla con ancho completo optimizado */}
+      <div className="w-full overflow-x-auto border rounded-lg shadow-sm">
+        <table className="w-full bg-white table-fixed">
           <thead className="bg-gray-50">
             <tr>
-              {Object.entries(FIELD_LABELS).map(([key, label]) => (
-                <th key={key} className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
-                  {label}
-                  {['fojas', 'numero', 'anno', 'cbr', 'comuna', 'rolAvaluo', 'predio', 'superficie', 'monto', 'fechaEscritura', 'latitud', 'longitud'].includes(key) && 
-                    <span className="text-red-500 ml-1">*</span>
-                  }
-                </th>
-              ))}
-              <th className="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-16">
+              {Object.entries(FIELD_LABELS).map(([key, label]) => {
+                // Asignar anchos específicos para optimizar el espacio
+                let width = 'w-32'; // ancho por defecto
+                if (key === 'observaciones') width = 'w-48';
+                else if (key === 'predio' || key === 'cbr') width = 'w-40';
+                else if (key === 'comuna') width = 'w-36';
+                else if (key === 'fechaEscritura') width = 'w-40';
+                else if (key === 'latitud' || key === 'longitud') width = 'w-36';
+                else if (key === 'superficie' || key === 'monto') width = 'w-36';
+                else if (key === 'fojas' || key === 'numero' || key === 'anno') width = 'w-28';
+                else if (key === 'rolAvaluo') width = 'w-32';
+
+                return (
+                  <th key={key} className={`${width} px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-gray-200 last:border-r-0`}>
+                    <div className="truncate">
+                      {label}
+                      {['fojas', 'numero', 'anno', 'cbr', 'comuna', 'rolAvaluo', 'predio', 'superficie', 'monto', 'fechaEscritura', 'latitud', 'longitud'].includes(key) && 
+                        <span className="text-red-500 ml-1">*</span>
+                      }
+                    </div>
+                  </th>
+                );
+              })}
+              <th className="w-20 px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Acciones
               </th>
             </tr>
