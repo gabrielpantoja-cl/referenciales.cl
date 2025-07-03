@@ -1,51 +1,55 @@
 // app/dashboard/referenciales/create/page.tsx
-import Form from '@/components/ui/referenciales/create-form';
 import Breadcrumbs from '@/components/ui/referenciales/breadcrumbs';
-import CsvUploader from '@/components/ui/referenciales/CsvUploader';
-import { fetchUsers } from '@/lib/users';
+import ReferencialTableEditor from '@/components/ui/referenciales/ReferencialTableEditor';
+import MinimalCsvUploader from '@/components/ui/referenciales/MinimalCsvUploader';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/lib/auth.config'; // Importa authOptions desde auth.config.ts
+import { authOptions } from '@/lib/auth.config';
 
 export default async function Page() {
   // Obtener sesión del usuario actual
   const session = await getServerSession(authOptions);
-  const allUsers = await fetchUsers();
   
-  // Filtrar para obtener solo el usuario actual con nombre válido
-  const currentUser = allUsers.find(user => 
-    user.id === session?.user?.id && user.name !== null
-  );
+  if (!session?.user?.id || !session?.user?.name) {
+    return (
+      <main>
+        <div className="text-center py-8">
+          <p className="text-red-600">Error: Usuario no autenticado</p>
+        </div>
+      </main>
+    );
+  }
 
-  // Asegurar que el tipo sea { id: string; name: string }[]
-  const users = currentUser ? [{
-    id: currentUser.id,
-    name: currentUser.name as string // Type assertion ya que sabemos que name no es null
-  }] : [];
-  
   return (
-    <main>
+    <main className="space-y-6">
       <Breadcrumbs
         breadcrumbs={[
           { label: 'Referenciales', href: '/dashboard/referenciales' },
           {
-            label: 'Crear Referencial',
+            label: 'Crear Referenciales',
             href: '/dashboard/referenciales/create',
             active: true,
           },
         ]}
       />
       
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <div className="md:col-span-1">
-          <h2 className="text-xl font-bold mb-4">Crear Referencial Individual</h2>
-          <Form users={users} />
+      {/* Tabla inteligente principal */}
+      <ReferencialTableEditor 
+        userId={session.user.id}
+        userName={session.user.name}
+      />
+      
+      {/* Separador */}
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-gray-300" />
         </div>
-        
-        <div className="md:col-span-1">
-          <h2 className="text-xl font-bold mb-4">Carga Masiva CSV</h2>
-          <CsvUploader users={users} />
+        <div className="relative flex justify-center text-sm">
+          <span className="px-2 bg-white text-gray-500">o</span>
         </div>
       </div>
+      
+      {/* Opción CSV minimalista */}
+      <MinimalCsvUploader userId={session.user.id} />
     </main>
   );
 }

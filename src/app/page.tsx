@@ -35,24 +35,10 @@ export default function Page() {
     
     try {
       setIsLoading(true);
-      const result = await signIn('google', {
+      await signIn('google', {
         callbackUrl: '/dashboard',
-        redirect: false
+        redirect: true
       });
-
-      if (result?.error) {
-        console.error('Error de autenticación:', result.error);
-        toast.error('Error al iniciar sesión. Por favor, intente nuevamente.');
-        return;
-      }
-
-      // ✅ SIMPLIFICADO: Si hay URL, navegar allí
-      if (result?.url) {
-        window.location.href = result.url;
-      } else {
-        // Si no hay URL pero el signIn fue exitoso, ir al dashboard
-        router.push('/dashboard');
-      }
     } catch (error) {
       console.error('Error en inicio de sesión:', error);
       toast.error('Error inesperado al iniciar sesión');

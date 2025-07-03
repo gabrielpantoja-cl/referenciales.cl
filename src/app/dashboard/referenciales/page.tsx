@@ -3,7 +3,6 @@
 import Pagination from '@/components/ui/referenciales/pagination';
 import Search from '@/components/ui/primitives/search';
 import Table from '@/components/ui/referenciales/table';
-import { CreateReferencial } from '@/components/ui/referenciales/buttons';
 import { lusitana } from '@/lib/styles/fonts';
 import { ReferencialesTableSkeleton } from '@/components/ui/primitives/skeletons';
 import { useState, useEffect, useCallback, Suspense } from 'react';
@@ -72,52 +71,17 @@ function ReferencialesContent() {
       const data = await fetchFilteredReferenciales(queryParam, pageParam);
       
       if (data && Array.isArray(data)) {
-        // Asegurarse de que los datos se ajustan al tipo Referencial[]
-        const formattedData = data.map(item => ({
-          ...item,
-          // Asegúrate de que todas las propiedades necesarias estén presentes
-          id: item.id,
-          lat: item.lat,
-          lng: item.lng,
-          fojas: item.fojas,
-          numero: item.numero,
-          anio: item.anio,
-          cbr: item.cbr,
-          comprador: item.comprador,
-          vendedor: item.vendedor,
-          predio: item.predio,
-          comuna: item.comuna,
-          rol: item.rol,
-          fechaescritura: item.fechaescritura,
-          monto: item.monto === null ? 0 : typeof item.monto === 'bigint' ? Number(item.monto) : item.monto,
-          superficie: item.superficie,
-          observaciones: item.observaciones,
-          userId: item.userId,
-          conservadorId: item.conservadorId,
-          createdAt: item.createdAt,
-          updatedAt: item.updatedAt,
-          user: {
-            name: item.user?.name || null,
-            email: item.user?.email || ''
-          },
-          conservador: item.conservadores ? {
-            id: item.conservadores.id,
-            nombre: item.conservadores.nombre,
-            comuna: item.conservadores.comuna
-          } : undefined
-        }));
-        // Seguro de tipo: primero convertimos a unknown y luego a Referencial[]
-        const typeSafeData = formattedData as unknown as Referencial[];
-        setReferenciales(typeSafeData);
+        // Los datos ya vienen transformados desde el backend (BigInt → Number)
+        setReferenciales(data as Referencial[]);
         
         // Validar referencias para exportación
-        const validRefs = formattedData.filter(ref => {
+        const validRefs = data.filter(ref => {
           return ref && typeof ref === 'object' && 
             'id' in ref && 
             'fechaescritura' in ref &&
             'lat' in ref && 'lng' in ref;
-        }) as unknown as Referencial[];
-        setValidReferenciales(validRefs);
+        });
+        setValidReferenciales(validRefs as Referencial[]);
       } else {
         console.error('Datos inválidos:', data);
         setReferenciales([]);
@@ -143,30 +107,11 @@ function ReferencialesContent() {
   }, [fetchData]);
 
   const handleExport = async () => {
-    // Usar directamente validReferenciales que ya está filtrada
+    // Los datos ya vienen con monto como Number desde el backend
     const exportableData = validReferenciales.map((ref) => ({
-      id: ref.id,
-      lat: ref.lat,
-      lng: ref.lng,
-      fojas: ref.fojas,
-      numero: ref.numero,
-      anio: ref.anio,
-      cbr: ref.cbr,
-      comprador: ref.comprador,
-      vendedor: ref.vendedor,
-      predio: ref.predio,
-      comuna: ref.comuna,
-      rol: ref.rol,
-      fechaescritura: ref.fechaescritura,
-      superficie: ref.superficie,
-      monto: ref.monto === null ? 0 : typeof ref.monto === 'bigint' ? Number(ref.monto) : ref.monto,
-      observaciones: ref.observaciones,
-      userId: ref.userId,
-      conservadorId: ref.conservadorId,
-      createdAt: ref.createdAt,
-      updatedAt: ref.updatedAt,
-      conservadorNombre: ref.conservador?.nombre || '',
-      conservadorComuna: ref.conservador?.comuna || ''
+      ...ref,
+      conservadorNombre: ref.conservadores?.nombre || '',
+      conservadorComuna: ref.conservadores?.comuna || ''
     }));
 
     const toastId = toast.loading('Exportando a XLSX...');
@@ -190,7 +135,6 @@ function ReferencialesContent() {
 
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <Search placeholder="Buscar referencial..." />
-        <CreateReferencial />
       </div>
 
       {isLoading ? (

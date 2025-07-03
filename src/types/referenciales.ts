@@ -12,7 +12,7 @@ export interface Referencial {
   comuna: string;
   rol: string;
   fechaescritura: Date;
-  monto: number | bigint | null;
+  monto: number | null;
   superficie: number;
   observaciones: string | null;
   userId: string;
@@ -23,7 +23,7 @@ export interface Referencial {
     name: string | null;
     email: string;
   };
-  conservador?: { // Relación opcional con conservadores
+  conservadores?: { // Relación opcional con conservadores
     id: string;
     nombre: string;
     comuna: string;

@@ -7,6 +7,8 @@ import {
   HomeIcon,
   DocumentDuplicateIcon,
   MapPinIcon,
+  BuildingOfficeIcon,
+  ArrowUpTrayIcon,
   PowerIcon,
   ExclamationTriangleIcon,
   QuestionMarkCircleIcon,
@@ -22,6 +24,8 @@ const links = [
   { name: 'Inicio', href: '/dashboard', icon: HomeIcon },
   { name: 'Referenciales', href: '/dashboard/referenciales', icon: DocumentDuplicateIcon },
   { name: 'Mapa', href: '/dashboard/mapa', icon: MapPinIcon },
+  { name: 'Subir Referenciales', href: '/dashboard/referenciales/create', icon: ArrowUpTrayIcon },
+  { name: 'Conservadores', href: '/dashboard/conservadores', icon: BuildingOfficeIcon },
 ];
 
 export default function MobileNavbar() {

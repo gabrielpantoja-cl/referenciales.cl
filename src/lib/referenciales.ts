@@ -27,6 +27,7 @@ export async function fetchLatestReferenciales() {
 
     const latestReferenciales = data.map((referencial) => ({
       ...referencial,
+      monto: referencial.monto ? Number(referencial.monto) : null,
       amount: formatCurrency(referencial.monto),
     }));
 
@@ -107,8 +108,14 @@ export async function fetchFilteredReferenciales(query: string | null | undefine
       return [];
     }
 
-    console.log(`[fetchFilteredReferenciales] Success, returning ${referenciales.length} items.`);
-    return referenciales;
+    // Transform BigInt to Number for JSON serialization
+    const transformedReferenciales = referenciales.map(ref => ({
+      ...ref,
+      monto: ref.monto ? Number(ref.monto) : null
+    }));
+
+    console.log(`[fetchFilteredReferenciales] Success, returning ${transformedReferenciales.length} items.`);
+    return transformedReferenciales;
   } catch (error) {
     console.error('[fetchFilteredReferenciales] Database error caught:', error);
     console.log('[fetchFilteredReferenciales] Returning [] due to caught error.');
@@ -165,6 +172,7 @@ export async function fetchReferencialById(id: string | null | undefined) {
 
     return {
       ...referencial,
+      monto: referencial.monto ? Number(referencial.monto) : null,
       amount: formatCurrency(referencial.monto),
     };
   } catch (error) {

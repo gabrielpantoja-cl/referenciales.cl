@@ -54,13 +54,13 @@ const nextConfig = {
       default-src 'self';
       script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://vercel.live/ https://va.vercel-scripts.com;
       style-src 'self' 'unsafe-inline';
-      img-src 'self' blob: data: https://*.googleusercontent.com https://*.tile.openstreetmap.org https://_next/ https://vercel.app https://referenciales.cl https://www.referenciales.cl;
+      img-src 'self' blob: data: https://*.googleusercontent.com https://*.tile.openstreetmap.org https://vercel.app https://referenciales.cl https://www.referenciales.cl;
       font-src 'self' data:;
       object-src 'none';
       base-uri 'self';
       form-action 'self';
       frame-ancestors 'none';
-      connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://vercel.live/ https://vitals.vercel-insights.com https://api.openai.com;
+      connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://vercel.live/ https://vitals.vercel-insights.com https://api.openai.com https://api.github.com;
       block-all-mixed-content;
       upgrade-insecure-requests;
     `;
