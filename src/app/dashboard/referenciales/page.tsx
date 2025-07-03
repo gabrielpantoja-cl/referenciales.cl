@@ -100,7 +100,7 @@ function ReferencialesContent() {
             name: item.user?.name || null,
             email: item.user?.email || ''
           },
-          conservador: item.conservadores ? {
+          conservadores: item.conservadores ? {
             id: item.conservadores.id,
             nombre: item.conservadores.nombre,
             comuna: item.conservadores.comuna
@@ -165,8 +165,8 @@ function ReferencialesContent() {
       conservadorId: ref.conservadorId,
       createdAt: ref.createdAt,
       updatedAt: ref.updatedAt,
-      conservadorNombre: ref.conservador?.nombre || '',
-      conservadorComuna: ref.conservador?.comuna || ''
+      conservadorNombre: ref.conservadores?.nombre || '',
+      conservadorComuna: ref.conservadores?.comuna || ''
     }));
 
     const toastId = toast.loading('Exportando a XLSX...');

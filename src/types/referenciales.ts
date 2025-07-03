@@ -23,7 +23,7 @@ export interface Referencial {
     name: string | null;
     email: string;
   };
-  conservador?: { // Relación opcional con conservadores
+  conservadores?: { // Relación opcional con conservadores
     id: string;
     nombre: string;
     comuna: string;
