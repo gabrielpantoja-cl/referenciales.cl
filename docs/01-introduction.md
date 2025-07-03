@@ -21,6 +21,7 @@ El objetivo principal es crear una plataforma centralizada donde los usuarios pu
 
 Para más detalles sobre el proyecto, consulta los siguientes documentos:
 
+*   **Guía del Esquema de la Base de Datos:** [DATABASE_SCHEMA_GUIDE.md](./DATABASE_SCHEMA_GUIDE.md)
 *   **Resumen de Fixes Críticos:** [CRITICAL_FIXES_SUMMARY.md](./CRITICAL_FIXES_SUMMARY.md)
 *   **Guía de la API Pública:** [PUBLIC_API_GUIDE.md](./PUBLIC_API_GUIDE.md)
 *   **Guía de Desarrollo:** [DEVELOPMENT_GUIDE.md](./DEVELOPMENT_GUIDE.md)
