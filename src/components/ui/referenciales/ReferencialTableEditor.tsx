@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/primitives/button';
 import { toast } from 'react-hot-toast';
 import { createReferencial } from '@/lib/actions';
@@ -98,7 +98,7 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
     };
   }
 
-  const validateField = useCallback((fieldName: string, value: string, rowData: ReferencialRow) => {
+  const validateField = useCallback((fieldName: string, value: string) => {
     const validation: { isValid: boolean; error?: string; warning?: string } = { isValid: true };
 
     switch (fieldName) {
@@ -190,7 +190,7 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
     // Validar campo en tiempo real
     const rowData = rows.find(r => r.id === rowId);
     if (rowData) {
-      const validation = validateField(fieldName, value, { ...rowData, [fieldName]: value });
+      const validation = validateField(fieldName, value);
       
       setValidationStates(prev => ({
         ...prev,
@@ -247,7 +247,7 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
         } else {
           successCount++;
         }
-      } catch (error) {
+      } catch {
         errorCount++;
       }
     }
@@ -270,7 +270,7 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
 
   const getCellClassName = (rowId: string, fieldName: string) => {
     const validation = validationStates[rowId]?.[fieldName];
-    let baseClass = 'px-2 py-1 border rounded text-sm min-w-0 w-full ';
+    const baseClass = 'px-2 py-1 border rounded text-sm min-w-0 w-full ';
     
     if (validation?.isValid === false) {
       return baseClass + 'border-red-300 bg-red-50 focus:border-red-500';
