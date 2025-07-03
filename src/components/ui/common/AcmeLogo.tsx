@@ -1,5 +1,7 @@
 "use client";
 
+"use client";
+
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { GlobeAltIcon } from '@heroicons/react/24/outline';
 import { lusitana } from '../../../lib/styles/fonts';
@@ -7,13 +9,7 @@ import throttle from 'lodash/throttle';
 
 export default function AcmeLogo() {
   const [rotationAngle, setRotationAngle] = useState(0);
-  const [isMounted, setIsMounted] = useState(false);
   const logoContainerRef = useRef<HTMLDivElement>(null);
-
-  // Marcar el componente como montado después de la hidratación
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   const calculateAngle = (event: MouseEvent) => {
     if (!logoContainerRef.current) return;
@@ -30,8 +26,7 @@ export default function AcmeLogo() {
     const angleRad = Math.atan2(dy, dx);
     let angleDeg = angleRad * (180 / Math.PI);
     
-    // Ajustar offset para que 0 grados apunte hacia arriba
-    angleDeg += 90;
+    angleDeg += 90; // Adjust offset
 
     setRotationAngle(angleDeg);
   };
@@ -55,45 +50,40 @@ export default function AcmeLogo() {
     };
   }, [handleMouseMove]);
 
-  // Clases de icono optimizadas para prevenir cambios de layout
-  const iconClasses = isMounted 
-    ? "w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-white transform transition-transform duration-300 ease-in-out flex-shrink-0" 
-    : "w-8 h-8 sm:w-10 sm:h-10 text-white transform transition-transform duration-300 ease-in-out flex-shrink-0";
-
   return (
     <div
       ref={logoContainerRef}
       suppressHydrationWarning
       className={`
-        ${lusitana.className} 
-        flex flex-col items-center justify-center 
-        w-full max-w-xs mx-auto
-        px-3 py-3 sm:px-4 sm:py-4 md:px-6 md:py-6
-        gap-2 sm:gap-3 md:gap-4
-        text-center
+        ${lusitana.className}
+        flex items-center
+        gap-2
         cursor-pointer
         select-none
+        p-1
       `}
       role="banner"
       aria-label="Logo de referenciales.cl"
     >
-      <div className="flex-shrink-0">
-        <GlobeAltIcon 
-          className={iconClasses}
-          style={{ 
-            transform: `rotate(${rotationAngle}deg)`,
-            willChange: 'transform'
-          }}
+      {/* Circular globe container */}
+      <div
+        className="flex-shrink-0 w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm p-1.5"
+        style={{
+          transform: `rotate(${rotationAngle}deg)`,
+          willChange: 'transform'
+        }}
+      >
+        <GlobeAltIcon
+          className="w-full h-full text-blue-800"
           aria-hidden="true"
         />
       </div>
       
-      <div className="flex flex-col items-center leading-tight">
-        <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-white">
-          <span className="whitespace-nowrap">referenciales</span>
-          <span className="text-white/90">.cl</span>
+      <div className="flex flex-col items-start leading-tight">
+        <h1 className="text-base font-bold tracking-tight text-white whitespace-nowrap">
+          referenciales<span className="text-white/90">.cl</span>
         </h1>
-        <p className="text-xs sm:text-sm text-white/80 font-normal mt-1 hidden sm:block">
+        <p className="text-xs text-white/80 font-normal hidden sm:block">
           Base de datos colaborativa
         </p>
       </div>
