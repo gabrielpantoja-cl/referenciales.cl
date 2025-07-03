@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import AcmeLogo from '@/components/ui/common/AcmeLogo';
 import { 
@@ -125,9 +126,11 @@ export default function Navbar() {
                   aria-label="Menú de usuario"
                 >
                   {session?.user?.image ? (
-                    <img 
+                    <Image 
                       src={session.user.image} 
                       alt="Avatar" 
+                      width={32}
+                      height={32}
                       className="w-8 h-8 rounded-full"
                     />
                   ) : (
@@ -259,14 +262,22 @@ export default function Navbar() {
         )}
       </nav>
 
-      {/* Click outside para cerrar menús */}
+      {/* Overlay para cerrar menús */}
       {(isMobileMenuOpen || isUserMenuOpen) && (
-        <div 
-          className="fixed inset-0 z-40" 
+        <button
+          type="button"
+          className="fixed inset-0 z-40 bg-transparent"
           onClick={() => {
             setIsMobileMenuOpen(false);
             setIsUserMenuOpen(false);
           }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              setIsMobileMenuOpen(false);
+              setIsUserMenuOpen(false);
+            }
+          }}
+          aria-label="Cerrar menú"
         />
       )}
 
