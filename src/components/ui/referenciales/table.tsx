@@ -17,8 +17,8 @@ const formatFieldValue = (key: string, value: any, referencial: Referencial) => 
   if ((key === 'monto' || key === 'superficie') && value !== undefined) {
     return value.toLocaleString('es-CL');
   }
-  if (key === 'conservador' && referencial.conservador) {
-    return referencial.conservador.nombre;
+  if (key === 'conservador' && referencial.conservadores) {
+    return referencial.conservadores.nombre;
   }
   return value || '';
 };
@@ -29,7 +29,7 @@ interface ReferencialTableProps {
   referenciales: Referencial[]; 
 }
 
-type BaseKeys = keyof Omit<Referencial, 'user' | 'conservador'>;
+type BaseKeys = keyof Omit<Referencial, 'user' | 'conservadores'>;
 type DisplayKeys = BaseKeys | 'conservador';
 
 const ALL_TABLE_HEADERS: { key: DisplayKeys, label: string }[] = [
@@ -81,7 +81,7 @@ export default function ReferencialesTable({
                           <p key={String(key)} className={key === 'cbr' ? 'font-medium' : ''}>
                             {label}: {
                               key === 'conservador' 
-                                ? (referencial.conservador?.nombre || '-') 
+                                ? (referencial.conservadores?.nombre || '-') 
                                 : formatFieldValue(key as string, (referencial as any)[key], referencial)
                             }
                           </p>
@@ -111,7 +111,7 @@ export default function ReferencialesTable({
                         {VISIBLE_HEADERS.map(({ key }) => (
                           <td key={String(key)} className="whitespace-nowrap px-3 py-3">
                             {key === 'conservador' 
-                              ? (referencial.conservador?.nombre || '-') 
+                              ? (referencial.conservadores?.nombre || '-') 
                               : formatFieldValue(key as string, (referencial as any)[key], referencial)
                             }
                           </td>
