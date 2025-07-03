@@ -5,6 +5,7 @@ import {
   DocumentDuplicateIcon,
   MapPinIcon,
   BuildingOfficeIcon,
+  ArrowUpTrayIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -16,12 +17,17 @@ const links = [
     href: '/dashboard/referenciales',
     icon: DocumentDuplicateIcon,
   },
+  { name: 'Mapa', href: '/dashboard/mapa', icon: MapPinIcon },
+  {
+    name: 'Subir Referenciales',
+    href: '/dashboard/referenciales/create',
+    icon: ArrowUpTrayIcon,
+  },
   {
     name: 'Conservadores',
     href: '/dashboard/conservadores',
     icon: BuildingOfficeIcon,
   },
-  { name: 'Mapa', href: '/dashboard/mapa', icon: MapPinIcon },
 ];
 
 export default function NavLinks() {
