@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/primitives/button';
 import { toast } from 'react-hot-toast';
 import { createReferencial } from '@/lib/actions';
 import { validateReferencial } from '@/lib/validation';
+import ComunaAutocomplete from '@/components/ui/forms/ComunaAutocomplete';
 
 interface ReferencialRow {
   id: string;
@@ -352,14 +353,23 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
                 {Object.keys(FIELD_LABELS).map((fieldName) => (
                   <td key={fieldName} className="px-2 py-2 relative">
                     <div className="flex items-center space-x-1">
-                      <input
-                        type={fieldName === 'fechaEscritura' ? 'date' : fieldName.includes('superficie') || fieldName.includes('monto') || fieldName.includes('numero') || fieldName.includes('anno') || fieldName.includes('latitud') || fieldName.includes('longitud') ? 'number' : 'text'}
-                        value={row[fieldName as keyof ReferencialRow]}
-                        onChange={(e) => handleFieldChange(row.id, fieldName, e.target.value)}
-                        placeholder={PLACEHOLDERS[fieldName as keyof typeof PLACEHOLDERS]}
-                        className={getCellClassName(row.id, fieldName)}
-                        step={fieldName.includes('latitud') || fieldName.includes('longitud') ? 'any' : undefined}
-                      />
+                      {fieldName === 'comuna' ? (
+                        <ComunaAutocomplete
+                          value={row[fieldName as keyof ReferencialRow]}
+                          onChange={(value) => handleFieldChange(row.id, fieldName, value)}
+                          placeholder={PLACEHOLDERS[fieldName as keyof typeof PLACEHOLDERS]}
+                          className={getCellClassName(row.id, fieldName)}
+                        />
+                      ) : (
+                        <input
+                          type={fieldName === 'fechaEscritura' ? 'date' : fieldName.includes('superficie') || fieldName.includes('monto') || fieldName.includes('numero') || fieldName.includes('anno') || fieldName.includes('latitud') || fieldName.includes('longitud') ? 'number' : 'text'}
+                          value={row[fieldName as keyof ReferencialRow]}
+                          onChange={(e) => handleFieldChange(row.id, fieldName, e.target.value)}
+                          placeholder={PLACEHOLDERS[fieldName as keyof typeof PLACEHOLDERS]}
+                          className={getCellClassName(row.id, fieldName)}
+                          step={fieldName.includes('latitud') || fieldName.includes('longitud') ? 'any' : undefined}
+                        />
+                      )}
                       {getValidationIcon(row.id, fieldName)}
                     </div>
                     {getValidationMessage(row.id, fieldName) && (
