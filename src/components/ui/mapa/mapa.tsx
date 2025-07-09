@@ -98,8 +98,8 @@ const Mapa = () => {
             center={[-33.4489, -70.6693]} // Coordenadas de Santiago de Chile
             zoom={10} 
                 style={{ 
-                    height: "70vh",    
-                    width: "90%",      
+                    height: "80vh",    
+                    width: "95%",      
                     margin: "auto",    
                     borderRadius: "8px" 
                 }}
