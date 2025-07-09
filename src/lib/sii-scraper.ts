@@ -1,7 +1,22 @@
 // Scraper directo del SII usando Playwright
 // Implementación para extraer coordenadas desde el mapa oficial del SII
 
-import { chromium, Browser, Page } from 'playwright';
+// Importación condicional para evitar errores en Vercel
+let chromium: any = null;
+let Browser: any = null;
+let Page: any = null;
+
+// Solo intentar importar playwright si no estamos en build de producción
+if (process.env.NODE_ENV !== 'production' && process.env.NEXT_PHASE !== 'phase-production-build') {
+  try {
+    const playwright = require('playwright');
+    chromium = playwright.chromium;
+    Browser = playwright.Browser;
+    Page = playwright.Page;
+  } catch (error) {
+    console.log('Playwright no disponible en este entorno');
+  }
+}
 
 interface SIIScrapingResult {
   lat: number;
@@ -14,10 +29,14 @@ interface SIIScrapingResult {
 }
 
 export class SIIScraper {
-  private browser: Browser | null = null;
-  private page: Page | null = null;
+  private browser: any = null;
+  private page: any = null;
 
   async init(): Promise<void> {
+    if (!chromium) {
+      throw new Error('Playwright no está disponible en este entorno');
+    }
+
     this.browser = await chromium.launch({
       headless: true, // Cambiar a false para debugging
       args: ['--no-sandbox', '--disable-setuid-sandbox']
@@ -161,12 +180,28 @@ export class SIIScraper {
 
 // Función helper para usar en API routes
 export async function scrapePropertyFromSII(rol: string, comuna: string): Promise<SIIScrapingResult> {
+  if (!canScrape()) {
+    return {
+      lat: 0,
+      lng: 0,
+      success: false,
+      error: 'Web scraping no disponible en este entorno'
+    };
+  }
+
   const scraper = new SIIScraper();
   
   try {
     await scraper.init();
     const result = await scraper.scrapePropertyCoordinates(rol, comuna);
     return result;
+  } catch (error) {
+    return {
+      lat: 0,
+      lng: 0,
+      success: false,
+      error: error instanceof Error ? error.message : 'Error en scraping'
+    };
   } finally {
     await scraper.close();
   }
@@ -174,5 +209,5 @@ export async function scrapePropertyFromSII(rol: string, comuna: string): Promis
 
 // Función para validar que el scraping es posible
 export function canScrape(): boolean {
-  return process.env.NODE_ENV !== 'production' || process.env.ENABLE_SII_SCRAPING === 'true';
+  return chromium !== null && (process.env.NODE_ENV !== 'production' || process.env.ENABLE_SII_SCRAPING === 'true');
 }

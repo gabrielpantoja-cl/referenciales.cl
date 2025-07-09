@@ -394,6 +394,7 @@ export const searchComunas = (query: string) => {
 };
 
 export const getRegiones = () => {
-  const regiones = [...new Set(COMUNAS_CHILE.map(comuna => comuna.region))];
+  const regionesSet = new Set(COMUNAS_CHILE.map(comuna => comuna.region));
+  const regiones = Array.from(regionesSet);
   return regiones.sort();
 };

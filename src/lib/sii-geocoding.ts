@@ -165,18 +165,22 @@ export async function autoGeocode(rol: string, comuna: string): Promise<{lat: nu
   const apiKey = process.env.SIMPLE_API_KEY;
   
   if (!apiKey) {
-    console.error('SIMPLE_API_KEY no configurada');
+    console.log('SIMPLE_API_KEY no configurada - usando métodos alternativos');
     return null;
   }
 
-  const service = new SIIGeocodingService(apiKey);
-  const data = await service.getFullPropertyData(rol, comuna);
-  
-  if (data?.latitud && data?.longitud) {
-    return {
-      lat: data.latitud,
-      lng: data.longitud
-    };
+  try {
+    const service = new SIIGeocodingService(apiKey);
+    const data = await service.getFullPropertyData(rol, comuna);
+    
+    if (data?.latitud && data?.longitud) {
+      return {
+        lat: data.latitud,
+        lng: data.longitud
+      };
+    }
+  } catch (error) {
+    console.log('Error en autoGeocode:', error);
   }
 
   return null;

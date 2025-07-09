@@ -111,8 +111,42 @@ export async function POST(request: NextRequest) {
 // Función fallback que geocodifica usando solo la comuna
 async function geocodeFallback(rol: string, comuna: string): Promise<{lat: number, lng: number} | null> {
   try {
+    const googleApiKey = process.env.GOOGLE_MAPS_API_KEY;
+    
+    if (!googleApiKey) {
+      console.log('GOOGLE_MAPS_API_KEY no configurada - usando coordenadas aproximadas');
+      // Coordenadas aproximadas para algunas comunas principales
+      const comunasCoords: { [key: string]: { lat: number, lng: number } } = {
+        'Santiago': { lat: -33.4489, lng: -70.6693 },
+        'Valparaíso': { lat: -33.0472, lng: -71.6127 },
+        'Concepción': { lat: -36.8201, lng: -73.0444 },
+        'Temuco': { lat: -38.7394, lng: -72.5986 },
+        'Antofagasta': { lat: -23.6509, lng: -70.3975 },
+        'Iquique': { lat: -20.2208, lng: -70.1431 },
+        'Rancagua': { lat: -34.1708, lng: -70.7394 },
+        'Talca': { lat: -35.4264, lng: -71.6554 },
+        'Chillán': { lat: -36.6067, lng: -72.1034 },
+        'Osorno': { lat: -40.5736, lng: -73.1328 },
+        'Puerto Montt': { lat: -41.4693, lng: -72.9424 },
+        'Punta Arenas': { lat: -53.1638, lng: -70.9171 }
+      };
+      
+      if (comunasCoords[comuna]) {
+        const coords = comunasCoords[comuna];
+        const latVariation = (Math.random() - 0.5) * 0.01;
+        const lngVariation = (Math.random() - 0.5) * 0.01;
+        
+        return {
+          lat: coords.lat + latVariation,
+          lng: coords.lng + lngVariation
+        };
+      }
+      
+      return null;
+    }
+
     const response = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(comuna + ', Chile')}&key=${process.env.GOOGLE_MAPS_API_KEY}`
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(comuna + ', Chile')}&key=${googleApiKey}`
     );
 
     const data = await response.json();

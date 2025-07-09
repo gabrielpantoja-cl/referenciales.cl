@@ -271,7 +271,14 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
         toast.success(`Coordenadas obtenidas por ${result.method}`);
         
         if (result.warning) {
-          toast.warning(result.warning);
+          toast(result.warning, {
+            icon: '⚠️',
+            style: {
+              background: '#fef3c7',
+              color: '#92400e',
+              border: '1px solid #fbbf24'
+            }
+          });
         }
       } else {
         toast.error(`Error: ${result.error}`);
