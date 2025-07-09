@@ -102,9 +102,9 @@ export type Point = {
     predio?: string;
     comuna?: string;
     rol?: string;
-    fechaescritura?: Date;
+    fechaescritura?: Date; // Use existing field
     superficie?: number;
-    monto?: number | bigint; // Actualizado para soportar BigInt
+    monto?: number | bigint; // Use existing field
     observaciones?: string;
     [key: string]: any;
 };

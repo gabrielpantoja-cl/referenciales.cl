@@ -1,23 +1,26 @@
 'use client';
 import React, { useEffect, useState, useRef } from 'react';
-import { MapContainer, TileLayer, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, useMap, FeatureGroup } from 'react-leaflet';
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-geosearch/dist/geosearch.css';
-import './mapa.css'; 
+import 'leaflet-draw/dist/leaflet.draw.css';
+import './mapa.css';
 import { fetchReferencialesForMap } from '@/lib/mapData';
 import { MapMarker, Point } from '@/components/ui/mapa/MapMarker';
-import LocationButton from '@/components/ui/mapa/LocationButton'; 
-import { Icon, Map } from 'leaflet'; 
+import LocationButton from '@/components/ui/mapa/LocationButton';
+import GraficoDispersion from '@/components/ui/mapa/GraficoDispersion';
+import { Icon, Map, LatLng } from 'leaflet';
+import { EditControl } from 'react-leaflet-draw';
 
 const redIcon = new Icon({
   iconUrl: '/images/marker-icon.png',
-  iconSize: [25, 41], 
-  iconAnchor: [12, 41], 
-  popupAnchor: [1, -34], 
-  shadowUrl: '/images/marker-shadow.png', 
-  shadowSize: [41, 41], 
-  shadowAnchor: [12, 41] 
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowUrl: '/images/marker-shadow.png',
+  shadowSize: [41, 41],
+  shadowAnchor: [12, 41]
 });
 
 const SearchField = (): null => {
@@ -59,12 +62,12 @@ const SearchField = (): null => {
 };
 
 const Mapa = () => {
+    const [allData, setAllData] = useState<Point[]>([]);
     const [filteredData, setFilteredData] = useState<Point[]>([]);
+    const [chartData, setChartData] = useState<Point[]>([]);
     const mapRef = useRef<Map | null>(null);
 
     useEffect(() => {
-        const map = mapRef.current;
-        
         fetchReferencialesForMap()
             .then(response => {
                 const points = response
@@ -76,40 +79,60 @@ const Mapa = () => {
                         anio: point.anio?.toString() || '',
                         lat: point.lat,
                         lng: point.lng,
-                        geom: point.geom
+                        geom: point.geom,
+                        fechaescritura: point.fechaescritura, 
+                        monto: point.monto
                     } as Point));
-                
+                setAllData(points);
                 setFilteredData(points);
             })
             .catch(error => {
                 console.error('Error fetching data: ', error);
             });
-
-        return () => {
-            if (map) {
-                map.remove();
-            }
-        };
     }, []);
+
+    const handleCreate = (e: any) => {
+        const { layerType, layer } = e;
+        if (layerType === 'circle') {
+            const center = layer.getLatLng();
+            const radius = layer.getRadius();
+            
+            const pointsInCircle = allData.filter(point => {
+                const pointLatLng = new LatLng(point.latLng[0], point.latLng[1]);
+                return center.distanceTo(pointLatLng) <= radius;
+            });
+            setChartData(pointsInCircle);
+        }
+    };
 
     return (
         <div className="relative w-full">
             <MapContainer 
-            center={[-33.4489, -70.6693]} // Coordenadas de Santiago de Chile
-            zoom={10} 
+                center={[-33.4489, -70.6693]} 
+                zoom={10} 
                 style={{ 
                     height: "80vh",    
                     width: "95%",      
                     margin: "auto",    
                     borderRadius: "8px" 
                 }}
-                whenReady={() => {
-                    const map = mapRef.current;
-                    if (map) {
-                        console.log('Mapa inicializado');
-                    }
-                }}
+                whenCreated={mapInstance => { mapRef.current = mapInstance; }}
             >          
+                <FeatureGroup>
+                    <EditControl
+                        position="topright"
+                        onCreated={handleCreate}
+                        draw={{
+                            rectangle: false,
+                            polygon: false,
+                            polyline: false,
+                            marker: false,
+                            circlemarker: false,
+                            circle: true,
+                        }}
+                        edit={{ remove: true }}
+                    />
+                </FeatureGroup>
                 <SearchField />
                 <LocationButton />
                 <TileLayer
@@ -126,6 +149,9 @@ const Mapa = () => {
                     <MapMarker key={point.id} point={point} />
                 ))}
             </MapContainer>
+            <div className="mt-4">
+                <GraficoDispersion data={chartData} />
+            </div>
         </div>
     );
 };

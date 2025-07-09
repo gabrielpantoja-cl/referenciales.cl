@@ -18,7 +18,7 @@ interface ReferencialMapData {
   rol?: string;
   fechaescritura?: Date | null;
   superficie?: number;
-  monto?: number;
+  monto?: number; // Use existing field
   observaciones?: string;
   userId: string;
   latLng: [number, number];
@@ -64,6 +64,7 @@ export async function fetchReferencialesForMap(): Promise<ReferencialMapData[]> 
       latLng: [Number(item.lat), Number(item.lng)] as [number, number],
       geom: [Number(item.lng), Number(item.lat)],
       fechaescritura: item.fechaescritura ? new Date(item.fechaescritura) : null,
+      monto: Number(item.monto)
     }));
 
     console.log(`Datos cargados: ${leafletData.length} referencias encontradas`);
