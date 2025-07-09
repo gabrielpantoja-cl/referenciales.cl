@@ -6,6 +6,7 @@ import { toast } from 'react-hot-toast';
 import { createReferencial } from '@/lib/actions';
 import { validateReferencial } from '@/lib/validation';
 import ComunaAutocomplete from '@/components/ui/forms/ComunaAutocomplete';
+import { validateRolAvaluo } from '@/lib/sii-geocoding';
 
 interface ReferencialRow {
   id: string;
@@ -178,6 +179,15 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
           }
         }
         break;
+      
+      case 'rolAvaluo':
+        if (value) {
+          if (!validateRolAvaluo(value)) {
+            validation.isValid = false;
+            validation.error = 'Formato: 123-45 o 12345-6';
+          }
+        }
+        break;
     }
 
     return validation;
@@ -216,6 +226,59 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
         delete newState[rowId];
         return newState;
       });
+    }
+  };
+
+  const geocodeRow = async (rowId: string) => {
+    const row = rows.find(r => r.id === rowId);
+    if (!row || !row.comuna || !row.rolAvaluo) {
+      toast.error('Comuna y rol de avalúo son requeridos para geocodificar');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/geocode-sii', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          rol: row.rolAvaluo,
+          comuna: row.comuna
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Actualizar coordenadas en la fila
+        setRows(prev => prev.map(r => 
+          r.id === rowId ? {
+            ...r,
+            latitud: result.data.lat.toString(),
+            longitud: result.data.lng.toString()
+          } : r
+        ));
+
+        // Actualizar estados de validación
+        setValidationStates(prev => ({
+          ...prev,
+          [rowId]: {
+            ...prev[rowId],
+            latitud: { isValid: true },
+            longitud: { isValid: true }
+          }
+        }));
+
+        toast.success(`Coordenadas obtenidas por ${result.method}`);
+        
+        if (result.warning) {
+          toast.warning(result.warning);
+        }
+      } else {
+        toast.error(`Error: ${result.error}`);
+      }
+    } catch (error) {
+      console.error('Error en geocodificación:', error);
+      toast.error('Error al geocodificar la propiedad');
     }
   };
 
@@ -342,7 +405,7 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
                   </th>
                 );
               })}
-              <th className="w-20 px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="w-24 px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Acciones
               </th>
             </tr>
@@ -380,15 +443,25 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
                   </td>
                 ))}
                 <td className="px-2 py-2 text-center">
-                  {rows.length > 1 && (
+                  <div className="flex flex-col space-y-1">
                     <button
-                      onClick={() => removeRow(row.id)}
-                      className="text-red-500 hover:text-red-700 text-sm"
-                      title="Eliminar fila"
+                      onClick={() => geocodeRow(row.id)}
+                      className="text-blue-500 hover:text-blue-700 text-xs"
+                      title="Geocodificar automáticamente"
+                      disabled={!row.comuna || !row.rolAvaluo}
                     >
-                      🗑️
+                      🌍
                     </button>
-                  )}
+                    {rows.length > 1 && (
+                      <button
+                        onClick={() => removeRow(row.id)}
+                        className="text-red-500 hover:text-red-700 text-xs"
+                        title="Eliminar fila"
+                      >
+                        🗑️
+                      </button>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}
@@ -424,6 +497,7 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
         <h3 className="font-medium text-gray-900 mb-2">💡 Instrucciones:</h3>
         <ul className="text-sm text-gray-600 space-y-1">
           <li>• <strong>Coordenadas:</strong> Formato decimal del SII (ej: -38.7394, -72.5986)</li>
+          <li>• <strong>Geocodificación:</strong> Botón 🌍 para obtener coordenadas automáticamente con rol + comuna</li>
           <li>• <strong>Fojas:</strong> Número + v/vuelta opcional (ej: 1234v)</li>
           <li>• <strong>Validación:</strong> ✓ Correcto, ⚠️ Advertencia, ✗ Error</li>
         </ul>
