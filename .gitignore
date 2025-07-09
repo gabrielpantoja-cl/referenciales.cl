@@ -52,3 +52,6 @@ next-env.d.ts
 *.sql
 *.dump
 backup_produccion.sql
+
+# MCP configuration
+.mcp.json
