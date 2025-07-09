@@ -413,7 +413,6 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
       <div className="bg-gray-50 p-4 rounded-lg">
         <h3 className="font-medium text-gray-900 mb-2">💡 Instrucciones:</h3>
         <ul className="text-sm text-gray-600 space-y-1">
-          <li>• <strong>Fecha:</strong> Formato YYYY-MM-DD (ej: 2024-03-15)</li>
           <li>• <strong>Coordenadas:</strong> Formato decimal del SII (ej: -38.7394, -72.5986)</li>
           <li>• <strong>Fojas:</strong> Número + v/vuelta opcional (ej: 1234v)</li>
           <li>• <strong>Validación:</strong> ✓ Correcto, ⚠️ Advertencia, ✗ Error</li>
