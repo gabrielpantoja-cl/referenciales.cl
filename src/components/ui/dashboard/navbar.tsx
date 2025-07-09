@@ -286,7 +286,7 @@ export default function Navbar() {
         open={showModal}
         onClose={() => setShowModal(false)}
         title="¿Estás seguro?"
-        description="Esta acción eliminará permanentemente tu cuenta y todos tus datos. Esta acción no se puede deshacer."
+        description='Esta acción eliminará permanentemente tu cuenta y todos tus datos. Esta acción no se puede deshacer.'
         buttons={[
           {
             label: "Cancelar",
