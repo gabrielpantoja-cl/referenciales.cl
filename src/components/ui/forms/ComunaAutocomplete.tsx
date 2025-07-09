@@ -135,17 +135,21 @@ export default function ComunaAutocomplete({
           className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto"
         >
           {suggestions.map((comuna, index) => (
-            <li
-              key={`${comuna.codigo}-${comuna.nombre}`}
-              onClick={() => handleSuggestionClick(comuna)}
-              className={`px-3 py-2 cursor-pointer hover:bg-blue-50 border-b border-gray-100 last:border-b-0 ${
-                index === highlightedIndex ? 'bg-blue-100' : ''
-              }`}
-            >
-              <div className="flex justify-between items-center">
-                <span className="font-medium text-gray-900">{comuna.nombre}</span>
-                <span className="text-sm text-gray-500">{comuna.region}</span>
-              </div>
+            <li key={`${comuna.codigo}-${comuna.nombre}`}>
+              <button
+                type="button"
+                role="option"
+                aria-selected={index === highlightedIndex}
+                onClick={() => handleSuggestionClick(comuna)}
+                className={`w-full text-left px-3 py-2 cursor-pointer hover:bg-blue-50 border-b border-gray-100 last:border-b-0 ${
+                  index === highlightedIndex ? 'bg-blue-100' : ''
+                }`}
+              >
+                <div className="flex justify-between items-center">
+                  <span className="font-medium text-gray-900">{comuna.nombre}</span>
+                  <span className="text-sm text-gray-500">{comuna.region}</span>
+                </div>
+              </button>
             </li>
           ))}
         </ul>
@@ -154,7 +158,7 @@ export default function ComunaAutocomplete({
       {isOpen && inputValue.length > 0 && suggestions.length === 0 && (
         <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg p-3">
           <div className="text-gray-500 text-sm">
-            No se encontraron comunas que coincidan con "{inputValue}"
+            No se encontraron comunas que coincidan con &quot;{inputValue}&quot;
           </div>
         </div>
       )}
