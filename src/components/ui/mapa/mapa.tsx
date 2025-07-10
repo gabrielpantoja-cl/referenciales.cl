@@ -116,7 +116,7 @@ const Mapa = () => {
                     margin: "auto",    
                     borderRadius: "8px" 
                 }}
-                whenReady={mapInstance => { mapRef.current = mapInstance; }}
+                ref={mapRef}
             >          
                 <FeatureGroup>
                     <EditControl
