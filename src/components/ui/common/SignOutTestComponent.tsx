@@ -12,9 +12,10 @@ import AuthLogger from '@/lib/auth-utils';
 export default function SignOutTestComponent() {
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [logs, setLogs] = useState<any[]>([]);
+  const [isVisible, setIsVisible] = useState(true);
 
   // Solo mostrar en desarrollo
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === 'production' || !isVisible) {
     return null;
   }
 
@@ -72,8 +73,9 @@ export default function SignOutTestComponent() {
 
   return (
     <div className="fixed bottom-4 right-4 bg-white border-2 border-yellow-400 rounded-lg p-4 shadow-lg max-w-md z-50">
-      <div className="text-sm font-bold text-yellow-800 mb-3">
-        🧪 SignOut Test Panel (DEV ONLY)
+      <div className="flex justify-between items-center text-sm font-bold text-yellow-800 mb-3">
+        <span>🧪 SignOut Test Panel (DEV ONLY)</span>
+        <button onClick={() => setIsVisible(false)} className="text-red-500 hover:text-red-700 font-bold">X</button>
       </div>
       
       <div className="space-y-2 mb-4">
