@@ -132,7 +132,7 @@ export default function ComunaAutocomplete({
       {isOpen && suggestions.length > 0 && (
         <ul
           ref={listRef}
-          className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto"
+          className="absolute z-[70] w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto"
         >
           {suggestions.map((comuna, index) => (
             <li key={`${comuna.codigo}-${comuna.nombre}`}>
@@ -156,7 +156,7 @@ export default function ComunaAutocomplete({
       )}
       
       {isOpen && inputValue.length > 0 && suggestions.length === 0 && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg p-3">
+        <div className="absolute z-[70] w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg p-3">
           <div className="text-gray-500 text-sm">
             No se encontraron comunas que coincidan con &quot;{inputValue}&quot;
           </div>

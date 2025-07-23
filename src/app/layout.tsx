@@ -3,9 +3,13 @@ import './globals.css';
 import { Metadata, Viewport } from 'next';
 import { Toaster } from 'react-hot-toast';
 import SessionProviderClient from '@/app/dashboard/SessionProviderClient';
-import { Analytics } from '@vercel/analytics/react'; 
-import { SpeedInsights } from '@vercel/speed-insights/next'; 
-import { GoogleAnalytics } from '@next/third-parties/google';
+import { CookieConsentProvider } from '@/components/ui/legal/CookieConsentProvider';
+import CookieConsentBanner from '@/components/ui/legal/CookieConsentBanner';
+import { 
+  ConditionalGoogleAnalytics, 
+  ConditionalVercelAnalytics, 
+  ConditionalSpeedInsights 
+} from '@/components/ui/legal/ConditionalAnalytics';
 
 // Configuración del Viewport
 export const viewport: Viewport = {
@@ -112,53 +116,67 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Lee el ID de Google Analytics desde las variables de entorno
-  const gaId = process.env.NEXT_PUBLIC_GA_ID;
-
   return (
     <html lang="es" suppressHydrationWarning={true}>
       <head>
         <link rel="manifest" href="/manifest.json" />
+        {/* Google Analytics Consent Mode Script */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('consent', 'default', {
+                analytics_storage: 'denied',
+                ad_storage: 'denied',
+                functionality_storage: 'denied',
+                personalization_storage: 'denied',
+                security_storage: 'granted',
+                wait_for_update: 500,
+              });
+            `
+          }}
+        />
       </head>
-      <body className="antialiased"> {/* Aplica estilos base o fuentes aquí si es necesario */}
-        <SessionProviderClient> {/* Proveedor para NextAuth.js */}
-          {children} {/* Contenido de la página actual */}
+      <body className="antialiased">
+        <CookieConsentProvider>
+          <SessionProviderClient>
+            {children}
 
-          {/* Componente para mostrar notificaciones (react-hot-toast) */}
-          <Toaster
-            position="top-right"
-            toastOptions={{
-              duration: 3000,
-              style: {
-                background: '#363636',
-                color: '#fff',
-              },
-              success: {
+            {/* Componente para mostrar notificaciones (react-hot-toast) */}
+            <Toaster
+              position="top-right"
+              toastOptions={{
                 duration: 3000,
                 style: {
-                  background: '#22c55e',
+                  background: '#363636',
+                  color: '#fff',
                 },
-              },
-              error: {
-                duration: 3000,
-                style: {
-                  background: '#ef4444',
+                success: {
+                  duration: 3000,
+                  style: {
+                    background: '#22c55e',
+                  },
                 },
-              },
-            }}
-          />
+                error: {
+                  duration: 3000,
+                  style: {
+                    background: '#ef4444',
+                  },
+                },
+              }}
+            />
 
-          {/* Componente de Vercel Analytics */}
-          <Analytics />
+            {/* Analytics condicionales - Solo se cargan con consentimiento */}
+            <ConditionalGoogleAnalytics />
+            <ConditionalVercelAnalytics />
+            <ConditionalSpeedInsights />
 
-          {/* Componente de Vercel Speed Insights */}
-          <SpeedInsights />
+            {/* Banner de consentimiento de cookies */}
+            <CookieConsentBanner />
 
-          {/* Componente de Google Analytics 4 */}
-          {/* Se renderiza solo si la variable de entorno NEXT_PUBLIC_GA_ID está definida */}
-          {gaId && <GoogleAnalytics gaId={gaId} />}
-
-        </SessionProviderClient>
+          </SessionProviderClient>
+        </CookieConsentProvider>
       </body>
     </html>
   );

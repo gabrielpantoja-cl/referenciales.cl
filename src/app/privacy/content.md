@@ -69,17 +69,131 @@ Implementamos protecciones contra:
 
 ---
 
-## 6. Cookies
+## 6. Cookies y Tecnologías de Seguimiento
 
-Referenciales.cl utiliza cookies para mejorar la experiencia del usuario en la plataforma. Las cookies son pequeños archivos de texto que se almacenan en el dispositivo del usuario y permiten recordar sus preferencias y actividades anteriores en el sitio web.
+### ¿Qué son las cookies?
 
-### Tipos de Cookies Utilizadas ###
-* **Cookies Esenciales:** Necesarias para el funcionamiento básico del sitio web.
-* **Cookies de Rendimiento:** Utilizadas para recopilar información sobre cómo los usuarios interactúan con el sitio web.
-* **Cookies de Funcionalidad:** Permiten recordar las preferencias del usuario para proporcionar una experiencia personalizada.
+Las cookies son pequeños archivos de texto que se descargan y almacenan en su dispositivo cuando visita nuestro sitio web. Estas nos permiten reconocer su dispositivo en visitas posteriores y mejorar su experiencia de usuario.
 
-> **Nota:** No utilizamos cookies con fines publicitarios.
+### Cookies que utilizamos específicamente
 
-### Gestión de Cookies ###
-Los usuarios pueden gestionar las cookies a través de la configuración de su navegador. Sin embargo, deshabilitar las cookies puede afectar la funcionalidad del sitio web.
+#### 6.1 Cookies Estrictamente Necesarias
+Estas cookies son esenciales para que el sitio web funcione correctamente y no se pueden desactivar.
+
+**🔐 Autenticación (NextAuth.js)**
+- **Nombre**: `next-auth.session-token` (desarrollo) / `__Secure-next-auth.session-token` (producción)
+- **Propósito**: Mantener su sesión activa tras autenticarse con Google
+- **Duración**: 24 horas
+- **Proveedor**: Referenciales.cl
+- **Tipo**: Esencial
+- **Base legal**: Interés legítimo (funcionalidad del sitio)
+
+**🔧 Cookies de Funcionalidad**
+- **Propósito**: Recordar sus preferencias de interfaz y configuración
+- **Duración**: Hasta que las elimine manualmente
+- **Tipo**: Funcional
+
+#### 6.2 Cookies Analíticas (Requieren Consentimiento)
+
+**📊 Google Analytics 4**
+- **Nombres**: `_ga`, `_ga_*`, `_gid`, `_gat`
+- **Propósito**: Analizar el uso del sitio, páginas más visitadas, tiempo de permanencia
+- **Duración**: Hasta 2 años
+- **Proveedor**: Google LLC
+- **Datos recopilados**: 
+  - Páginas visitadas
+  - Tiempo en el sitio
+  - Ubicación geográfica aproximada
+  - Tipo de dispositivo y navegador
+- **Transferencia internacional**: Estados Unidos (adequacy decision)
+- **Política de privacidad**: [https://policies.google.com/privacy](https://policies.google.com/privacy)
+
+**⚡ Vercel Analytics**
+- **Propósito**: Métricas de rendimiento del sitio web
+- **Duración**: 30 días
+- **Proveedor**: Vercel Inc.
+- **Datos recopilados**: 
+  - Velocidad de carga de páginas
+  - Errores técnicos
+  - Métricas de rendimiento
+- **Política de privacidad**: [https://vercel.com/legal/privacy-policy](https://vercel.com/legal/privacy-policy)
+
+**🚀 Vercel Speed Insights**
+- **Propósito**: Optimización de velocidad del sitio
+- **Duración**: 30 días
+- **Proveedor**: Vercel Inc.
+- **Datos recopilados**: Core Web Vitals, métricas de performance
+
+### 6.3 Sus Derechos sobre las Cookies
+
+Conforme a la **Ley 21.719 de Protección de Datos Personales de Chile** y las mejores prácticas internacionales, usted tiene derecho a:
+
+#### ✅ Control Granular
+- **Aceptar todas** las cookies
+- **Rechazar cookies** no esenciales
+- **Configurar categorías** específicas de cookies
+- **Cambiar sus preferencias** en cualquier momento
+
+#### 🔄 Gestión de Consentimiento
+- **Retirar consentimiento** tan fácilmente como lo otorgó
+- **Modificar preferencias** desde nuestro centro de privacidad
+- **Recibir información clara** sobre el impacto de rechazar cookies
+
+### 6.4 Cómo Gestionar sus Cookies
+
+#### En Nuestro Sitio Web
+1. **Banner de consentimiento**: Aparece en su primera visita
+2. **Centro de privacidad**: Accesible desde el footer
+3. **Configuración granular**: Por categoría de cookie
+
+#### En su Navegador
+**Chrome**: Configuración > Privacidad y seguridad > Cookies  
+**Firefox**: Opciones > Privacidad y seguridad  
+**Safari**: Preferencias > Privacidad  
+**Edge**: Configuración > Cookies y permisos del sitio
+
+#### ⚠️ Impacto de Deshabilitar Cookies
+- **Cookies esenciales**: El sitio no funcionará correctamente
+- **Cookies analíticas**: No afecta la funcionalidad, pero limita nuestras mejoras
+- **Cookies de rendimiento**: Puede reducir la optimización del sitio
+
+### 6.5 Cookies de Terceros
+
+Los siguientes servicios de terceros pueden establecer cookies cuando utiliza nuestro sitio:
+
+| Servicio | Propósito | Política de Privacidad |
+|----------|-----------|------------------------|
+| Google Analytics | Análisis de uso | [Ver política](https://policies.google.com/privacy) |
+| Google OAuth | Autenticación | [Ver política](https://policies.google.com/privacy) |
+| Vercel | Hosting y analytics | [Ver política](https://vercel.com/legal/privacy-policy) |
+
+### 6.6 Transferencias Internacionales
+
+Algunos de nuestros proveedores de cookies están ubicados fuera de Chile:
+- **Google**: Estados Unidos (Decision de Adequacy UE-US)
+- **Vercel**: Estados Unidos (Cláusulas Contractuales Estándar)
+
+### 6.7 Actualizaciones de esta Política
+
+Esta política de cookies puede actualizarse para reflejar:
+- Cambios en la legislación chilena
+- Nuevas tecnologías implementadas
+- Modificaciones en servicios de terceros
+
+**Última actualización**: Diciembre 2024  
+**Próxima revisión**: Marzo 2025
+
+### 6.8 Contacto y Ejercicio de Derechos
+
+Para consultas sobre cookies o ejercer sus derechos:
+- **WhatsApp**: [+56 9 3176 9472](https://wa.me/56931769472)
+- **Tiempo de respuesta**: Máximo 30 días hábiles
+
+---
+
+**⚖️ Marco Legal Aplicable**  
+Esta política cumple con:
+- Ley 21.719 de Protección de Datos Personales (Chile)
+- Ley 19.628 sobre Protección de la Vida Privada (Chile)
+- Principios del GDPR (UE) como referencia de buenas prácticas
 
