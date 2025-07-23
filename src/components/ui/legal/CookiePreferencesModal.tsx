@@ -50,7 +50,7 @@ export default function CookiePreferencesModal({ isOpen, onClose }: CookiePrefer
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black bg-opacity-60">
       <Card className="w-full max-w-3xl max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           {/* Header */}
@@ -122,17 +122,17 @@ export default function CookiePreferencesModal({ isOpen, onClose }: CookiePrefer
             </div>
 
             {/* Analíticas */}
-            <div className="border rounded-lg p-4">
+            <div className="border rounded-lg p-4 bg-white">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
                     <BarChart3 className="h-5 w-5 text-blue-600" />
-                    <h3 className="font-semibold">Cookies Analíticas</h3>
+                    <h3 className="font-semibold text-gray-900">Cookies Analíticas</h3>
                   </div>
-                  <p className="text-sm text-gray-600 mb-3">
+                  <p className="text-sm text-gray-700 mb-3">
                     Google Analytics 4 para entender el uso del sitio y mejorar la experiencia.
                   </p>
-                  <div className="text-xs text-gray-500 space-y-1">
+                  <div className="text-xs text-gray-600 space-y-1">
                     <div><strong>Cookies:</strong> _ga, _ga_*, _gid</div>
                     <div><strong>Duración:</strong> Hasta 2 años</div>
                     <div><strong>Proveedor:</strong> Google LLC</div>
@@ -159,17 +159,17 @@ export default function CookiePreferencesModal({ isOpen, onClose }: CookiePrefer
             </div>
 
             {/* Rendimiento */}
-            <div className="border rounded-lg p-4">
+            <div className="border rounded-lg p-4 bg-white">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
                     <Zap className="h-5 w-5 text-yellow-600" />
-                    <h3 className="font-semibold">Cookies de Rendimiento</h3>
+                    <h3 className="font-semibold text-gray-900">Cookies de Rendimiento</h3>
                   </div>
-                  <p className="text-sm text-gray-600 mb-3">
+                  <p className="text-sm text-gray-700 mb-3">
                     Vercel Analytics y Speed Insights para optimizar la velocidad del sitio.
                   </p>
-                  <div className="text-xs text-gray-500 space-y-1">
+                  <div className="text-xs text-gray-600 space-y-1">
                     <div><strong>Servicios:</strong> Vercel Analytics, Speed Insights</div>
                     <div><strong>Duración:</strong> 30 días</div>
                     <div><strong>Proveedor:</strong> Vercel Inc.</div>
@@ -196,17 +196,17 @@ export default function CookiePreferencesModal({ isOpen, onClose }: CookiePrefer
             </div>
 
             {/* Funcionales */}
-            <div className="border rounded-lg p-4">
+            <div className="border rounded-lg p-4 bg-white">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
                     <SettingsIcon className="h-5 w-5 text-purple-600" />
-                    <h3 className="font-semibold">Cookies Funcionales</h3>
+                    <h3 className="font-semibold text-gray-900">Cookies Funcionales</h3>
                   </div>
-                  <p className="text-sm text-gray-600 mb-3">
+                  <p className="text-sm text-gray-700 mb-3">
                     Recordar preferencias de usuario como tema, idioma y configuraciones de interfaz.
                   </p>
-                  <div className="text-xs text-gray-500 space-y-1">
+                  <div className="text-xs text-gray-600 space-y-1">
                     <div><strong>Funciones:</strong> Preferencias UI, configuraciones personalizadas</div>
                     <div><strong>Duración:</strong> 1 año</div>
                     <div><strong>Almacenamiento:</strong> Local (navegador)</div>

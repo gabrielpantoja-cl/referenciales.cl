@@ -25,7 +25,7 @@ export default function DisclaimerPopup() {
   };
 
   return isVisible ? (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white rounded-lg p-8 max-w-2xl mx-4 shadow-xl">
         <h2 className="text-xl font-bold mb-4 text-blue-600">
           Aviso Importante

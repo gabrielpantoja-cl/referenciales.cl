@@ -70,7 +70,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
+      <nav className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-[60]">
         <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             {/* Logo y navegación principal */}
@@ -140,7 +140,7 @@ export default function Navbar() {
 
                 {/* Dropdown menu */}
                 {isUserMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 py-1 z-50">
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 py-1 z-[60]">
                     <button
                       onClick={handleSignOut}
                       disabled={isSigningOut}

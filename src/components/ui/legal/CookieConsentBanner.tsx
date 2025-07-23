@@ -57,7 +57,7 @@ export default function CookieConsentBanner() {
   return (
     <>
       {/* Banner Principal */}
-      <div className="fixed bottom-0 left-0 right-0 z-[9998] p-4 bg-white border-t border-gray-200 shadow-lg">
+      <div className="fixed bottom-0 left-0 right-0 z-[100] p-4 bg-white border-t border-gray-200 shadow-lg">
         <Card className="max-w-6xl mx-auto p-6">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
@@ -113,7 +113,7 @@ export default function CookieConsentBanner() {
 
       {/* Modal de Preferencias Detalladas */}
       {showPreferences && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black bg-opacity-50">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black bg-opacity-60">
           <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
@@ -156,17 +156,17 @@ export default function CookieConsentBanner() {
                 </div>
 
                 {/* Cookies Analíticas */}
-                <div className="flex items-start justify-between p-4 border rounded-lg">
+                <div className="flex items-start justify-between p-4 border rounded-lg bg-white">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <BarChart3 className="h-5 w-5 text-blue-600" />
-                      <h3 className="font-medium">Cookies Analíticas</h3>
+                      <h3 className="font-medium text-gray-900">Cookies Analíticas</h3>
                     </div>
-                    <p className="text-sm text-gray-600 mb-2">
+                    <p className="text-sm text-gray-700 mb-2">
                       Google Analytics 4 para entender cómo se usa el sitio. 
                       Nos ayuda a mejorar la experiencia del usuario.
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-600">
                       Cookies: _ga, _ga_*, _gid | Duración: hasta 2 años
                     </p>
                   </div>
@@ -189,17 +189,17 @@ export default function CookieConsentBanner() {
                 </div>
 
                 {/* Cookies de Rendimiento */}
-                <div className="flex items-start justify-between p-4 border rounded-lg">
+                <div className="flex items-start justify-between p-4 border rounded-lg bg-white">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <Zap className="h-5 w-5 text-yellow-600" />
-                      <h3 className="font-medium">Cookies de Rendimiento</h3>
+                      <h3 className="font-medium text-gray-900">Cookies de Rendimiento</h3>
                     </div>
-                    <p className="text-sm text-gray-600 mb-2">
+                    <p className="text-sm text-gray-700 mb-2">
                       Vercel Analytics y Speed Insights para optimizar la velocidad 
                       y rendimiento del sitio web.
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-600">
                       Duración: 30 días | No incluye información personal
                     </p>
                   </div>
