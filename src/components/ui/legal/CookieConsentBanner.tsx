@@ -171,8 +171,10 @@ export default function CookieConsentBanner() {
                     </p>
                   </div>
                   <div className="ml-4">
-                    <label className="relative inline-flex items-center cursor-pointer">
+                    <label className="relative inline-flex items-center cursor-pointer" htmlFor="analytics-toggle">
+                      <span className="sr-only">Activar cookies analíticas</span>
                       <input
+                        id="analytics-toggle"
                         type="checkbox"
                         checked={localPreferences.analytics}
                         onChange={(e) => setLocalPreferences(prev => ({
@@ -202,8 +204,10 @@ export default function CookieConsentBanner() {
                     </p>
                   </div>
                   <div className="ml-4">
-                    <label className="relative inline-flex items-center cursor-pointer">
+                    <label className="relative inline-flex items-center cursor-pointer" htmlFor="performance-toggle">
+                      <span className="sr-only">Activar cookies de rendimiento</span>
                       <input
+                        id="performance-toggle"
                         type="checkbox"
                         checked={localPreferences.performance}
                         onChange={(e) => setLocalPreferences(prev => ({

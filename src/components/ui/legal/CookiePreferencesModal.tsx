@@ -140,8 +140,10 @@ export default function CookiePreferencesModal({ isOpen, onClose }: CookiePrefer
                   </div>
                 </div>
                 <div className="ml-4">
-                  <label className="relative inline-flex items-center cursor-pointer">
+                  <label className="relative inline-flex items-center cursor-pointer" htmlFor="modal-analytics-toggle">
+                    <span className="sr-only">Activar cookies analíticas</span>
                     <input
+                      id="modal-analytics-toggle"
                       type="checkbox"
                       checked={localPreferences.analytics}
                       onChange={(e) => setLocalPreferences(prev => ({
@@ -175,8 +177,10 @@ export default function CookiePreferencesModal({ isOpen, onClose }: CookiePrefer
                   </div>
                 </div>
                 <div className="ml-4">
-                  <label className="relative inline-flex items-center cursor-pointer">
+                  <label className="relative inline-flex items-center cursor-pointer" htmlFor="modal-performance-toggle">
+                    <span className="sr-only">Activar cookies de rendimiento</span>
                     <input
+                      id="modal-performance-toggle"
                       type="checkbox"
                       checked={localPreferences.performance}
                       onChange={(e) => setLocalPreferences(prev => ({
@@ -209,8 +213,10 @@ export default function CookiePreferencesModal({ isOpen, onClose }: CookiePrefer
                   </div>
                 </div>
                 <div className="ml-4">
-                  <label className="relative inline-flex items-center cursor-pointer">
+                  <label className="relative inline-flex items-center cursor-pointer" htmlFor="modal-functional-toggle">
+                    <span className="sr-only">Activar cookies funcionales</span>
                     <input
+                      id="modal-functional-toggle"
                       type="checkbox"
                       checked={localPreferences.functional}
                       onChange={(e) => setLocalPreferences(prev => ({
