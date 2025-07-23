@@ -51,23 +51,34 @@ export default function CookiePreferencesModal({ isOpen, onClose }: CookiePrefer
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black bg-opacity-60">
-      <Card className="w-full max-w-3xl max-h-[90vh] overflow-y-auto">
-        <div className="p-6">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-2xl font-semibold flex items-center gap-2">
-                <SettingsIcon className="h-6 w-6 text-blue-600" />
-                Centro de Privacidad
-              </h2>
-              <p className="text-gray-600 mt-1">
-                Gestiona tus preferencias de cookies y privacidad
-              </p>
+      <Card className="w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white shadow-2xl">
+        <div className="relative">
+          {/* Header con fondo */}
+          <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 rounded-t-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-white bg-opacity-20 rounded-lg">
+                  <SettingsIcon className="h-6 w-6" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold">Centro de Privacidad</h2>
+                  <p className="text-blue-100 text-sm">
+                    Gestiona tus preferencias de cookies y privacidad
+                  </p>
+                </div>
+              </div>
+              <Button 
+                variant="ghost" 
+                onClick={onClose} 
+                className="text-white hover:bg-white hover:bg-opacity-20 p-2 rounded-full"
+              >
+                <X className="h-5 w-5" />
+              </Button>
             </div>
-            <Button variant="ghost" onClick={onClose} className="p-2">
-              <X className="h-4 w-4" />
-            </Button>
           </div>
+
+          {/* Contenido */}
+          <div className="p-6">
 
           {/* Estado actual */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
@@ -254,26 +265,26 @@ export default function CookiePreferencesModal({ isOpen, onClose }: CookiePrefer
             </div>
           </div>
 
-          {/* Botones de acción */}
-          <div className="flex gap-3 mt-6 pt-4 border-t">
-            <Button
-              onClick={handleSave}
-              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              Guardar Preferencias
-            </Button>
-            <Button
-              onClick={onClose}
-              variant="outline"
-              className="px-6"
-            >
-              Cancelar
-            </Button>
           </div>
 
-          {/* Footer legal */}
-          <div className="mt-4 text-xs text-gray-500">
-            <p>
+          {/* Footer con botones */}
+          <div className="bg-gray-50 px-6 py-4 border-t rounded-b-lg">
+            <div className="flex gap-3">
+              <Button
+                onClick={handleSave}
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 font-semibold"
+              >
+                Guardar Preferencias
+              </Button>
+              <Button
+                onClick={onClose}
+                variant="outline"
+                className="px-8 py-3 border-gray-300 hover:bg-gray-100"
+              >
+                Cancelar
+              </Button>
+            </div>
+            <p className="text-xs text-gray-500 mt-3 text-center">
               Al usar este sitio web, acepta nuestro uso de cookies según se describe en esta política. 
               Esta configuración cumple con la Ley 21.719 de Protección de Datos Personales de Chile.
             </p>
