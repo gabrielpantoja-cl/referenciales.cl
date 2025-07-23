@@ -50,7 +50,7 @@ export default function CookiePreferencesModal({ isOpen, onClose }: CookiePrefer
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black bg-opacity-50">
       <Card className="w-full max-w-3xl max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           {/* Header */}

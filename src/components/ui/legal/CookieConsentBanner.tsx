@@ -57,7 +57,7 @@ export default function CookieConsentBanner() {
   return (
     <>
       {/* Banner Principal */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-white border-t border-gray-200 shadow-lg">
+      <div className="fixed bottom-0 left-0 right-0 z-[9998] p-4 bg-white border-t border-gray-200 shadow-lg">
         <Card className="max-w-6xl mx-auto p-6">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
@@ -113,7 +113,7 @@ export default function CookieConsentBanner() {
 
       {/* Modal de Preferencias Detalladas */}
       {showPreferences && (
-        <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black bg-opacity-50">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black bg-opacity-50">
           <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
