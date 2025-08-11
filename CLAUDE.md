@@ -8,6 +8,7 @@ Referenciales.cl is a Next.js 15 application for managing real estate appraisal 
 
 - **Public API**: Unauthenticated endpoints for external integrations (e.g., pantojapropiedades.cl)
 - **Private Dashboard**: Authenticated CRUD operations for real estate references
+- **Advanced Statistics Module**: Interactive maps with area selection and comprehensive PDF reports
 - **Google OAuth**: Exclusive authentication via Google accounts
 - **PostGIS Integration**: Spatial data management with PostgreSQL + PostGIS
 - **Real-time Data**: Interactive maps and geolocation features
@@ -58,6 +59,8 @@ npm run api:validate     # Validate public API
 - **Authentication**: NextAuth.js v4 (Google OAuth only)
 - **UI**: Tailwind CSS with custom components
 - **Maps**: React Leaflet with PostGIS geometry
+- **Charts**: Recharts for statistical visualizations
+- **PDF Generation**: jsPDF + html2canvas for comprehensive reports
 
 ### Directory Structure (src/)
 ```
@@ -67,9 +70,12 @@ src/
 │   │   ├── public/     # Public API (no auth required)
 │   │   └── auth/       # NextAuth.js routes
 │   ├── dashboard/      # Protected pages
+│   │   └── estadisticas/ # Advanced Statistics Module
 │   └── auth/           # Authentication pages
 ├── components/         # React components
 │   ├── ui/            # Reusable UI components
+│   │   ├── estadisticas/ # Statistics module components
+│   │   └── mapa/      # Map and chart components
 │   ├── features/      # Feature-specific components
 │   └── primitives/    # Base UI primitives
 ├── lib/               # Utilities and configurations
@@ -143,6 +149,27 @@ curl "http://localhost:3000/api/public/map-data?comuna=santiago&limit=5"
 curl "http://localhost:3000/api/public/health?stats=true"
 ```
 
+### Using Advanced Statistics Module
+1. Access module at `/dashboard/estadisticas`
+2. Navigate and search locations on interactive map
+3. Use circle tool to select areas for analysis
+4. Review real-time statistics and multiple chart types
+5. Generate comprehensive PDF reports for CBR review
+
+**Key Features:**
+- **Interactive Map**: Circle selection with PostGIS spatial queries
+- **Real-time Analytics**: 6 different chart types (scatter, trends, histograms)
+- **Always-visible Statistics**: Price metrics, surface analysis, market trends
+- **Comprehensive PDF Reports**: 3-page format optimized for property registry review
+- **CBR Integration**: Complete field listing (fojas, número, año, CBR, ROL, etc.)
+
+**PDF Report Structure:**
+- Page 1: Executive summary and main chart (portrait)
+- Page 2: Complete property table for CBR review (landscape)
+- Page 3: Additional information and field explanations (portrait)
+
+For detailed documentation, see `docs/ADVANCED_STATISTICS_MODULE_GUIDE.md`
+
 ## Environment Variables
 
 ### Required Variables
@@ -201,5 +228,6 @@ npm run dev
 
 - **Authentication**: `docs/AUTHENTICATION_GUIDE.md` - Comprehensive auth debugging guide
 - **Public API**: `docs/PUBLIC_API_GUIDE.md` - Complete API integration guide  
+- **Advanced Statistics**: `docs/ADVANCED_STATISTICS_MODULE_GUIDE.md` - Complete statistics module documentation
 - **Development**: `docs/DEVELOPMENT_GUIDE.md` - Development patterns and conventions
 - **Database Schema**: `docs/DATABASE_SCHEMA_GUIDE.md` - Schema structure and relationships
