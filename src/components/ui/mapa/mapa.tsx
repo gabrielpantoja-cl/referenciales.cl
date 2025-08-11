@@ -1,17 +1,14 @@
 'use client';
-import React, { useEffect, useState, useRef } from 'react';
-import { MapContainer, TileLayer, useMap, FeatureGroup } from 'react-leaflet';
+import React, { useEffect, useState } from 'react';
+import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-geosearch/dist/geosearch.css';
-import 'leaflet-draw/dist/leaflet.draw.css';
 import './mapa.css';
 import { fetchReferencialesForMap } from '@/lib/mapData';
 import { MapMarker, Point } from '@/components/ui/mapa/MapMarker';
 import LocationButton from '@/components/ui/mapa/LocationButton';
-import AdvancedRealEstateCharts from '@/components/ui/mapa/AdvancedRealEstateCharts';
-import { Icon, Map, LatLng } from 'leaflet';
-import { EditControl } from 'react-leaflet-draw';
+import { Icon } from 'leaflet';
 
 const redIcon = new Icon({
   iconUrl: '/images/marker-icon.png',
@@ -62,12 +59,7 @@ const SearchField = (): null => {
 };
 
 const Mapa = () => {
-    const [allData, setAllData] = useState<Point[]>([]);
     const [filteredData, setFilteredData] = useState<Point[]>([]);
-    const [chartData, setChartData] = useState<Point[]>([]);
-    const [isSelecting, setIsSelecting] = useState(false);
-    const [selectedArea, setSelectedArea] = useState<string>('');
-    const mapRef = useRef<Map | null>(null);
 
     useEffect(() => {
         fetchReferencialesForMap()
@@ -85,7 +77,6 @@ const Mapa = () => {
                         fechaescritura: point.fechaescritura, 
                         monto: point.monto
                     } as Point));
-                setAllData(points);
                 setFilteredData(points);
             })
             .catch(error => {
@@ -93,70 +84,19 @@ const Mapa = () => {
             });
     }, []);
 
-    const handleCreate = (e: any) => {
-        const { layerType, layer } = e;
-        if (layerType === 'circle') {
-            const center = layer.getLatLng();
-            const radius = layer.getRadius();
-            
-            const pointsInCircle = allData.filter(point => {
-                const pointLatLng = new LatLng(point.latLng[0], point.latLng[1]);
-                return center.distanceTo(pointLatLng) <= radius;
-            });
-            
-            setChartData(pointsInCircle);
-            setSelectedArea(`Radio: ${Math.round(radius)}m - ${pointsInCircle.length} propiedades`);
-            setIsSelecting(false);
-        }
-    };
 
-    const handleDrawStart = () => {
-        setIsSelecting(true);
-        setSelectedArea('Dibujando área de selección...');
-    };
-
-    const handleDrawStop = () => {
-        setIsSelecting(false);
-    };
 
     return (
-        <div className="relative w-full space-y-4">
-            {/* Status Indicator */}
-            {selectedArea && (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mx-auto w-95%">
-                    <div className="flex items-center space-x-2">
-                        <div className={`w-3 h-3 rounded-full ${isSelecting ? 'bg-yellow-400 animate-pulse' : 'bg-green-400'}`}></div>
-                        <span className="text-blue-800 font-medium">{selectedArea}</span>
-                    </div>
-                </div>
-            )}
-            
+        <div className="relative w-full">
             <MapContainer 
                 center={[-33.4489, -70.6693]} 
                 zoom={10} 
                 style={{ 
-                    height: "80vh",    
-                    width: "95%",      
-                    margin: "auto",    
+                    height: "85vh",    
+                    width: "100%",      
                     borderRadius: "8px" 
                 }}
-                ref={mapRef}
             >          
-                <FeatureGroup>
-                    <EditControl
-                        position="topright"
-                        onCreated={handleCreate}
-                        draw={{
-                            rectangle: false,
-                            polygon: false,
-                            polyline: false,
-                            marker: false,
-                            circlemarker: false,
-                            circle: true,
-                        }}
-                        edit={{ remove: true }}
-                    />
-                </FeatureGroup>
                 <SearchField />
                 <LocationButton />
                 <TileLayer
@@ -173,9 +113,6 @@ const Mapa = () => {
                     <MapMarker key={point.id} point={point} />
                 ))}
             </MapContainer>
-            <div className="mt-6">
-                <AdvancedRealEstateCharts data={chartData} />
-            </div>
         </div>
     );
 };

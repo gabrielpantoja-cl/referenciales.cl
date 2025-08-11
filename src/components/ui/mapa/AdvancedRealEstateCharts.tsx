@@ -33,6 +33,7 @@ import { BarChart3, LineChart as LineChartIcon, PieChart as PieChartIcon, Trendi
 
 interface AdvancedRealEstateChartsProps {
   data: Point[];
+  selectedArea?: string;
 }
 
 type ChartType = 'scatter' | 'timeSeries' | 'pricePerSqm' | 'histogram' | 'commune' | 'distribution';
@@ -42,9 +43,8 @@ const CHART_COLORS = [
   '#F97316', '#06B6D4', '#84CC16', '#EC4899', '#6366F1'
 ];
 
-const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ data }) => {
+const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ data, selectedArea = '' }) => {
   const [selectedChart, setSelectedChart] = useState<ChartType>('scatter');
-  const [showStats, setShowStats] = useState(true);
   const chartRef = useRef<HTMLDivElement>(null);
 
   if (!data || data.length === 0) {
@@ -104,50 +104,187 @@ const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ dat
       
       if (!chartElement) return;
 
-      // Capturar el elemento del gráfico
+      // ========== PÁGINA 1: PORTADA Y RESUMEN EJECUTIVO ==========
+      pdf.setFontSize(24);
+      pdf.text('REPORTE COMPLETO DE ANÁLISIS', 20, 30);
+      pdf.text('DE MERCADO INMOBILIARIO', 20, 40);
+      
+      pdf.setFontSize(16);
+      pdf.text(`Área Seleccionada: ${selectedArea || 'Región Metropolitana'}`, 20, 60);
+      
+      pdf.setFontSize(12);
+      pdf.text(`Fecha de generación: ${new Date().toLocaleDateString('es-CL', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      })}`, 20, 75);
+      pdf.text(`Total de propiedades analizadas: ${stats.totalProperties}`, 20, 85);
+      
+      // Resumen ejecutivo
+      pdf.setFontSize(16);
+      pdf.text('RESUMEN EJECUTIVO', 20, 105);
+      
+      pdf.setFontSize(11);
+      const resumenY = 115;
+      pdf.text(`• Precio promedio del área: ${formatCurrency(stats.averagePrice)}`, 25, resumenY);
+      pdf.text(`• Precio mediano: ${formatCurrency(stats.medianPrice)}`, 25, resumenY + 8);
+      pdf.text(`• Precio promedio por m²: ${formatCurrency(stats.pricePerSqm)}`, 25, resumenY + 16);
+      pdf.text(`• Superficie promedio: ${formatNumber(stats.averageSize)} m²`, 25, resumenY + 24);
+      pdf.text(`• Volumen total de transacciones: ${formatCurrency(stats.totalVolume)}`, 25, resumenY + 32);
+      
+      // Tendencia del mercado
+      if (stats.trend.percentage > 0) {
+        const trendText = stats.trend.direction === 'up' ? 'Alza' : 
+                         stats.trend.direction === 'down' ? 'Baja' : 'Estable';
+        pdf.text(`• Tendencia del mercado: ${trendText} (${stats.trend.percentage}%)`, 25, resumenY + 40);
+      }
+
+      // Capturar el gráfico para la primera página
       const canvas = await html2canvas(chartElement, {
-        scale: 2,
+        scale: 1.5,
         useCORS: true,
         backgroundColor: '#ffffff'
       });
 
       const imgData = canvas.toDataURL('image/png');
-      const imgWidth = 190; // Ancho en mm
+      const imgWidth = 170;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      // Agregar gráfico en la primera página
+      pdf.text('GRÁFICO PRINCIPAL', 20, 175);
+      pdf.addImage(imgData, 'PNG', 20, 185, imgWidth, Math.min(imgHeight, 90));
 
-      // Configurar el PDF
-      pdf.setFontSize(20);
-      pdf.text('Análisis de Mercado Inmobiliario', 20, 20);
+      // ========== PÁGINA 2: LISTADO COMPLETO DE PROPIEDADES ==========
+      pdf.addPage('a4', 'landscape'); // Cambiar a horizontal para la tabla
       
-      pdf.setFontSize(12);
-      pdf.text(`Fecha: ${new Date().toLocaleDateString('es-CL')}`, 20, 30);
-      pdf.text(`Propiedades analizadas: ${stats.totalProperties}`, 20, 40);
-      
-      // Agregar estadísticas
-      let y = 50;
-      pdf.setFontSize(14);
-      pdf.text('Estadísticas Principales:', 20, y);
-      y += 10;
+      pdf.setFontSize(18);
+      pdf.text('LISTADO COMPLETO PARA REVISIÓN EN CONSERVADOR DE BIENES RAÍCES', 20, 25);
       
       pdf.setFontSize(10);
-      pdf.text(`• Precio promedio: ${formatCurrency(stats.averagePrice)}`, 25, y);
-      y += 5;
-      pdf.text(`• Precio mediano: ${formatCurrency(stats.medianPrice)}`, 25, y);
-      y += 5;
-      pdf.text(`• Precio por m²: ${formatCurrency(stats.pricePerSqm)}`, 25, y);
-      y += 5;
-      pdf.text(`• Superficie promedio: ${formatNumber(stats.averageSize)} m²`, 25, y);
-      y += 5;
-      pdf.text(`• Volumen total: ${formatCurrency(stats.totalVolume)}`, 25, y);
-      y += 10;
+      pdf.text(`Propiedades en el área seleccionada (${data.length} registros)`, 20, 35);
+      
+      // Configurar la tabla
+      const tableStartY = 45;
+      const rowHeight = 8;
+      const colWidths = [25, 20, 15, 20, 80, 35, 25, 25, 35];
+      let currentY = tableStartY;
+      
+      // Encabezados de la tabla
+      pdf.setFillColor(240, 240, 240);
+      pdf.rect(20, currentY - 6, colWidths.reduce((a, b) => a + b, 0), rowHeight, 'F');
+      
+      pdf.setFontSize(9);
+      pdf.setFont('helvetica', 'bold');
+      let currentX = 20;
+      const headers = ['Fojas', 'Número', 'Año', 'CBR', 'Comuna', 'Fecha Escritura', 'Superficie', 'Monto', 'ROL'];
+      
+      headers.forEach((header, index) => {
+        pdf.text(header, currentX + 2, currentY);
+        currentX += colWidths[index];
+      });
+      
+      currentY += rowHeight;
+      
+      // Datos de las propiedades
+      pdf.setFont('helvetica', 'normal');
+      pdf.setFontSize(8);
+      
+      data.forEach((property, index) => {
+        // Alternar color de fondo para mejor lectura
+        if (index % 2 === 0) {
+          pdf.setFillColor(250, 250, 250);
+          pdf.rect(20, currentY - 6, colWidths.reduce((a, b) => a + b, 0), rowHeight, 'F');
+        }
+        
+        currentX = 20;
+        const rowData = [
+          property.fojas || '-',
+          property.numero?.toString() || '-',
+          property.anio?.toString() || '-',
+          property.cbr || '-',
+          property.comuna || '-',
+          property.fechaescritura ? new Date(property.fechaescritura).toLocaleDateString('es-CL') : '-',
+          property.superficie ? `${Math.round(property.superficie)} m²` : '-',
+          property.monto ? formatCompactCurrency(Number(property.monto)) : '-',
+          property.rol || '-'
+        ];
+        
+        rowData.forEach((data, colIndex) => {
+          pdf.text(data.toString().substring(0, 15), currentX + 2, currentY);
+          currentX += colWidths[colIndex];
+        });
+        
+        currentY += rowHeight;
+        
+        // Nueva página si es necesario
+        if (currentY > 190) {
+          pdf.addPage('a4', 'landscape');
+          currentY = 25;
+          
+          // Repetir encabezados
+          pdf.setFillColor(240, 240, 240);
+          pdf.rect(20, currentY - 6, colWidths.reduce((a, b) => a + b, 0), rowHeight, 'F');
+          
+          pdf.setFont('helvetica', 'bold');
+          currentX = 20;
+          headers.forEach((header, index) => {
+            pdf.text(header, currentX + 2, currentY);
+            currentX += colWidths[index];
+          });
+          
+          currentY += rowHeight;
+          pdf.setFont('helvetica', 'normal');
+        }
+      });
 
-      // Agregar gráfico
-      pdf.addImage(imgData, 'PNG', 10, y, imgWidth, imgHeight);
+      // ========== PÁGINA 3: DETALLES ADICIONALES ==========
+      pdf.addPage('a4', 'portrait');
+      
+      pdf.setFontSize(16);
+      pdf.text('INFORMACIÓN ADICIONAL PARA REVISIÓN', 20, 25);
+      
+      pdf.setFontSize(12);
+      pdf.text('Campos disponibles para consulta en Conservador:', 20, 45);
+      
+      pdf.setFontSize(10);
+      const fieldsY = 55;
+      pdf.text('• Fojas: Número de fojas del registro en el conservador', 25, fieldsY);
+      pdf.text('• Número: Número específico del registro', 25, fieldsY + 8);
+      pdf.text('• Año: Año de inscripción de la escritura', 25, fieldsY + 16);
+      pdf.text('• CBR: Conservador de Bienes Raíces correspondiente', 25, fieldsY + 24);
+      pdf.text('• ROL: Rol de avalúo fiscal de la propiedad', 25, fieldsY + 32);
+      pdf.text('• Fecha Escritura: Fecha de otorgamiento de la escritura pública', 25, fieldsY + 40);
+      
+      pdf.setFontSize(12);
+      pdf.text('Estadísticas del área seleccionada:', 20, 105);
+      
+      pdf.setFontSize(10);
+      const statsY = 115;
+      pdf.text(`Total de propiedades: ${stats.totalProperties}`, 25, statsY);
+      pdf.text(`Rango de precios: ${formatCurrency(Math.min(...data.map(p => Number(p.monto || 0)).filter(m => m > 0)))} - ${formatCurrency(Math.max(...data.map(p => Number(p.monto || 0))))}`, 25, statsY + 8);
+      pdf.text(`Rango de superficies: ${Math.min(...data.map(p => p.superficie || 0).filter(s => s > 0))} m² - ${Math.max(...data.map(p => p.superficie || 0))} m²`, 25, statsY + 16);
+      
+      const comunas = Array.from(new Set(data.map(p => p.comuna).filter((c): c is string => !!c)));
+      pdf.text(`Comunas incluidas: ${comunas.join(', ')}`, 25, statsY + 24);
+      
+      const añosRange = data.map(p => parseInt(p.anio)).filter(a => !isNaN(a) && a > 0);
+      if (añosRange.length > 0) {
+        pdf.text(`Rango de años: ${Math.min(...añosRange)} - ${Math.max(...añosRange)}`, 25, statsY + 32);
+      }
+
+      // Información de contacto y fecha
+      pdf.setFontSize(8);
+      pdf.text('Generado por Referenciales.cl - Sistema de Análisis de Mercado Inmobiliario', 20, 280);
+      pdf.text(`Fecha de generación: ${new Date().toLocaleString('es-CL')}`, 20, 288);
 
       // Descargar
-      pdf.save(`analisis-inmobiliario-${new Date().toISOString().split('T')[0]}.pdf`);
+      const areaName = selectedArea ? selectedArea.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase() : 'area-seleccionada';
+      pdf.save(`reporte-completo-${areaName}-${new Date().toISOString().split('T')[0]}.pdf`);
+      
     } catch (error) {
       console.error('Error al generar PDF:', error);
+      alert('Error al generar el PDF. Por favor, intente nuevamente.');
     }
   };
 
@@ -388,25 +525,17 @@ const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ dat
         </div>
         <div className="flex space-x-2">
           <button
-            onClick={() => setShowStats(!showStats)}
-            className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-          >
-            <TrendingUp className="w-4 h-4" />
-            <span>{showStats ? 'Ocultar' : 'Mostrar'} Estadísticas</span>
-          </button>
-          <button
             onClick={downloadPDF}
             className="flex items-center space-x-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
           >
             <Download className="w-4 h-4" />
-            <span>Descargar PDF</span>
+            <span>Descargar PDF Completo</span>
           </button>
         </div>
       </div>
 
-      {/* Statistics Panel */}
-      {showStats && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg">
+      {/* Statistics Panel - Always Visible */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg">
           <div className="bg-white p-4 rounded-lg shadow">
             <div className="flex items-center justify-between">
               <div>
@@ -463,7 +592,6 @@ const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ dat
             </div>
           </div>
         </div>
-      )}
 
       {/* Chart Type Selector */}
       <div className="flex flex-wrap gap-2 p-4 bg-gray-50 rounded-lg">
