@@ -175,7 +175,7 @@ const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ dat
       pdf.rect(20, currentY - 6, colWidths.reduce((a, b) => a + b, 0), rowHeight, 'F');
       
       pdf.setFontSize(9);
-      pdf.setFont(undefined, 'bold');
+      pdf.setFont('helvetica', 'bold');
       let currentX = 20;
       const headers = ['Fojas', 'Número', 'Año', 'CBR', 'Comuna', 'Fecha Escritura', 'Superficie', 'Monto', 'ROL'];
       
@@ -187,7 +187,7 @@ const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ dat
       currentY += rowHeight;
       
       // Datos de las propiedades
-      pdf.setFont(undefined, 'normal');
+      pdf.setFont('helvetica', 'normal');
       pdf.setFontSize(8);
       
       data.forEach((property, index) => {
@@ -226,7 +226,7 @@ const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ dat
           pdf.setFillColor(240, 240, 240);
           pdf.rect(20, currentY - 6, colWidths.reduce((a, b) => a + b, 0), rowHeight, 'F');
           
-          pdf.setFont(undefined, 'bold');
+          pdf.setFont('helvetica', 'bold');
           currentX = 20;
           headers.forEach((header, index) => {
             pdf.text(header, currentX + 2, currentY);
@@ -234,7 +234,7 @@ const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ dat
           });
           
           currentY += rowHeight;
-          pdf.setFont(undefined, 'normal');
+          pdf.setFont('helvetica', 'normal');
         }
       });
 
@@ -265,10 +265,10 @@ const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ dat
       pdf.text(`Rango de precios: ${formatCurrency(Math.min(...data.map(p => Number(p.monto || 0)).filter(m => m > 0)))} - ${formatCurrency(Math.max(...data.map(p => Number(p.monto || 0))))}`, 25, statsY + 8);
       pdf.text(`Rango de superficies: ${Math.min(...data.map(p => p.superficie || 0).filter(s => s > 0))} m² - ${Math.max(...data.map(p => p.superficie || 0))} m²`, 25, statsY + 16);
       
-      const comunas = [...new Set(data.map(p => p.comuna).filter(c => c))];
+      const comunas = Array.from(new Set(data.map(p => p.comuna).filter((c): c is string => !!c)));
       pdf.text(`Comunas incluidas: ${comunas.join(', ')}`, 25, statsY + 24);
       
-      const añosRange = data.map(p => p.anio).filter(a => a);
+      const añosRange = data.map(p => parseInt(p.anio)).filter(a => !isNaN(a) && a > 0);
       if (añosRange.length > 0) {
         pdf.text(`Rango de años: ${Math.min(...añosRange)} - ${Math.max(...añosRange)}`, 25, statsY + 32);
       }
