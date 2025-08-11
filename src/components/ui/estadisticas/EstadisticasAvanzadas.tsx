@@ -66,7 +66,6 @@ const EstadisticasAvanzadas = () => {
     const [allData, setAllData] = useState<Point[]>([]);
     const [filteredData, setFilteredData] = useState<Point[]>([]);
     const [chartData, setChartData] = useState<Point[]>([]);
-    const [isSelecting, setIsSelecting] = useState(false);
     const [selectedArea, setSelectedArea] = useState<string>('');
     const mapRef = useRef<Map | null>(null);
 
@@ -107,18 +106,9 @@ const EstadisticasAvanzadas = () => {
             
             setChartData(pointsInCircle);
             setSelectedArea(`Radio: ${Math.round(radius)}m - ${pointsInCircle.length} propiedades`);
-            setIsSelecting(false);
         }
     };
 
-    const handleDrawStart = () => {
-        setIsSelecting(true);
-        setSelectedArea('Dibujando área de selección...');
-    };
-
-    const handleDrawStop = () => {
-        setIsSelecting(false);
-    };
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -128,7 +118,7 @@ const EstadisticasAvanzadas = () => {
                 {selectedArea && (
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                         <div className="flex items-center space-x-2">
-                            <div className={`w-3 h-3 rounded-full ${isSelecting ? 'bg-yellow-400 animate-pulse' : 'bg-green-400'}`}></div>
+                            <div className="w-3 h-3 rounded-full bg-green-400"></div>
                             <span className="text-blue-800 font-medium text-sm">{selectedArea}</span>
                         </div>
                     </div>
@@ -154,8 +144,6 @@ const EstadisticasAvanzadas = () => {
                             <EditControl
                                 position="topright"
                                 onCreated={handleCreate}
-                                onDrawStart={handleDrawStart}
-                                onDrawStop={handleDrawStop}
                                 draw={{
                                     rectangle: false,
                                     polygon: false,

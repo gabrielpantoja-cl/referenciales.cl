@@ -110,14 +110,6 @@ const Mapa = () => {
         }
     };
 
-    const handleDrawStart = () => {
-        setIsSelecting(true);
-        setSelectedArea('Dibujando área de selección...');
-    };
-
-    const handleDrawStop = () => {
-        setIsSelecting(false);
-    };
 
     return (
         <div className="relative w-full space-y-4">
