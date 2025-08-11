@@ -33,6 +33,7 @@ import { BarChart3, LineChart as LineChartIcon, PieChart as PieChartIcon, Trendi
 
 interface AdvancedRealEstateChartsProps {
   data: Point[];
+  selectedArea?: string;
 }
 
 type ChartType = 'scatter' | 'timeSeries' | 'pricePerSqm' | 'histogram' | 'commune' | 'distribution';
@@ -42,7 +43,7 @@ const CHART_COLORS = [
   '#F97316', '#06B6D4', '#84CC16', '#EC4899', '#6366F1'
 ];
 
-const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ data }) => {
+const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ data, selectedArea = '' }) => {
   const [selectedChart, setSelectedChart] = useState<ChartType>('scatter');
   const chartRef = useRef<HTMLDivElement>(null);
 
@@ -278,7 +279,7 @@ const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ dat
       pdf.text(`Fecha de generación: ${new Date().toLocaleString('es-CL')}`, 20, 288);
 
       // Descargar
-      const areaName = selectedArea.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
+      const areaName = selectedArea ? selectedArea.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase() : 'area-seleccionada';
       pdf.save(`reporte-completo-${areaName}-${new Date().toISOString().split('T')[0]}.pdf`);
       
     } catch (error) {

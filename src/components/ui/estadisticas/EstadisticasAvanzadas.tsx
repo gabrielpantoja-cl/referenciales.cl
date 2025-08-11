@@ -205,7 +205,7 @@ const EstadisticasAvanzadas = () => {
                             </p>
                         </div>
                     ) : (
-                        <AdvancedRealEstateCharts data={chartData} />
+                        <AdvancedRealEstateCharts data={chartData} selectedArea={selectedArea} />
                     )}
                 </div>
             </div>
