@@ -3,12 +3,14 @@
 [![Project Status: Active Development](https://img.shields.io/badge/status-active%20development-brightgreen)](https://github.com/TheCuriousSloth/referenciales.cl) 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![API Status](https://img.shields.io/badge/API%20P%C3%BAblica-Disponible-success)](https://referenciales.cl/api/public/docs)
+[![Statistics Module](https://img.shields.io/badge/Estadísticas%20Avanzadas-Completo-brightgreen)](/dashboard/estadisticas)
 
-Sistema de gestión para referenciales de tasación inmobiliaria construido con Next.js 15 (App Router), PostgreSQL + PostGIS y autenticación Google OAuth.
+Sistema de gestión para referenciales de tasación inmobiliaria construido con Next.js 15 (App Router), PostgreSQL + PostGIS, autenticación Google OAuth y módulo avanzado de estadísticas.
 
 ## Tabla de Contenidos
 - [Descripción](#descripción)
 - [🆕 API Pública](#-api-pública)
+- [📊 Módulo de Estadísticas Avanzadas](#-módulo-de-estadísticas-avanzadas)
 - [Estado del Proyecto](#estado-del-proyecto)
 - [Características Clave](#características-clave)
 - [Tech Stack](#tech-stack)
@@ -19,7 +21,7 @@ Sistema de gestión para referenciales de tasación inmobiliaria construido con 
 - [Variables de Entorno](#variables-de-entorno)
 - [Uso](#uso)
 - [Base de Datos](#base-de-datos)
-- [Problemas Conocidos](#problemas-conocidos)
+- [Reportar Problemas](#reportar-problemas)
 - [Contribuciones](#contribuciones)
 - [Licencia](#licencia)
 
@@ -122,22 +124,81 @@ curl "https://referenciales.cl/api/public/map-data?comuna=santiago&limit=5"
 
 ---
 
-## Estado del Proyecto
-🚧 **En desarrollo activo** 🚧
+## 📊 Módulo de Estadísticas Avanzadas
 
-### Foco Actual:
+**¡Nueva funcionalidad completa!** El sistema ahora incluye un módulo de análisis estadístico avanzado para profesionales de la tasación.
+
+### 🎯 Características Principales
+
+- **🗺️ Mapa Interactivo**: Selección de áreas mediante círculos con herramientas de dibujo
+- **📈 Análisis en Tiempo Real**: 6 tipos de gráficos diferentes (dispersión, tendencias, histogramas)
+- **📊 Estadísticas Siempre Visibles**: Métricas clave permanentemente disponibles
+- **📄 Reportes PDF Completos**: Sistema de 3 páginas optimizado para CBR
+
+### 📑 Estructura del Reporte PDF
+
+| Página | Formato | Contenido |
+|--------|---------|-----------|
+| **1** | Vertical | Resumen ejecutivo, estadísticas clave, gráfico principal |
+| **2** | Horizontal | **Tabla completa para CBR** con fojas, número, año, ROL |
+| **3** | Vertical | Información adicional y guía de campos |
+
+### 🏢 Integración con Conservador de Bienes Raíces (CBR)
+
+El reporte PDF incluye **todos los campos necesarios** para la revisión en el Conservador:
+
+- ✅ **Fojas**: Número de fojas del registro
+- ✅ **Número**: Número específico del registro  
+- ✅ **Año**: Año de inscripción de la escritura
+- ✅ **CBR**: Conservador de Bienes Raíces correspondiente
+- ✅ **ROL**: Rol de avalúo fiscal de la propiedad
+- ✅ **Fecha Escritura**: Fecha de otorgamiento
+- ✅ **Comuna, Superficie, Monto**: Datos complementarios
+
+### 🚀 Acceso y Uso
+
+```
+Dashboard → Estadísticas → /dashboard/estadisticas
+```
+
+1. **Seleccionar área** dibujando un círculo en el mapa
+2. **Revisar estadísticas** actualizadas automáticamente
+3. **Cambiar tipo de gráfico** según el análisis necesario
+4. **Generar PDF completo** para revisión en CBR
+5. **Imprimir listado** optimizado para consulta oficial
+
+### 📚 Documentación Completa
+
+- **📖 Guía Completa**: [`docs/ADVANCED_STATISTICS_MODULE_GUIDE.md`](docs/ADVANCED_STATISTICS_MODULE_GUIDE.md)
+- **🔧 Implementación Técnica**: React Leaflet + Recharts + jsPDF
+- **🗃️ Integración**: PostGIS spatial queries + análisis estadístico
+
+---
+
+## Estado del Proyecto
+🚀 **Sistema Completamente Funcional** 🚀
+
+### Funcionalidades Completadas:
 - ✅ **API Pública Implementada** - Lista para integración externa 🎉
-- Reforzar el sistema de autenticación con Google 🔒
-- Optimizar el formulario de ingreso de referenciales 📝
-- Corregir errores conocidos (ver [Problemas Conocidos](#problemas-conocidos))
+- ✅ **Módulo de Estadísticas Avanzadas** - Análisis completo con reportes PDF para CBR 📊
+- ✅ **Sistema de Autenticación con Google** - Completamente estable 🔒
+- ✅ **Gestión CRUD de Referenciales** - Interfaz optimizada 📝
+- ✅ **Integración PostGIS** - Datos espaciales funcionales 🗺️
+
+### En Desarrollo Continuo:
+- Optimización de performance y UX
+- Nuevas funcionalidades según feedback de usuarios
+- Integración con APIs externas del ecosistema inmobiliario
 
 ## Características Clave
--   **🆕 API Pública:** Acceso sin autenticación a datos del mapa para integración externa 🌐.
--   **Autenticación Segura:** Inicio de sesión exclusivo con Google OAuth 2.0 🔐.
--   **Panel de Administración:** Interfaz protegida para usuarios autenticados 🛡️.
--   **Gestión CRUD:** Crear, leer, actualizar y eliminar referenciales inmobiliarios 📋.
--   **Datos Espaciales:** Uso de PostGIS para almacenar y gestionar coordenadas geográficas 🗺️.
--   **Interfaz Moderna:** Construida con Next.js App Router y Tailwind CSS.
+-   **🆕 API Pública:** Acceso sin autenticación a datos del mapa para integración externa 🌐
+-   **📊 Estadísticas Avanzadas:** Módulo completo de análisis con reportes PDF para CBR 📄
+-   **Autenticación Segura:** Inicio de sesión exclusivo con Google OAuth 2.0 🔐
+-   **Panel de Administración:** Interfaz protegida para usuarios autenticados 🛡️
+-   **Gestión CRUD:** Crear, leer, actualizar y eliminar referenciales inmobiliarios 📋
+-   **Análisis Geoespacial:** PostGIS + selección de áreas circulares en mapas interactivos 🗺️
+-   **Reportes Profesionales:** PDFs de 3 páginas optimizados para revisión en Conservador 📑
+-   **Interfaz Moderna:** Construida con Next.js App Router y Tailwind CSS ✨
 
 ## Tech Stack
 -   **Framework:** Next.js 15.2.0 (App Router)
@@ -148,6 +209,9 @@ curl "https://referenciales.cl/api/public/map-data?comuna=santiago&limit=5"
 -   **Autenticación:** NextAuth.js v4 (Google Provider)
 -   **UI:** React
 -   **🆕 API Pública:** REST endpoints con CORS habilitado
+-   **📊 Mapas y Gráficos:** React Leaflet + Recharts
+-   **📄 Generación PDF:** jsPDF + html2canvas
+-   **🗺️ Análisis Espacial:** PostGIS spatial queries
 
 ## Sistema de Autenticación
 
@@ -275,27 +339,55 @@ Usamos PostgreSQL + Prisma ORM con la extensión PostGIS. El esquema actual (`pr
 ### 🆕 API Pública de Datos
 Los datos de la tabla `referenciales` están disponibles públicamente a través de la API, excluyendo información sensible como nombres de compradores/vendedores.
 
-## Problemas Conocidos 🐛
--   En vista móvil, `next/image` no optimiza correctamente la imagen de la página de inicio 📱.
--   Al crear un nuevo referencial, aparece un mensaje duplicado de éxito 📨.
--   **Paginación Rota en Producción:** La tabla de Referenciales no se actualiza correctamente al navegar entre páginas en el entorno de producción. Investigando activamente. 🚧
+## Reportar Problemas 🐛
 
-*(Se recomienda usar el issue tracker de GitHub para gestionar estos problemas)*
+¿Encontraste un bug, tienes una sugerencia o necesitas ayuda?
+
+### 📋 GitHub Issues
+Usa nuestro sistema de issues para:
+- **🐛 Reportar bugs**: Incluye pasos para reproducir el problema
+- **💡 Sugerir mejoras**: Nuevas funcionalidades o optimizaciones  
+- **❓ Hacer preguntas**: Sobre uso, integración o desarrollo
+- **📊 Issues del módulo de estadísticas**: Problemas específicos con análisis o PDFs
+- **🌐 Issues de la API pública**: Problemas de integración externa
+
+### 🔗 Enlaces Útiles
+- **[Crear nuevo issue](https://github.com/TheCuriousSloth/referenciales.cl/issues/new)**
+- **[Ver issues existentes](https://github.com/TheCuriousSloth/referenciales.cl/issues)**
+- **[Discusiones](https://github.com/TheCuriousSloth/referenciales.cl/discussions)**
+
+### 📝 Información a Incluir
+Para reportar problemas efectivamente:
+- Versión del navegador y sistema operativo
+- Pasos para reproducir el problema
+- Screenshots o videos si es necesario
+- Logs de consola relevantes
 
 ## 🆕 Scripts Útiles
 
 ```bash
-# Probar API pública en desarrollo
+# Desarrollo
+npm run dev               # Servidor de desarrollo con Turbo
+npm run build             # Build de producción (incluye Prisma generate)
+
+# Probar API pública
 npm run test:api          # Ejecuta test-api-public.sh
 npm run test:api:windows  # Ejecuta test-api-public.ps1
 
-# Ejecutar tests unitarios
-npm run test              # Jest tests
+# Testing
+npm run test              # Jest tests completos
+npm run test:watch        # Jest en modo watch
+npm run test:public-api   # Tests específicos de API pública
 
 # Base de datos
-npm run db:push           # Aplicar schema a DB
-npm run db:generate       # Generar cliente Prisma
-npm run db:studio         # Abrir Prisma Studio
+npm run prisma:generate   # Generar cliente Prisma
+npm run prisma:push       # Aplicar schema a DB
+npm run prisma:studio     # Abrir Prisma Studio
+npm run prisma:reset      # Reset completo de schema
+
+# Validación
+npm run lint              # ESLint
+npx tsc --noEmit         # Verificación de TypeScript
 ```
 
 ## Contribuciones 🤝
@@ -306,19 +398,28 @@ Si quieres integrar la API pública en tu proyecto:
 
 1. **Revisa la documentación**: [https://referenciales.cl/api/public/docs](https://referenciales.cl/api/public/docs)
 2. **Usa los ejemplos**: Disponibles en [`docs/integration-examples/`](docs/integration-examples/)
-3. **Reporta issues**: Si encuentras problemas con la API pública
+3. **Módulo de estadísticas**: Consulta [`docs/ADVANCED_STATISTICS_MODULE_GUIDE.md`](docs/ADVANCED_STATISTICS_MODULE_GUIDE.md)
+4. **Reporta issues**: Si encuentras problemas con la API pública o el módulo de estadísticas
 
 ## Licencia 📄
 Este proyecto está licenciado bajo la [Licencia MIT](https://opensource.org/licenses/MIT).
 
 ---
 
-## 🌟 ¿Usas nuestra API Pública?
+## 🌟 ¿Usas nuestras funcionalidades?
 
-Si estás integrando la API pública de referenciales.cl en tu proyecto, ¡nos encantaría saberlo! Contacta con nosotros:
+Si estás integrando la API pública o usando el módulo de estadísticas de referenciales.cl, ¡nos encantaría saberlo!
 
+### 🌐 API Pública
+- **URL**: `https://referenciales.cl/api/public`
+- **Documentación**: [https://referenciales.cl/api/public/docs](https://referenciales.cl/api/public/docs)
+
+### 📊 Módulo de Estadísticas
+- **URL**: `/dashboard/estadisticas`
+- **Documentación**: [`docs/ADVANCED_STATISTICS_MODULE_GUIDE.md`](docs/ADVANCED_STATISTICS_MODULE_GUIDE.md)
+
+### 💬 Contacto
 - **GitHub Issues**: Para reportar problemas o sugerir mejoras
-- **Discussions**: Para compartir casos de uso o hacer preguntas
-- **Ejemplos de integración**: Contribuye con ejemplos para otros desarrolladores
-
-**API Pública URL**: `https://referenciales.cl/api/public`
+- **Discussions**: Para compartir casos de uso o hacer preguntas  
+- **Ejemplos**: Contribuye con ejemplos para otros desarrolladores
+- **Feedback**: Comparte tu experiencia usando las herramientas
