@@ -137,7 +137,7 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
     if (rows.length === 0) {
       setRows([createEmptyRow()]);
     }
-  }, [canViewSensitiveData]);
+  }, [canViewSensitiveData, rows.length]);
 
   const validateField = useCallback((fieldName: string, value: string) => {
     const validation: { isValid: boolean; error?: string; warning?: string } = { isValid: true };
@@ -468,7 +468,7 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
       {canViewSensitiveData && (
         <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
           <p className="text-sm text-blue-700">
-            🔐 <strong>Privilegios de Administrador:</strong> Estás viendo los campos "Vendedor" y "Comprador" porque tienes permisos de administrador.
+            🔐 <strong>Privilegios de Administrador:</strong> Estás viendo los campos &quot;Vendedor&quot; y &quot;Comprador&quot; porque tienes permisos de administrador.
           </p>
         </div>
       )}
