@@ -113,18 +113,29 @@ const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ dat
       const { jsPDF } = await import('jspdf');
       const html2canvas = (await import('html2canvas')).default;
       
-      const pdf = new jsPDF('p', 'mm', 'a4');
+      // Usar formato oficio chileno (216 x 330 mm)
+      const pdf = new jsPDF('p', 'mm', [216, 330]);
       const chartElement = chartRef.current;
       
       if (!chartElement) return;
 
+      let totalPages = 3; // Calcular después el número real de páginas
+      let currentPageNumber = 1;
+
+      // Función para agregar número de página
+      const addPageNumber = (pageNum: number, total: number) => {
+        pdf.setFontSize(8);
+        pdf.setFont('helvetica', 'normal');
+        pdf.text(`Página ${pageNum} de ${total}`, 180, 320);
+      };
+
       // ========== PÁGINA 1: PORTADA Y RESUMEN EJECUTIVO ==========
-      pdf.setFontSize(24);
-      pdf.text('REPORTE COMPLETO DE ANÁLISIS', 20, 30);
-      pdf.text('DE MERCADO INMOBILIARIO', 20, 40);
+      pdf.setFontSize(26);
+      pdf.text('REPORTE COMPLETO DE ANÁLISIS', 20, 35);
+      pdf.text('DE MERCADO INMOBILIARIO', 20, 47);
       
-      pdf.setFontSize(16);
-      pdf.text(`Área Seleccionada: ${selectedArea || 'Región Metropolitana'}`, 20, 60);
+      pdf.setFontSize(18);
+      pdf.text(`Área Seleccionada: ${selectedArea || 'Región Metropolitana'}`, 20, 70);
       
       pdf.setFontSize(12);
       pdf.text(`Fecha de generación: ${new Date().toLocaleDateString('es-CL', { 
@@ -132,205 +143,217 @@ const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ dat
         year: 'numeric', 
         month: 'long', 
         day: 'numeric' 
-      })}`, 20, 75);
-      pdf.text(`Total de propiedades analizadas: ${stats.totalProperties}`, 20, 85);
+      })}`, 20, 85);
+      pdf.text(`Total de propiedades analizadas: ${stats.totalProperties}`, 20, 97);
       
       // Resumen ejecutivo
-      pdf.setFontSize(16);
-      pdf.text('RESUMEN EJECUTIVO', 20, 105);
+      pdf.setFontSize(18);
+      pdf.text('RESUMEN EJECUTIVO', 20, 120);
       
-      pdf.setFontSize(11);
-      const resumenY = 115;
+      pdf.setFontSize(12);
+      const resumenY = 135;
       pdf.text(`• Precio promedio del área: ${formatFullCurrency(stats.averagePrice)}`, 25, resumenY);
-      pdf.text(`• Precio mediano: ${formatFullCurrency(stats.medianPrice)}`, 25, resumenY + 8);
-      pdf.text(`• Precio promedio por m²: ${formatFullCurrency(stats.pricePerSqm)}`, 25, resumenY + 16);
-      pdf.text(`• Superficie promedio: ${formatNumber(stats.averageSize)} m²`, 25, resumenY + 24);
-      pdf.text(`• Volumen total de transacciones: ${formatFullCurrency(stats.totalVolume)}`, 25, resumenY + 32);
+      pdf.text(`• Precio mediano: ${formatFullCurrency(stats.medianPrice)}`, 25, resumenY + 10);
+      pdf.text(`• Precio promedio por m²: ${formatFullCurrency(stats.pricePerSqm)}`, 25, resumenY + 20);
+      pdf.text(`• Superficie promedio: ${formatNumber(stats.averageSize)} m²`, 25, resumenY + 30);
+      pdf.text(`• Volumen total de transacciones: ${formatFullCurrency(stats.totalVolume)}`, 25, resumenY + 40);
       
       // Tendencia del mercado
       if (stats.trend.percentage > 0) {
         const trendText = stats.trend.direction === 'up' ? 'Alza' : 
                          stats.trend.direction === 'down' ? 'Baja' : 'Estable';
-        pdf.text(`• Tendencia del mercado: ${trendText} (${stats.trend.percentage}%)`, 25, resumenY + 40);
+        pdf.text(`• Tendencia del mercado: ${trendText} (${stats.trend.percentage}%)`, 25, resumenY + 50);
       }
 
       // Capturar el gráfico para la primera página
       const canvas = await html2canvas(chartElement, {
-        scale: 1.5,
+        scale: 1.8,
         useCORS: true,
         backgroundColor: '#ffffff'
       });
 
       const imgData = canvas.toDataURL('image/png');
-      const imgWidth = 170;
+      const imgWidth = 175;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       
       // Agregar gráfico en la primera página
-      pdf.text('GRÁFICO PRINCIPAL', 20, 175);
-      pdf.addImage(imgData, 'PNG', 20, 185, imgWidth, Math.min(imgHeight, 90));
+      pdf.setFontSize(16);
+      pdf.text('GRÁFICO PRINCIPAL', 20, 210);
+      pdf.addImage(imgData, 'PNG', 20, 220, imgWidth, Math.min(imgHeight, 85));
 
-      // ========== PÁGINA 2: LISTADO COMPLETO DE PROPIEDADES ==========
-      pdf.addPage('a4', 'landscape'); // Cambiar a horizontal para la tabla
+      // ========== PÁGINA 2: DETALLES ADICIONALES ==========
+      pdf.addPage([216, 330], 'portrait');
+      currentPageNumber++;
       
       pdf.setFontSize(18);
-      pdf.text('LISTADO COMPLETO PARA REVISIÓN EN CONSERVADOR DE BIENES RAÍCES', 20, 25);
+      pdf.text('INFORMACIÓN ADICIONAL PARA REVISIÓN', 20, 30);
       
-      pdf.setFontSize(10);
-      pdf.text(`Propiedades en el área seleccionada (${data.length} registros)`, 20, 35);
+      pdf.setFontSize(14);
+      pdf.text('Campos disponibles para consulta en Conservador:', 20, 50);
       
+      pdf.setFontSize(11);
+      const fieldsY = 65;
+      pdf.text('• Fojas: Número de fojas del registro en el conservador', 25, fieldsY);
+      pdf.text('• Número: Número específico del registro', 25, fieldsY + 12);
+      pdf.text('• Año: Año de inscripción de la escritura', 25, fieldsY + 24);
+      pdf.text('• CBR: Conservador de Bienes Raíces correspondiente', 25, fieldsY + 36);
+      pdf.text('• Predio: Descripción o dirección completa del predio', 25, fieldsY + 48);
+      pdf.text('• Comuna: Comuna donde se ubica la propiedad', 25, fieldsY + 60);
+      pdf.text('• ROL: Rol de avalúo fiscal de la propiedad', 25, fieldsY + 72);
+      pdf.text('• Fecha Escritura: Fecha de otorgamiento de la escritura pública', 25, fieldsY + 84);
+      pdf.text('• Superficie: Superficie total construida en metros cuadrados', 25, fieldsY + 96);
+      pdf.text('• Monto: Valor total de la transacción en pesos chilenos', 25, fieldsY + 108);
+      pdf.text('• Observaciones: Comentarios adicionales del registro', 25, fieldsY + 120);
+      
+      if (canViewSensitiveData) {
+        pdf.text('• Comprador: Identificación del comprador (solo administradores)', 25, fieldsY + 132);
+        pdf.text('• Vendedor: Identificación del vendedor (solo administradores)', 25, fieldsY + 144);
+      }
+      
+      pdf.setFontSize(14);
+      const statsHeaderY = canViewSensitiveData ? 225 : 205;
+      pdf.text('Estadísticas del área seleccionada:', 20, statsHeaderY);
+      
+      pdf.setFontSize(11);
+      const statsY = canViewSensitiveData ? 240 : 220;
+      pdf.text(`Total de propiedades: ${stats.totalProperties}`, 25, statsY);
+      pdf.text(`Rango de precios: ${formatFullCurrency(Math.min(...data.map(p => Number(p.monto || 0)).filter(m => m > 0)))} - ${formatFullCurrency(Math.max(...data.map(p => Number(p.monto || 0))))}`, 25, statsY + 12);
+      pdf.text(`Rango de superficies: ${Math.min(...data.map(p => p.superficie || 0).filter(s => s > 0))} m² - ${Math.max(...data.map(p => p.superficie || 0))} m²`, 25, statsY + 24);
+      
+      const comunas = Array.from(new Set(data.map(p => p.comuna).filter((c): c is string => !!c)));
+      pdf.text(`Comunas incluidas: ${comunas.join(', ')}`, 25, statsY + 36);
+      
+      const añosRange = data.map(p => parseInt(p.anio)).filter(a => !isNaN(a) && a > 0);
+      if (añosRange.length > 0) {
+        pdf.text(`Rango de años: ${Math.min(...añosRange)} - ${Math.max(...añosRange)}`, 25, statsY + 48);
+      }
+
+      // Información de contacto
+      pdf.setFontSize(9);
+      pdf.text('Generado por Referenciales.cl - Sistema de Análisis de Mercado Inmobiliario', 20, 305);
+      pdf.text(`Fecha de generación: ${new Date().toLocaleString('es-CL')}`, 20, 315);
+
+      // ========== LISTADO COMPLETO DE PROPIEDADES AL FINAL (Múltiples páginas en horizontal) ==========
       // Configurar la tabla - Headers y columnas dinámicas basadas en rol
-      const baseHeaders = ['Fojas', 'Número', 'Año', 'CBR', 'Predio', 'Comuna', 'ROL', 'Fecha Escritura', 'Superficie (m²)', 'Monto (CLP)', 'Observaciones'];
+      const baseHeaders = ['N°', 'Fojas', 'Núm', 'Año', 'CBR', 'Predio', 'Comuna', 'ROL', 'Fecha Escr.', 'Sup.(m²)', 'Monto (CLP)', 'Observaciones'];
       const sensitiveHeaders = ['Comprador', 'Vendedor'];
       
       const headers = canViewSensitiveData 
         ? [...baseHeaders, ...sensitiveHeaders]
         : baseHeaders;
       
-      // Ajustar anchos de columna según número de campos - Columnas más amplias
-      const baseColWidths = [20, 18, 15, 18, 35, 25, 30, 30, 25, 35, 40];
-      const sensitiveColWidths = [35, 35];
+      // Columnas optimizadas para formato oficio horizontal (297mm ancho útil)
+      const baseColWidths = [10, 14, 12, 12, 15, 32, 20, 25, 22, 18, 30, 35];
+      const sensitiveColWidths = [28, 28];
       
       const colWidths = canViewSensitiveData 
         ? [...baseColWidths, ...sensitiveColWidths]
         : baseColWidths;
-      
-      const tableStartY = 45;
-      const rowHeight = 12; // Aumentado para mejor legibilidad
-      let currentY = tableStartY;
-      
-      // Encabezados de la tabla
-      pdf.setFillColor(240, 240, 240);
-      pdf.rect(20, currentY - 6, colWidths.reduce((a, b) => a + b, 0), rowHeight, 'F');
-      
-      pdf.setFontSize(9);
-      pdf.setFont('helvetica', 'bold');
-      let currentX = 20;
-      
-      headers.forEach((header, index) => {
-        pdf.text(header, currentX + 2, currentY);
-        currentX += colWidths[index];
-      });
-      
-      currentY += rowHeight;
-      
-      // Datos de las propiedades
-      pdf.setFont('helvetica', 'normal');
-      pdf.setFontSize(8);
-      
-      data.forEach((property, index) => {
-        // Alternar color de fondo para mejor lectura
-        if (index % 2 === 0) {
-          pdf.setFillColor(250, 250, 250);
-          pdf.rect(20, currentY - 6, colWidths.reduce((a, b) => a + b, 0), rowHeight, 'F');
+
+      // Calcular páginas necesarias para la tabla
+      const rowsPerPage = 22; // Filas por página en formato horizontal
+      const tablePages = Math.ceil(data.length / rowsPerPage);
+      totalPages = 2 + tablePages; // 2 páginas iniciales + páginas de tabla
+
+      // Agregar páginas para la tabla
+      for (let tablePageNum = 0; tablePageNum < tablePages; tablePageNum++) {
+        pdf.addPage([330, 216], 'landscape'); // Formato oficio horizontal
+        currentPageNumber++;
+        
+        if (tablePageNum === 0) {
+          pdf.setFontSize(16);
+          pdf.text('LISTADO COMPLETO PARA REVISIÓN EN CONSERVADOR DE BIENES RAÍCES', 20, 25);
+          
+          pdf.setFontSize(10);
+          pdf.text(`Propiedades en el área seleccionada (${data.length} registros enumerados)`, 20, 35);
         }
         
-        currentX = 20;
-        const baseRowData = [
-          property.fojas || '-',
-          property.numero?.toString() || '-',
-          property.anio?.toString() || '-',
-          property.cbr || '-',
-          property.predio || '-',
-          property.comuna || '-',
-          property.rol || '-',
-          property.fechaescritura ? new Date(property.fechaescritura).toLocaleDateString('es-CL') : '-',
-          property.superficie ? `${Math.round(property.superficie)}` : '-',
-          property.monto ? formatFullCurrency(property.monto) : '-',
-          property.observaciones || '-'
-        ];
+        const tableStartY = tablePageNum === 0 ? 45 : 25;
+        const rowHeight = 8;
+        let currentY = tableStartY;
         
-        const sensitiveRowData = [
-          property.comprador || '-',
-          property.vendedor || '-'
-        ];
+        // Encabezados de la tabla
+        pdf.setFillColor(230, 230, 230);
+        pdf.rect(15, currentY - 4, colWidths.reduce((a, b) => a + b, 0), rowHeight, 'F');
         
-        const rowData = canViewSensitiveData 
-          ? [...baseRowData, ...sensitiveRowData]
-          : baseRowData;
+        pdf.setFontSize(7);
+        pdf.setFont('helvetica', 'bold');
+        let currentX = 15;
         
-        rowData.forEach((data, colIndex) => {
-          // Ajustar longitud del texto según el ancho de la columna
-          const maxLength = Math.floor(colWidths[colIndex] / 2.5);
-          const textToShow = data.toString().length > maxLength 
-            ? data.toString().substring(0, maxLength - 3) + '...'
-            : data.toString();
-          pdf.text(textToShow, currentX + 2, currentY);
-          currentX += colWidths[colIndex];
+        headers.forEach((header, index) => {
+          pdf.text(header, currentX + 1, currentY);
+          currentX += colWidths[index];
         });
         
         currentY += rowHeight;
         
-        // Nueva página si es necesario - Ajustado para filas más altas
-        if (currentY > 180) {
-          pdf.addPage('a4', 'landscape');
-          currentY = 25;
+        // Datos de las propiedades para esta página
+        const startIndex = tablePageNum * rowsPerPage;
+        const endIndex = Math.min(startIndex + rowsPerPage, data.length);
+        const pageData = data.slice(startIndex, endIndex);
+        
+        pdf.setFont('helvetica', 'normal');
+        pdf.setFontSize(6);
+        
+        pageData.forEach((property, index) => {
+          const globalIndex = startIndex + index;
           
-          // Repetir encabezados
-          pdf.setFillColor(240, 240, 240);
-          pdf.rect(20, currentY - 6, colWidths.reduce((a, b) => a + b, 0), rowHeight, 'F');
+          // Alternar color de fondo para mejor lectura
+          if (index % 2 === 0) {
+            pdf.setFillColor(248, 248, 248);
+            pdf.rect(15, currentY - 4, colWidths.reduce((a, b) => a + b, 0), rowHeight, 'F');
+          }
           
-          pdf.setFont('helvetica', 'bold');
-          currentX = 20;
-          headers.forEach((header, index) => {
-            pdf.text(header, currentX + 2, currentY);
-            currentX += colWidths[index];
+          currentX = 15;
+          
+          // Agregar número de enumeración
+          const baseRowData = [
+            (globalIndex + 1).toString(), // Enumeración
+            property.fojas || '-',
+            property.numero?.toString() || '-',
+            property.anio?.toString() || '-',
+            property.cbr || '-',
+            property.predio || '-',
+            property.comuna || '-',
+            property.rol || '-',
+            property.fechaescritura ? new Date(property.fechaescritura).toLocaleDateString('es-CL') : '-',
+            property.superficie ? `${Math.round(property.superficie)}` : '-',
+            property.monto ? formatFullCurrency(property.monto) : '-',
+            property.observaciones || '-'
+          ];
+          
+          const sensitiveRowData = [
+            property.comprador || '-',
+            property.vendedor || '-'
+          ];
+          
+          const rowData = canViewSensitiveData 
+            ? [...baseRowData, ...sensitiveRowData]
+            : baseRowData;
+          
+          rowData.forEach((data, colIndex) => {
+            // Ajustar longitud del texto según el ancho de la columna
+            const maxLength = Math.floor(colWidths[colIndex] / 1.8);
+            const textToShow = data.toString().length > maxLength 
+              ? data.toString().substring(0, maxLength - 2) + '..'
+              : data.toString();
+            pdf.text(textToShow, currentX + 1, currentY);
+            currentX += colWidths[colIndex];
           });
           
           currentY += rowHeight;
-          pdf.setFont('helvetica', 'normal');
-        }
-      });
+        });
 
-      // ========== PÁGINA 3: DETALLES ADICIONALES ==========
-      pdf.addPage('a4', 'portrait');
-      
-      pdf.setFontSize(16);
-      pdf.text('INFORMACIÓN ADICIONAL PARA REVISIÓN', 20, 25);
-      
-      pdf.setFontSize(12);
-      pdf.text('Campos disponibles para consulta en Conservador:', 20, 45);
-      
-      pdf.setFontSize(10);
-      const fieldsY = 55;
-      pdf.text('• Fojas: Número de fojas del registro en el conservador', 25, fieldsY);
-      pdf.text('• Número: Número específico del registro', 25, fieldsY + 8);
-      pdf.text('• Año: Año de inscripción de la escritura', 25, fieldsY + 16);
-      pdf.text('• CBR: Conservador de Bienes Raíces correspondiente', 25, fieldsY + 24);
-      pdf.text('• Predio: Descripción o dirección completa del predio', 25, fieldsY + 32);
-      pdf.text('• Comuna: Comuna donde se ubica la propiedad', 25, fieldsY + 40);
-      pdf.text('• ROL: Rol de avalúo fiscal de la propiedad', 25, fieldsY + 48);
-      pdf.text('• Fecha Escritura: Fecha de otorgamiento de la escritura pública', 25, fieldsY + 56);
-      pdf.text('• Superficie: Superficie total construida en metros cuadrados', 25, fieldsY + 64);
-      pdf.text('• Monto: Valor total de la transacción en pesos chilenos', 25, fieldsY + 72);
-      pdf.text('• Observaciones: Comentarios adicionales del registro', 25, fieldsY + 80);
-      
-      if (canViewSensitiveData) {
-        pdf.text('• Comprador: Identificación del comprador (solo administradores)', 25, fieldsY + 88);
-        pdf.text('• Vendedor: Identificación del vendedor (solo administradores)', 25, fieldsY + 96);
-      }
-      
-      pdf.setFontSize(12);
-      const statsHeaderY = canViewSensitiveData ? 145 : 125;
-      pdf.text('Estadísticas del área seleccionada:', 20, statsHeaderY);
-      
-      pdf.setFontSize(10);
-      const statsY = canViewSensitiveData ? 155 : 135;
-      pdf.text(`Total de propiedades: ${stats.totalProperties}`, 25, statsY);
-      pdf.text(`Rango de precios: ${formatFullCurrency(Math.min(...data.map(p => Number(p.monto || 0)).filter(m => m > 0)))} - ${formatFullCurrency(Math.max(...data.map(p => Number(p.monto || 0))))}`, 25, statsY + 8);
-      pdf.text(`Rango de superficies: ${Math.min(...data.map(p => p.superficie || 0).filter(s => s > 0))} m² - ${Math.max(...data.map(p => p.superficie || 0))} m²`, 25, statsY + 16);
-      
-      const comunas = Array.from(new Set(data.map(p => p.comuna).filter((c): c is string => !!c)));
-      pdf.text(`Comunas incluidas: ${comunas.join(', ')}`, 25, statsY + 24);
-      
-      const añosRange = data.map(p => parseInt(p.anio)).filter(a => !isNaN(a) && a > 0);
-      if (añosRange.length > 0) {
-        pdf.text(`Rango de años: ${Math.min(...añosRange)} - ${Math.max(...añosRange)}`, 25, statsY + 32);
+        // Agregar número de página en formato horizontal
+        addPageNumber(currentPageNumber, totalPages);
       }
 
-      // Información de contacto y fecha
-      pdf.setFontSize(8);
-      pdf.text('Generado por Referenciales.cl - Sistema de Análisis de Mercado Inmobiliario', 20, 280);
-      pdf.text(`Fecha de generación: ${new Date().toLocaleString('es-CL')}`, 20, 288);
+      // Actualizar números de página en las primeras páginas
+      const pageCount = pdf.getNumberOfPages();
+      for (let i = 1; i <= 2; i++) {
+        pdf.setPage(i);
+        addPageNumber(i, pageCount);
+      }
 
       // Descargar
       const areaName = selectedArea ? selectedArea.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase() : 'area-seleccionada';
