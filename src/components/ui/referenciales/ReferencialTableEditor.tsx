@@ -159,12 +159,29 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
         break;
       
       case 'superficie':
-      case 'monto':
         if (value) {
           const num = parseFloat(value);
           if (isNaN(num) || num <= 0) {
             validation.isValid = false;
             validation.error = 'Debe ser un número positivo';
+          }
+        }
+        break;
+      
+      case 'monto':
+        if (value) {
+          // Verificar que no contenga puntos, comas o separadores de miles
+          if (/[.,]/.test(value)) {
+            validation.isValid = false;
+            validation.error = 'No usar puntos ni comas. Ej: 85000000';
+          } else {
+            const num = parseFloat(value);
+            if (isNaN(num) || num <= 0) {
+              validation.isValid = false;
+              validation.error = 'Debe ser un número positivo';
+            } else if (num < 1000000) {
+              validation.warning = 'Monto parece bajo para pesos chilenos';
+            }
           }
         }
         break;
@@ -293,8 +310,10 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
     setIsSubmitting(true);
     let successCount = 0;
     let errorCount = 0;
+    const errorDetails: string[] = [];
 
-    for (const row of rows) {
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
       try {
         const formData = new FormData();
         
@@ -309,17 +328,26 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
         const validationResult = validateReferencial(formData);
         if (!validationResult.isValid) {
           errorCount++;
+          
+          // Recopilar errores específicos para mostrar al usuario
+          Object.entries(validationResult.errors).forEach(([field, messages]) => {
+            messages.forEach(message => {
+              errorDetails.push(`Fila ${i + 1} - ${FIELD_LABELS[field as keyof typeof FIELD_LABELS] || field}: ${message}`);
+            });
+          });
           continue;
         }
 
         const result = await createReferencial(formData);
         if (result?.errors) {
           errorCount++;
+          errorDetails.push(`Fila ${i + 1}: Error en el servidor`);
         } else {
           successCount++;
         }
-      } catch {
+      } catch (error) {
         errorCount++;
+        errorDetails.push(`Fila ${i + 1}: Error inesperado`);
       }
     }
 
@@ -336,6 +364,19 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
     
     if (errorCount > 0) {
       toast.error(`${errorCount} referenciales tuvieron errores`);
+      
+      // Mostrar detalles específicos de los errores
+      if (errorDetails.length > 0) {
+        setTimeout(() => {
+          errorDetails.slice(0, 5).forEach(detail => {
+            toast.error(detail, { duration: 8000 });
+          });
+          
+          if (errorDetails.length > 5) {
+            toast.error(`...y ${errorDetails.length - 5} errores más. Revisa los campos marcados en rojo.`, { duration: 8000 });
+          }
+        }, 1000);
+      }
     }
   };
 
@@ -503,6 +544,7 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
       <div className="bg-gray-50 p-4 rounded-lg">
         <h3 className="font-medium text-gray-900 mb-2">💡 Instrucciones:</h3>
         <ul className="text-sm text-gray-600 space-y-1">
+          <li>• <strong>Monto:</strong> Sin puntos ni comas (ej: 85000000, NO 85.000.000)</li>
           <li>• <strong>Coordenadas:</strong> Formato decimal del SII (ej: -38.7394, -72.5986)</li>
           <li>• <strong>Geocodificación:</strong> Botón 🌍 para obtener coordenadas automáticamente con rol + comuna</li>
           <li>• <strong>Fojas:</strong> Número + v/vuelta opcional (ej: 1234v)</li>
