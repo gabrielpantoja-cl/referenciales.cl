@@ -76,24 +76,36 @@ export const authOptions: NextAuthOptions = {
       return defaultUrl;
     },
     
-    // ✅ SESSION CALLBACK SIMPLIFICADO
+    // ✅ SESSION CALLBACK - INCLUYE ROLE
     async session({ session, token }) {
       if (session?.user && token?.sub) {
         session.user.id = token.sub;
+        session.user.role = token.role as 'user' | 'admin' | 'superadmin';
       }
       return session;
     },
     
-    // ✅ JWT CALLBACK SIMPLIFICADO
+    // ✅ JWT CALLBACK - INCLUYE ROLE DEL USUARIO
     async jwt({ token, user }) {
       if (user) {
         token.sub = user.id;
+        // Obtener el role del usuario desde la base de datos
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: user.id },
+            select: { role: true }
+          });
+          token.role = dbUser?.role || 'user';
+        } catch (error) {
+          console.error('Error fetching user role:', error);
+          token.role = 'user';
+        }
       }
       return token;
     },
     
     // ✅ SIGNIN CALLBACK - LOGGING Y VALIDACIÓN
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account }) {
       console.log('✅ [AUTH-SIGNIN]', {
         userId: user.id,
         email: user.email,
@@ -105,6 +117,30 @@ export const authOptions: NextAuthOptions = {
       if (!user.email) {
         console.error('❌ [AUTH-SIGNIN] No email provided');
         return false;
+      }
+
+      try {
+        // Crear usuario con rol por defecto (los roles admin se asignan manualmente en la DB)
+        await prisma.user.upsert({
+          where: { email: user.email },
+          update: {
+            name: user.name,
+            image: user.image,
+            // Mantener el rol existente, no sobrescribir
+          },
+          create: {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            image: user.image,
+            role: 'user', // Rol por defecto, se cambia manualmente en DB si es admin
+          },
+        });
+
+        console.log(`✅ [AUTH-SIGNIN] User processed: ${user.email}`);
+      } catch (error) {
+        console.error('❌ [AUTH-SIGNIN] Error processing user:', error);
+        // Continuar con el login aunque falle la actualización
       }
       
       return true;

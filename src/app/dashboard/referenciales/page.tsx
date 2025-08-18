@@ -12,6 +12,8 @@ import { Referencial } from '@/types/referenciales';
 import { useSearchParams } from 'next/navigation';
 import { saveAs } from 'file-saver';
 import toast from 'react-hot-toast';
+import { useAuth } from '@/hooks/useAuth';
+import Link from 'next/link';
 
 type ExportableKeys =
   | 'cbr'
@@ -45,6 +47,7 @@ const VISIBLE_HEADERS: { key: ExportableKeys; label: string }[] = [
 // Nuevo componente interno que usa useSearchParams
 function ReferencialesContent() {
   const searchParams = useSearchParams();
+  const { canCreateReferenciales, userRole } = useAuth();
   const [query, setQuery] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [referenciales, setReferenciales] = useState<Referencial[]>([]);
@@ -131,10 +134,26 @@ function ReferencialesContent() {
     <div className="w-full relative">
       <div className="flex w-full items-center justify-between">
         <h1 className={`${lusitana.className} text-2xl`}>Referenciales de Compraventas</h1>
+        {canCreateReferenciales && (
+          <div className="flex gap-2">
+            <Link
+              href="/dashboard/referenciales/create"
+              className="flex h-10 items-center rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            >
+              <span className="hidden md:block">Crear Referencial</span>
+              <span className="block md:hidden">+</span>
+            </Link>
+          </div>
+        )}
       </div>
 
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <Search placeholder="Buscar referencial..." />
+        {canCreateReferenciales && (
+          <div className="text-sm text-gray-600 bg-blue-50 px-3 py-1 rounded-md">
+            Modo Administrador: {userRole}
+          </div>
+        )}
       </div>
 
       {isLoading ? (
