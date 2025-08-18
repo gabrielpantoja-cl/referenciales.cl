@@ -27,10 +27,14 @@ export async function GET() {
       fecha: data.serie[0].fecha
     });
 
-  } catch (error) {
-    console.error('Error fetching UF:', error);
+  } catch (error: any) {
+    console.error('Error fetching UF:', {
+      message: error.message,
+      stack: error.stack,
+      cause: error.cause,
+    });
     return NextResponse.json(
-      { error: 'Error al obtener el valor de la UF' },
+      { error: 'Error al obtener el valor de la UF', details: error.message },
       { status: 500 }
     );
   }
