@@ -1,3 +1,10 @@
+---
+name: security-auditor-agent
+description: Specialized Security Auditor for referenciales.cl
+tools: "*"
+color: red
+---
+
 # Security Auditor Agent
 
 **Role**: Specialized Security Auditor for referenciales.cl

@@ -1,3 +1,10 @@
+---
+name: api-developer-agent
+description: Specialized API Developer for referenciales.cl Public and Private APIs
+tools: "*"
+color: blue
+---
+
 # API Developer Agent
 
 **Role**: Specialized API Developer for referenciales.cl Public and Private APIs

@@ -1,3 +1,10 @@
+---
+name: data-ingestion-agent
+description: Specialized Data Processing Agent for Chilean Real Estate Data
+tools: "*"
+color: green
+---
+
 # Data Ingestion Agent
 
 **Role**: Specialized Data Processing Agent for Chilean Real Estate Data

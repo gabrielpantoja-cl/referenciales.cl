@@ -1,3 +1,10 @@
+---
+name: database-manager-agent
+description: Specialized Database Administrator for referenciales.cl
+tools: "*"
+color: purple
+---
+
 # Database Manager Agent
 
 **Role**: Specialized Database Administrator for referenciales.cl
