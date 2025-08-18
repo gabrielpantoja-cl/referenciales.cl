@@ -104,7 +104,7 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     
-    // ✅ SIGNIN CALLBACK - LOGGING, VALIDACIÓN Y ASIGNACIÓN DE ROLES
+    // ✅ SIGNIN CALLBACK - LOGGING Y VALIDACIÓN
     async signIn({ user, account }) {
       console.log('✅ [AUTH-SIGNIN]', {
         userId: user.id,
@@ -119,32 +119,28 @@ export const authOptions: NextAuthOptions = {
         return false;
       }
 
-      // ✅ ASIGNACIÓN AUTOMÁTICA DE ROLES ADMIN
-      const adminEmails = ['gabrielpantojarivera@gmail.com', 'monacaniqueo@gmail.com'];
-      const isAdmin = adminEmails.includes(user.email);
-
       try {
-        // Actualizar o crear usuario con rol apropiado
+        // Crear usuario con rol por defecto (los roles admin se asignan manualmente en la DB)
         await prisma.user.upsert({
           where: { email: user.email },
           update: {
-            role: isAdmin ? 'admin' : 'user',
             name: user.name,
             image: user.image,
+            // Mantener el rol existente, no sobrescribir
           },
           create: {
             id: user.id,
             email: user.email,
             name: user.name,
             image: user.image,
-            role: isAdmin ? 'admin' : 'user',
+            role: 'user', // Rol por defecto, se cambia manualmente en DB si es admin
           },
         });
 
-        console.log(`✅ [AUTH-SIGNIN] User role assigned: ${isAdmin ? 'admin' : 'user'} for ${user.email}`);
+        console.log(`✅ [AUTH-SIGNIN] User processed: ${user.email}`);
       } catch (error) {
-        console.error('❌ [AUTH-SIGNIN] Error updating user role:', error);
-        // Continuar con el login aunque falle la actualización del rol
+        console.error('❌ [AUTH-SIGNIN] Error processing user:', error);
+        // Continuar con el login aunque falle la actualización
       }
       
       return true;

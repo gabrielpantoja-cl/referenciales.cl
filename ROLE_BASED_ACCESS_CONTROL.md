@@ -2,13 +2,27 @@
 
 ## Overview
 
-This document describes the role-based access control (RBAC) system implemented for Referenciales.cl. The system allows only specific admin users to perform CRUD operations and view sensitive buyer/seller data.
+This document describes the role-based access control (RBAC) system implemented for Referenciales.cl. The system allows only admin users to perform CRUD operations and view sensitive buyer/seller data.
 
-## Admin Users
+## Admin Role Assignment
 
-The following email addresses have automatic admin privileges:
-- `gabrielpantojarivera@gmail.com`
-- `monacaniqueo@gmail.com`
+Admin roles are assigned manually in the database using SQL scripts. This approach provides better security than hardcoding email addresses in the application code.
+
+### Setting Admin Roles
+
+Execute the following SQL script in Neon database console:
+
+```sql
+-- Update existing users to admin role
+UPDATE "User" 
+SET role = 'admin' 
+WHERE email IN ('admin-email-1@domain.com', 'admin-email-2@domain.com');
+
+-- Verify the changes
+SELECT id, email, role FROM "User" WHERE role = 'admin';
+```
+
+See `sql/assign_admin_roles.sql` for the complete script.
 
 ## Implementation Details
 
@@ -33,8 +47,8 @@ enum Role {
 
 Updated `src/lib/auth.config.ts` to:
 - Include role in JWT tokens and sessions
-- Automatically assign admin role to specified emails
-- Fetch user role from database during authentication
+- Read user roles from database only (no hardcoded emails)
+- Maintain existing roles during user updates
 
 ### 3. Middleware Protection (✅ Implemented)
 
@@ -49,153 +63,118 @@ Protected admin-only paths:
 - `/api/referenciales/create`
 - `/api/referenciales/update`
 - `/api/referenciales/delete`
-- `/dashboard/referenciales/[id]/edit`
+- `/api/referenciales/upload-csv`
 
 ### 4. Custom Auth Hook (✅ Implemented)
 
 Created `src/hooks/useAuth.ts` with utilities:
 ```typescript
-const {
-  isAuthenticated,
-  user,
-  userRole,
-  isAdmin,
-  canCreateReferenciales,
-  canEditReferenciales,
-  canDeleteReferenciales,
-  canViewSensitiveData
-} = useAuth();
+const { isAdmin, canCreateReferenciales, canViewSensitiveData } = useAuth();
 ```
 
-### 5. Component Updates (✅ Implemented)
+### 5. Component-Level Protection (✅ Implemented)
 
 #### Table Component (`src/components/ui/referenciales/table.tsx`)
-- Shows/hides sensitive fields (comprador, vendedor) based on user role
-- Dynamically filters table headers
-- Admin users see all data, regular users see redacted data
+- Conditionally shows/hides sensitive buyer/seller data
+- Redacts data for non-admin users with "• • • • •"
 
 #### Dashboard Page (`src/app/dashboard/referenciales/page.tsx`)
 - Shows "Create" button only for admin users
-- Displays admin mode indicator
-- Conditional rendering based on permissions
+- Displays admin role indicator
 
-#### API Routes (`src/app/api/referenciales/upload-csv/route.ts`)
-- Authentication checks for protected endpoints
-- Role-based authorization for admin operations
-- Secure session management
+### 6. API Protection (✅ Implemented)
 
-## Usage Examples
+#### Server-side Validation
+All admin-only API endpoints verify:
+- User authentication (valid session)
+- User authorization (admin role)
+- Return 403 Forbidden for unauthorized access
 
-### Frontend Component with Role Checks
-
-```tsx
-import { useAuth } from '@/hooks/useAuth';
-
-function MyComponent() {
-  const { canCreateReferenciales, canViewSensitiveData, userRole } = useAuth();
-
-  return (
-    <div>
-      {/* Admin-only actions */}
-      {canCreateReferenciales && (
-        <button>Create New Referencial</button>
-      )}
-
-      {/* Conditional data display */}
-      {canViewSensitiveData ? (
-        <p>Buyer: {data.comprador}</p>
-      ) : (
-        <p>Buyer: • • • • •</p>
-      )}
-
-      {/* Role indicator */}
-      <div>Current role: {userRole}</div>
-    </div>
-  );
-}
-```
-
-### API Route with Admin Protection
-
+Example implementation:
 ```typescript
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/lib/auth.config';
+// Check authentication
+const session = await getServerSession(authOptions);
+if (!session?.user?.id) {
+  return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+}
 
-export async function POST(request: NextRequest) {
-  // Check authentication
-  const session = await getServerSession(authOptions);
-  
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
-  }
+// Check authorization
+const user = await prisma.user.findUnique({
+  where: { id: session.user.id },
+  select: { role: true }
+});
 
-  // Check admin permissions
-  if (session.user.role !== 'admin' && session.user.role !== 'superadmin') {
-    return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-  }
-
-  // Admin-only logic here
+if (user?.role !== 'admin') {
+  return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 }
 ```
 
 ## Security Features
 
-### 1. Sensitive Data Protection
-- Buyer and seller names are hidden from non-admin users
-- Database queries remain the same for performance
-- Frontend filtering ensures data protection
+### Double Protection
+- **Client-side**: UI controls hide/show elements based on role
+- **Server-side**: API endpoints validate permissions
 
-### 2. Route Protection
-- Middleware intercepts unauthorized requests
-- Admin-only pages return 403 errors for regular users
-- API endpoints validate permissions server-side
+### Data Privacy
+- Sensitive buyer/seller names are hidden from regular users
+- Data appears as "• • • • •" for non-admin users
+- Only admin users see full property transaction details
 
-### 3. Automatic Role Assignment
-- Admin emails are automatically assigned admin role on login
-- No manual database updates required
-- Roles are fetched fresh on each session
+### Session Security
+- Roles stored in secure JWT tokens
+- Database lookup for role verification
+- No sensitive data in client-side storage
 
-## Testing the Implementation
+## User Experience
 
-### As a Regular User:
-1. Login with a non-admin Google account
-2. Visit `/dashboard/referenciales`
-3. Should see:
-   - No "Create" button
-   - Redacted buyer/seller data (• • • • •)
-   - No admin mode indicator
+### Regular Users (role: 'user')
+- ✅ Can view property listings
+- ✅ Can use maps and basic features
+- ❌ Cannot create/edit/delete properties
+- ❌ Cannot see buyer/seller names
+- ❌ Cannot access CSV upload
 
-### As an Admin User:
-1. Login with `gabrielpantojarivera@gmail.com` or `monacaniqueo@gmail.com`
-2. Visit `/dashboard/referenciales`
-3. Should see:
-   - "Create" button available
-   - Full buyer/seller data visible
-   - "Modo Administrador" indicator
-   - Access to `/dashboard/referenciales/create`
+### Admin Users (role: 'admin')
+- ✅ All regular user features
+- ✅ Can create/edit/delete properties
+- ✅ Can see full buyer/seller information
+- ✅ Can upload CSV files
+- ✅ See admin mode indicator in UI
 
-### Testing API Protection:
-```bash
-# This should fail for non-admin users
-curl -X POST http://localhost:3000/api/referenciales/upload-csv \
-  -H "Authorization: Bearer <non-admin-token>" \
-  -F "file=@test.csv"
+## Maintenance
 
-# Should return 403 Forbidden
+### Adding New Admin Users
+1. User must login at least once (creates account with 'user' role)
+2. Execute SQL script to update their role to 'admin'
+3. User will have admin privileges on next login
+
+### Removing Admin Access
+```sql
+UPDATE "User" SET role = 'user' WHERE email = 'former-admin@domain.com';
 ```
 
-## Security Considerations
+### Verification Scripts
+Use `sql/verify_roles.sql` to check current role assignments and verify system state.
 
-1. **Role Verification**: Roles are verified both client-side (for UI) and server-side (for security)
-2. **Session Management**: Roles are included in JWT tokens and refreshed appropriately
-3. **Data Protection**: Sensitive data is filtered at the component level but remains available for authorized users
-4. **Audit Trail**: All authentication events are logged for security monitoring
+## Technical Notes
 
-## Production Deployment Notes
+- **NextAuth.js v4**: Compatible with existing authentication system
+- **TypeScript**: Fully typed with proper role definitions
+- **Performance**: No additional database queries for role checks (cached in JWT)
+- **Backwards Compatible**: Existing functionality preserved for all users
+- **Production Ready**: Secure implementation without hardcoded values
 
-1. **Environment Variables**: Ensure all required NextAuth environment variables are set
-2. **Database Permissions**: The application user should have appropriate database permissions
-3. **HTTPS**: Always use HTTPS in production for secure authentication
-4. **Session Security**: NextAuth handles secure session management automatically
+## Files Modified
 
-This implementation provides secure, role-based access control while maintaining the existing functionality for all users and adding enhanced capabilities for administrators.
+- ✅ `src/lib/auth.config.ts` - Role inclusion in sessions
+- ✅ `src/middleware.ts` - Route protection
+- ✅ `src/hooks/useAuth.ts` - Custom auth utilities
+- ✅ `src/types/next-auth.d.ts` - TypeScript definitions
+- ✅ `src/components/ui/referenciales/table.tsx` - Conditional data display
+- ✅ `src/app/dashboard/referenciales/page.tsx` - Admin UI elements
+- ✅ `src/app/api/referenciales/upload-csv/route.ts` - API protection
+
+## SQL Scripts
+
+- ✅ `sql/assign_admin_roles.sql` - Set admin roles
+- ✅ `sql/verify_roles.sql` - Verify role assignments
