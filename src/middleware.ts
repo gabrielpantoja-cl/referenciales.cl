@@ -50,7 +50,7 @@ export async function middleware(req: NextRequest) {
       req, 
       secret: process.env.NEXTAUTH_SECRET 
     });
-    console.log(`🛡️ [MIDDLEWARE] Token status: ${token ? 'VALID' : 'NONE'}`);
+    console.log(`🛡️ [MIDDLEWARE] Token status: ${token ? 'VALID' : 'NONE'}, Role: ${token?.role || 'none'}`);
   } catch (error) {
     console.error('🛡️ [MIDDLEWARE] Token error:', error);
     // En caso de error, permitir continuar para evitar bloqueos en APIs públicas
@@ -59,10 +59,22 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  // ✅ PASO 4: LÓGICA DE AUTENTICACIÓN
+  // ✅ PASO 4: LÓGICA DE AUTENTICACIÓN Y AUTORIZACIÓN
   const isHomePage = pathname === '/';
   const isProtectedPage = pathname.startsWith('/dashboard');
   const isChatbotPage = pathname.startsWith('/chatbot');
+
+  // ✅ IDENTIFICAR RUTAS ADMIN-ONLY
+  const adminOnlyPaths = [
+    '/dashboard/referenciales/create',
+    '/dashboard/referenciales/edit',
+    '/api/referenciales/create',
+    '/api/referenciales/update',
+    '/api/referenciales/delete',
+  ];
+
+  const isAdminOnlyPath = adminOnlyPaths.some(path => pathname.startsWith(path)) || 
+                         pathname.match(/\/dashboard\/referenciales\/[^\/]+\/edit$/);
 
   // ✅ REGLA 1: APIs protegidas requieren autenticación
   if (!token && isProtectedApi) {
@@ -85,7 +97,20 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // ✅ REGLA 3: APIs no protegidas y páginas públicas - permitir acceso
+  // ✅ REGLA 3: Rutas admin-only requieren rol admin
+  if (token && isAdminOnlyPath && token.role !== 'admin' && token.role !== 'superadmin') {
+    console.log(`🛡️ [MIDDLEWARE] Unauthorized admin access: ${pathname}, Role: ${token.role}`);
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Insufficient permissions',
+        message: 'Admin access required for this operation' 
+      },
+      { status: 403 }
+    );
+  }
+
+  // ✅ REGLA 4: APIs no protegidas y páginas públicas - permitir acceso
   if (pathname.startsWith('/api/') && !isProtectedApi) {
     console.log(`🛡️ [MIDDLEWARE] Public API access: ${pathname}`);
     return NextResponse.next();

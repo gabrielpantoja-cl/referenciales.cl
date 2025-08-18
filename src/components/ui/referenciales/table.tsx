@@ -2,12 +2,13 @@
 
 import { formatDateToLocal } from '@/lib/utils';
 import { Referencial } from '@/types/referenciales';
+import { useAuth } from '@/hooks/useAuth';
 
 const SENSITIVE_FIELDS = ['comprador', 'vendedor'];
 const isSensitiveField = (key: string) => SENSITIVE_FIELDS.includes(key);
 
-const formatFieldValue = (key: string, value: any, referencial: Referencial) => {
-  if (isSensitiveField(key)) {
+const formatFieldValue = (key: string, value: any, referencial: Referencial, canViewSensitiveData: boolean) => {
+  if (isSensitiveField(key) && !canViewSensitiveData) {
     return '• • • • •';
   }
 
@@ -37,6 +38,8 @@ const ALL_TABLE_HEADERS: { key: DisplayKeys, label: string }[] = [
   { key: 'fojas', label: 'Fojas' },
   { key: 'numero', label: 'Número' },
   { key: 'anio', label: 'Año' },
+  { key: 'comprador', label: 'Comprador' },
+  { key: 'vendedor', label: 'Vendedor' },
   { key: 'predio', label: 'Predio' },
   { key: 'comuna', label: 'Comuna' },
   { key: 'rol', label: 'Rol' },
@@ -46,15 +49,17 @@ const ALL_TABLE_HEADERS: { key: DisplayKeys, label: string }[] = [
   { key: 'observaciones', label: 'Observaciones' },
 ];
 
-const VISIBLE_HEADERS = ALL_TABLE_HEADERS.filter(
-  header => !SENSITIVE_FIELDS.includes(header.key as string)
-);
-
 export default function ReferencialesTable({
   query,
   currentPage,
   referenciales, 
 }: ReferencialTableProps) {
+  const { canViewSensitiveData } = useAuth();
+
+  // Filtrar headers basado en permisos del usuario
+  const VISIBLE_HEADERS = ALL_TABLE_HEADERS.filter(
+    header => canViewSensitiveData || !SENSITIVE_FIELDS.includes(header.key as string)
+  );
   return (
     <div className="mt-6 flow-root w-full">
       <div className="w-full">
@@ -82,7 +87,7 @@ export default function ReferencialesTable({
                             {label}: {
                               key === 'conservador' 
                                 ? (referencial.conservadores?.nombre || '-') 
-                                : formatFieldValue(key as string, (referencial as any)[key], referencial)
+                                : formatFieldValue(key as string, (referencial as any)[key], referencial, canViewSensitiveData)
                             }
                           </p>
                         ))}
@@ -112,7 +117,7 @@ export default function ReferencialesTable({
                           <td key={String(key)} className="whitespace-nowrap px-3 py-3">
                             {key === 'conservador' 
                               ? (referencial.conservadores?.nombre || '-') 
-                              : formatFieldValue(key as string, (referencial as any)[key], referencial)
+                              : formatFieldValue(key as string, (referencial as any)[key], referencial, canViewSensitiveData)
                             }
                           </td>
                         ))}

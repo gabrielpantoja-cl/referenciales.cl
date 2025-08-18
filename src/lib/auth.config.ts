@@ -76,24 +76,36 @@ export const authOptions: NextAuthOptions = {
       return defaultUrl;
     },
     
-    // ✅ SESSION CALLBACK SIMPLIFICADO
+    // ✅ SESSION CALLBACK - INCLUYE ROLE
     async session({ session, token }) {
       if (session?.user && token?.sub) {
         session.user.id = token.sub;
+        session.user.role = token.role as 'user' | 'admin' | 'superadmin';
       }
       return session;
     },
     
-    // ✅ JWT CALLBACK SIMPLIFICADO
+    // ✅ JWT CALLBACK - INCLUYE ROLE DEL USUARIO
     async jwt({ token, user }) {
       if (user) {
         token.sub = user.id;
+        // Obtener el role del usuario desde la base de datos
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: user.id },
+            select: { role: true }
+          });
+          token.role = dbUser?.role || 'user';
+        } catch (error) {
+          console.error('Error fetching user role:', error);
+          token.role = 'user';
+        }
       }
       return token;
     },
     
-    // ✅ SIGNIN CALLBACK - LOGGING Y VALIDACIÓN
-    async signIn({ user, account, profile }) {
+    // ✅ SIGNIN CALLBACK - LOGGING, VALIDACIÓN Y ASIGNACIÓN DE ROLES
+    async signIn({ user, account }) {
       console.log('✅ [AUTH-SIGNIN]', {
         userId: user.id,
         email: user.email,
@@ -105,6 +117,34 @@ export const authOptions: NextAuthOptions = {
       if (!user.email) {
         console.error('❌ [AUTH-SIGNIN] No email provided');
         return false;
+      }
+
+      // ✅ ASIGNACIÓN AUTOMÁTICA DE ROLES ADMIN
+      const adminEmails = ['gabrielpantojarivera@gmail.com', 'monacaniqueo@gmail.com'];
+      const isAdmin = adminEmails.includes(user.email);
+
+      try {
+        // Actualizar o crear usuario con rol apropiado
+        await prisma.user.upsert({
+          where: { email: user.email },
+          update: {
+            role: isAdmin ? 'admin' : 'user',
+            name: user.name,
+            image: user.image,
+          },
+          create: {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            image: user.image,
+            role: isAdmin ? 'admin' : 'user',
+          },
+        });
+
+        console.log(`✅ [AUTH-SIGNIN] User role assigned: ${isAdmin ? 'admin' : 'user'} for ${user.email}`);
+      } catch (error) {
+        console.error('❌ [AUTH-SIGNIN] Error updating user role:', error);
+        // Continuar con el login aunque falle la actualización del rol
       }
       
       return true;

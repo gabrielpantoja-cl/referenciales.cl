@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { parse } from 'csv-parse/sync';
 import { Prisma } from '@prisma/client';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/auth.config';
 
 type ValidationError = {
   row: number;
@@ -21,20 +23,30 @@ function extractConservadorName(cbrValue: string): string {
 
 export async function POST(request: NextRequest) {
   try {
+    // ✅ VERIFICAR AUTENTICACIÓN Y PERMISOS ADMIN
+    const session = await getServerSession(authOptions);
+    
+    if (!session?.user) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    if (session.user.role !== 'admin' && session.user.role !== 'superadmin') {
+      return NextResponse.json(
+        { error: 'Admin access required for CSV upload' },
+        { status: 403 }
+      );
+    }
+
     const formData = await request.formData();
     const file = formData.get('file') as File;
-    const userId = formData.get('userId') as string;
+    const userId = session.user.id; // Usar el ID del usuario autenticado
 
     if (!file) {
       return NextResponse.json(
         { error: 'No se proporcionó archivo' },
-        { status: 400 }
-      );
-    }
-
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'No se proporcionó ID de usuario' },
         { status: 400 }
       );
     }
@@ -185,7 +197,7 @@ export async function POST(request: NextRequest) {
             if (!conservador) {
               conservador = await tx.conservadores.create({
                 data: {
-                  id: `conservador_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                  id: `conservador_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
                   nombre: conservadorName,
                   direccion: 'Por definir',
                   comuna: record.comuna || 'Por definir',
@@ -198,7 +210,7 @@ export async function POST(request: NextRequest) {
             // Create the referencial
             const referencial = await tx.referenciales.create({
               data: {
-                id: `ref_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                id: `ref_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
                 lat: parseFloat(record.lat),
                 lng: parseFloat(record.lng),
                 fojas: record.fojas,
