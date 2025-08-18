@@ -37,7 +37,7 @@ interface ValidationState {
   };
 }
 
-const FIELD_LABELS = {
+const ALL_FIELD_LABELS = {
   fojas: 'Fojas',
   numero: 'Número',
   anno: 'Año',
@@ -50,8 +50,12 @@ const FIELD_LABELS = {
   fechaEscritura: 'Fecha Escritura',
   latitud: 'Latitud',
   longitud: 'Longitud',
-  observaciones: 'Observaciones'
+  observaciones: 'Observaciones',
+  vendedor: 'Vendedor',
+  comprador: 'Comprador'
 };
+
+const SENSITIVE_FIELDS = ['vendedor', 'comprador'];
 
 const PLACEHOLDERS = {
   fojas: '1234v',
@@ -66,7 +70,9 @@ const PLACEHOLDERS = {
   fechaEscritura: '2024-03-15',
   latitud: '-38.7394',
   longitud: '-72.5986',
-  observaciones: 'Casa habitación'
+  observaciones: 'Casa habitación',
+  vendedor: 'Juan Pérez',
+  comprador: 'María González'
 };
 
 interface ReferencialTableEditorProps {
@@ -76,7 +82,17 @@ interface ReferencialTableEditorProps {
 
 export default function ReferencialTableEditor({ userId, userName }: ReferencialTableEditorProps) {
   const { userRole, isAdmin, canViewSensitiveData } = useAuth();
-  const [rows, setRows] = useState<ReferencialRow[]>([createEmptyRow()]);
+  
+  // Filtrar los campos según permisos del usuario
+  const FIELD_LABELS = React.useMemo(() => {
+    return Object.fromEntries(
+      Object.entries(ALL_FIELD_LABELS).filter(([key]) => 
+        canViewSensitiveData || !SENSITIVE_FIELDS.includes(key)
+      )
+    );
+  }, [canViewSensitiveData]);
+
+  const [rows, setRows] = useState<ReferencialRow[]>([]);
   const [validationStates, setValidationStates] = useState<{ [rowId: string]: ValidationState }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -88,9 +104,11 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
       canViewSensitiveData,
       userId,
       userName,
+      visibleFields: Object.keys(FIELD_LABELS),
+      sensitiveFieldsVisible: SENSITIVE_FIELDS.some(field => field in FIELD_LABELS),
       timestamp: new Date().toISOString()
     });
-  }, [userRole, isAdmin, canViewSensitiveData, userId, userName]);
+  }, [userRole, isAdmin, canViewSensitiveData, userId, userName, FIELD_LABELS]);
 
   function createEmptyRow(): ReferencialRow {
     return {
@@ -108,11 +126,18 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
       latitud: '',
       longitud: '',
       observaciones: '',
-      // Campos ocultos con valores por defecto
-      vendedor: 'Datos reservados',
-      comprador: 'Datos reservados'
+      // Campos sensibles - siempre incluidos para el backend pero solo visibles si hay permisos
+      vendedor: canViewSensitiveData ? '' : 'Datos reservados',
+      comprador: canViewSensitiveData ? '' : 'Datos reservados'
     };
   }
+
+  // Inicializar las filas cuando los permisos están disponibles
+  React.useEffect(() => {
+    if (rows.length === 0) {
+      setRows([createEmptyRow()]);
+    }
+  }, [canViewSensitiveData]);
 
   const validateField = useCallback((fieldName: string, value: string) => {
     const validation: { isValid: boolean; error?: string; warning?: string } = { isValid: true };
@@ -346,7 +371,7 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
           // Recopilar errores específicos para mostrar al usuario
           Object.entries(validationResult.errors).forEach(([field, messages]) => {
             messages.forEach(message => {
-              errorDetails.push(`Fila ${i + 1} - ${FIELD_LABELS[field as keyof typeof FIELD_LABELS] || field}: ${message}`);
+              errorDetails.push(`Fila ${i + 1} - ${ALL_FIELD_LABELS[field as keyof typeof ALL_FIELD_LABELS] || field}: ${message}`);
             });
           });
           continue;
@@ -438,6 +463,15 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
           Agrega datos fila por fila con validación automática
         </p>
       </div>
+
+      {/* Mensaje de privilegios de administrador */}
+      {canViewSensitiveData && (
+        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <p className="text-sm text-blue-700">
+            🔐 <strong>Privilegios de Administrador:</strong> Estás viendo los campos "Vendedor" y "Comprador" porque tienes permisos de administrador.
+          </p>
+        </div>
+      )}
 
       {/* Tabla con ancho completo optimizado */}
       <div className="w-full overflow-x-auto border rounded-lg shadow-sm pb-20">
