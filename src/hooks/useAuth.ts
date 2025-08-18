@@ -28,7 +28,7 @@ export function useAuth() {
   const isUser = userRole === 'user';
 
   // Función para verificar si el usuario puede realizar operaciones CRUD
-  const canCreateReferenciales = isAdmin;
+  const canCreateReferenciales = isAuthenticated; // Todos los usuarios autenticados pueden crear
   const canEditReferenciales = isAdmin;
   const canDeleteReferenciales = isAdmin;
   const canViewSensitiveData = isAdmin;

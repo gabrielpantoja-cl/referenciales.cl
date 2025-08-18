@@ -151,7 +151,7 @@ function ReferencialesContent() {
         <Search placeholder="Buscar referencial..." />
         {canCreateReferenciales && (
           <div className="text-sm text-gray-600 bg-blue-50 px-3 py-1 rounded-md">
-            Modo Administrador: {userRole}
+            Rol: {userRole}
           </div>
         )}
       </div>
