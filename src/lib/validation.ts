@@ -113,11 +113,19 @@ export const validateReferencial = (formData: FormData): {
   // Validación de monto
   const monto = formData.get('monto') as string;
   if (monto) {
-    const montoValue = parseFloat(monto);
-    if (isNaN(montoValue)) {
-      errors['monto'] = ['El Monto debe ser un valor numérico'];
-    } else if (montoValue <= 0) {
-      errors['monto'] = ['El Monto debe ser mayor que cero'];
+    // Verificar que no contenga puntos, comas o separadores de miles
+    if (/[.,]/.test(monto)) {
+      errors['monto'] = [
+        'El Monto no debe contener puntos ni comas',
+        'Ejemplo correcto: 85000000 (sin separadores de miles)'
+      ];
+    } else {
+      const montoValue = parseFloat(monto);
+      if (isNaN(montoValue)) {
+        errors['monto'] = ['El Monto debe ser un valor numérico'];
+      } else if (montoValue <= 0) {
+        errors['monto'] = ['El Monto debe ser mayor que cero'];
+      }
     }
   }
 

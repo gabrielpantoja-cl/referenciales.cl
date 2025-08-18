@@ -1,0 +1,4 @@
+{
+  "matcher": "tool.name == \"Bash\" && tool.args.command.includes(\"git add\")",
+  "command": "cd /home/gabriel/Documentos/referenciales-cl && npx tsc --noEmit"
+}

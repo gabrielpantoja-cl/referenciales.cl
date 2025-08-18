@@ -4,6 +4,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
+**IMPORTANT**: Referenciales.cl is an open and collaborative database of real estate transactions in Chile, based on data from the Conservador de Bienes Raíces. Its objective is to provide transparency and accessibility to this information for the Chilean real estate market.
+
 Referenciales.cl is a Next.js 15 application for managing real estate appraisal references in Chile. It features:
 
 - **Public API**: Unauthenticated endpoints for external integrations (e.g., pantojapropiedades.cl)
@@ -110,6 +112,8 @@ import { authOptions } from '../../../lib/auth.config'
 - **Spatial Data**: `referenciales` table with PostGIS geometry
 - **Relations**: Strict naming conventions required for NextAuth compatibility
 - **Migration**: Use `npx prisma db push` for development, migrations for production
+- **YOU MUST**: Always validate Chilean property data consistency (ROL, fojas, CBR numbers)
+- **IMPORTANT**: Implement Row Level Security (RLS) for sensitive property data
 
 ### Public API Architecture
 ```
@@ -223,6 +227,9 @@ npm run dev
 - **Data Sanitization**: All public API responses exclude personal information
 - **CSP Headers**: Configured in `next.config.js` for security
 - **Input Validation**: All API endpoints validate query parameters
+- **IMPORTANT**: Follow OWASP guidelines for SQL injection, XSS, and CSRF prevention
+- **YOU MUST**: Regular security audits for Chilean property data protection
+- **Compliance**: Adhere to Chilean data protection laws for property information
 
 ## References
 
