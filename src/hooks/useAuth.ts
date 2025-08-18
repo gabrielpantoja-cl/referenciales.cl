@@ -1,4 +1,5 @@
 import { useSession } from 'next-auth/react';
+import { useEffect } from 'react';
 
 export function useAuth() {
   const { data: session, status } = useSession();
@@ -7,6 +8,20 @@ export function useAuth() {
   const isAuthenticated = !!session?.user;
   const user = session?.user;
   const userRole = session?.user?.role || 'user';
+
+  // Log para debugging en consola - solo cuando hay cambios en la sesión
+  useEffect(() => {
+    if (status !== 'loading') {
+      console.log('🔐 [USEAUTH-HOOK]', {
+        status,
+        isAuthenticated,
+        userRole,
+        userId: user?.id,
+        userEmail: user?.email,
+        timestamp: new Date().toISOString()
+      });
+    }
+  }, [status, isAuthenticated, userRole, user?.id, user?.email]);
 
   const isAdmin = userRole === 'admin' || userRole === 'superadmin';
   const isSuperAdmin = userRole === 'superadmin';

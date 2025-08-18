@@ -41,6 +41,17 @@ export default function EditReferencialForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { canEdit, canDelete } = usePermissions();
 
+  // Log para debugging en consola
+  React.useEffect(() => {
+    console.log('🔐 [EDIT-FORM-AUTH]', {
+      status,
+      canEdit,
+      canDelete,
+      referencialId: referencial.id,
+      timestamp: new Date().toISOString()
+    });
+  }, [status, canEdit, canDelete, referencial.id]);
+
   const [formState, setFormState] = useState<FormState>({
     id: referencial.id,
     userId: referencial.userId,

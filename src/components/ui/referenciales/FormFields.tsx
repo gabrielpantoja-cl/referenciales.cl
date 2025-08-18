@@ -1,6 +1,7 @@
 // components/ui/referenciales/FormFields.tsx
 import React from 'react';
 import { Input } from '@/components/ui/primitives/input';
+import { useAuth } from '@/hooks/useAuth';
 
 interface FormState {
   errors: {
@@ -23,6 +24,17 @@ interface FormFieldsProps {
 }
 
 const FormFields: React.FC<FormFieldsProps> = ({ state, currentUser }) => {
+  const { isAdmin, userRole, canViewSensitiveData } = useAuth();
+
+  // Log para debugging en consola
+  React.useEffect(() => {
+    console.log('🔐 [FORM-FIELDS-AUTH]', {
+      userRole,
+      isAdmin,
+      canViewSensitiveData,
+      timestamp: new Date().toISOString()
+    });
+  }, [userRole, isAdmin, canViewSensitiveData]);
   return (
     <>
       <div className="mb-6 p-4 bg-gray-50 rounded-lg">
@@ -106,23 +118,47 @@ const FormFields: React.FC<FormFieldsProps> = ({ state, currentUser }) => {
         required={true}
       />
 
-      <Input
-        label="Vendedor"
-        id="vendedor"
-        name="vendedor"
-        placeholder="Escribe el nombre del vendedor"
-        error={state.errors.vendedor}
-        required={true}
-      />
+      {/* Campos privilegiados para administradores */}
+      {canViewSensitiveData ? (
+        <>
+          <Input
+            label="Vendedor"
+            id="vendedor"
+            name="vendedor"
+            placeholder="Escribe el nombre del vendedor"
+            error={state.errors.vendedor}
+            required={true}
+          />
+          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-sm text-blue-700">
+              🔐 <strong>Campo privilegiado:</strong> Solo los administradores pueden ver y editar el campo &quot;Vendedor&quot;
+            </p>
+          </div>
 
-      <Input
-        label="Comprador"
-        id="comprador"
-        name="comprador"
-        placeholder="Escribe el nombre del comprador"
-        error={state.errors.comprador}
-        required={true}
-      />
+          <Input
+            label="Comprador"
+            id="comprador"
+            name="comprador"
+            placeholder="Escribe el nombre del comprador"
+            error={state.errors.comprador}
+            required={true}
+          />
+          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-sm text-blue-700">
+              🔐 <strong>Campo privilegiado:</strong> Solo los administradores pueden ver y editar el campo &quot;Comprador&quot;
+            </p>
+          </div>
+        </>
+      ) : (
+        <div className="mb-6 p-4 bg-gray-100 border border-gray-300 rounded-lg">
+          <p className="text-sm text-gray-600 mb-2">
+            🔒 <strong>Campos restringidos:</strong> Los campos &quot;Vendedor&quot; y &quot;Comprador&quot; solo son visibles para administradores de la base de datos.
+          </p>
+          <p className="text-xs text-gray-500">
+            Si necesitas acceso a estos campos, contacta con un administrador del sistema.
+          </p>
+        </div>
+      )}
 
       <Input
         label="Superficie (m2)"
