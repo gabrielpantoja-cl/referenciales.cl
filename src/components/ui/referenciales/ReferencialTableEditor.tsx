@@ -426,7 +426,7 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
       </div>
 
       {/* Tabla con ancho completo optimizado */}
-      <div className="w-full overflow-x-auto border rounded-lg shadow-sm">
+      <div className="w-full overflow-x-auto border rounded-lg shadow-sm pb-20">
         <table className="w-full bg-white table-fixed">
           <thead className="bg-gray-50">
             <tr>
