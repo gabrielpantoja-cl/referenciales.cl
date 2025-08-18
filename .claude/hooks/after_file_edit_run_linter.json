@@ -1,0 +1,4 @@
+{
+  "matcher": "tool.name == \"Edit\" && (tool.args.file_path.endsWith(\".ts\") || tool.args.file_path.endsWith(\".tsx\") || tool.args.file_path.endsWith(\".js\") || tool.args.file_path.endsWith(\".jsx\"))",
+  "command": "cd /home/gabriel/Documentos/referenciales-cl && npm run lint -- --fix --no-eslint-rc --config .eslintrc.json ${tool.args.file_path}"
+}
