@@ -30,6 +30,7 @@ import {
   formatCompactCurrency 
 } from '@/lib/realEstateAnalytics';
 import { BarChart3, LineChart as LineChartIcon, PieChart as PieChartIcon, TrendingUp, Download, FileText, Calendar, MapPin, Zap as ScatterIcon } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 interface AdvancedRealEstateChartsProps {
   data: Point[];
@@ -46,6 +47,7 @@ const CHART_COLORS = [
 const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ data, selectedArea = '' }) => {
   const [selectedChart, setSelectedChart] = useState<ChartType>('scatter');
   const chartRef = useRef<HTMLDivElement>(null);
+  const { canViewSensitiveData } = useAuth();
 
   if (!data || data.length === 0) {
     return (
@@ -92,6 +94,18 @@ const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ dat
 
   const chartData = getChartData();
 
+  // Función para formatear moneda completa sin abreviaciones
+  const formatFullCurrency = (amount: number | bigint | null | undefined): string => {
+    if (amount === null || amount === undefined) return '-';
+    const numAmount = typeof amount === 'bigint' ? Number(amount) : amount;
+    return new Intl.NumberFormat('es-CL', { 
+      style: 'currency', 
+      currency: 'CLP',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(numAmount);
+  };
+
   const downloadPDF = async () => {
     if (typeof window === 'undefined') return;
 
@@ -127,11 +141,11 @@ const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ dat
       
       pdf.setFontSize(11);
       const resumenY = 115;
-      pdf.text(`• Precio promedio del área: ${formatCurrency(stats.averagePrice)}`, 25, resumenY);
-      pdf.text(`• Precio mediano: ${formatCurrency(stats.medianPrice)}`, 25, resumenY + 8);
-      pdf.text(`• Precio promedio por m²: ${formatCurrency(stats.pricePerSqm)}`, 25, resumenY + 16);
+      pdf.text(`• Precio promedio del área: ${formatFullCurrency(stats.averagePrice)}`, 25, resumenY);
+      pdf.text(`• Precio mediano: ${formatFullCurrency(stats.medianPrice)}`, 25, resumenY + 8);
+      pdf.text(`• Precio promedio por m²: ${formatFullCurrency(stats.pricePerSqm)}`, 25, resumenY + 16);
       pdf.text(`• Superficie promedio: ${formatNumber(stats.averageSize)} m²`, 25, resumenY + 24);
-      pdf.text(`• Volumen total de transacciones: ${formatCurrency(stats.totalVolume)}`, 25, resumenY + 32);
+      pdf.text(`• Volumen total de transacciones: ${formatFullCurrency(stats.totalVolume)}`, 25, resumenY + 32);
       
       // Tendencia del mercado
       if (stats.trend.percentage > 0) {
@@ -164,10 +178,24 @@ const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ dat
       pdf.setFontSize(10);
       pdf.text(`Propiedades en el área seleccionada (${data.length} registros)`, 20, 35);
       
-      // Configurar la tabla
+      // Configurar la tabla - Headers y columnas dinámicas basadas en rol
+      const baseHeaders = ['Fojas', 'Número', 'Año', 'CBR', 'Predio', 'Comuna', 'ROL', 'Fecha Escritura', 'Superficie (m²)', 'Monto (CLP)', 'Observaciones'];
+      const sensitiveHeaders = ['Comprador', 'Vendedor'];
+      
+      const headers = canViewSensitiveData 
+        ? [...baseHeaders, ...sensitiveHeaders]
+        : baseHeaders;
+      
+      // Ajustar anchos de columna según número de campos - Columnas más amplias
+      const baseColWidths = [20, 18, 15, 18, 35, 25, 30, 30, 25, 35, 40];
+      const sensitiveColWidths = [35, 35];
+      
+      const colWidths = canViewSensitiveData 
+        ? [...baseColWidths, ...sensitiveColWidths]
+        : baseColWidths;
+      
       const tableStartY = 45;
-      const rowHeight = 8;
-      const colWidths = [25, 20, 15, 20, 80, 35, 25, 25, 35];
+      const rowHeight = 12; // Aumentado para mejor legibilidad
       let currentY = tableStartY;
       
       // Encabezados de la tabla
@@ -177,7 +205,6 @@ const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ dat
       pdf.setFontSize(9);
       pdf.setFont('helvetica', 'bold');
       let currentX = 20;
-      const headers = ['Fojas', 'Número', 'Año', 'CBR', 'Comuna', 'Fecha Escritura', 'Superficie', 'Monto', 'ROL'];
       
       headers.forEach((header, index) => {
         pdf.text(header, currentX + 2, currentY);
@@ -198,27 +225,43 @@ const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ dat
         }
         
         currentX = 20;
-        const rowData = [
+        const baseRowData = [
           property.fojas || '-',
           property.numero?.toString() || '-',
           property.anio?.toString() || '-',
           property.cbr || '-',
+          property.predio || '-',
           property.comuna || '-',
+          property.rol || '-',
           property.fechaescritura ? new Date(property.fechaescritura).toLocaleDateString('es-CL') : '-',
-          property.superficie ? `${Math.round(property.superficie)} m²` : '-',
-          property.monto ? formatCompactCurrency(Number(property.monto)) : '-',
-          property.rol || '-'
+          property.superficie ? `${Math.round(property.superficie)}` : '-',
+          property.monto ? formatFullCurrency(property.monto) : '-',
+          property.observaciones || '-'
         ];
         
+        const sensitiveRowData = [
+          property.comprador || '-',
+          property.vendedor || '-'
+        ];
+        
+        const rowData = canViewSensitiveData 
+          ? [...baseRowData, ...sensitiveRowData]
+          : baseRowData;
+        
         rowData.forEach((data, colIndex) => {
-          pdf.text(data.toString().substring(0, 15), currentX + 2, currentY);
+          // Ajustar longitud del texto según el ancho de la columna
+          const maxLength = Math.floor(colWidths[colIndex] / 2.5);
+          const textToShow = data.toString().length > maxLength 
+            ? data.toString().substring(0, maxLength - 3) + '...'
+            : data.toString();
+          pdf.text(textToShow, currentX + 2, currentY);
           currentX += colWidths[colIndex];
         });
         
         currentY += rowHeight;
         
-        // Nueva página si es necesario
-        if (currentY > 190) {
+        // Nueva página si es necesario - Ajustado para filas más altas
+        if (currentY > 180) {
           pdf.addPage('a4', 'landscape');
           currentY = 25;
           
@@ -253,16 +296,27 @@ const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ dat
       pdf.text('• Número: Número específico del registro', 25, fieldsY + 8);
       pdf.text('• Año: Año de inscripción de la escritura', 25, fieldsY + 16);
       pdf.text('• CBR: Conservador de Bienes Raíces correspondiente', 25, fieldsY + 24);
-      pdf.text('• ROL: Rol de avalúo fiscal de la propiedad', 25, fieldsY + 32);
-      pdf.text('• Fecha Escritura: Fecha de otorgamiento de la escritura pública', 25, fieldsY + 40);
+      pdf.text('• Predio: Descripción o dirección completa del predio', 25, fieldsY + 32);
+      pdf.text('• Comuna: Comuna donde se ubica la propiedad', 25, fieldsY + 40);
+      pdf.text('• ROL: Rol de avalúo fiscal de la propiedad', 25, fieldsY + 48);
+      pdf.text('• Fecha Escritura: Fecha de otorgamiento de la escritura pública', 25, fieldsY + 56);
+      pdf.text('• Superficie: Superficie total construida en metros cuadrados', 25, fieldsY + 64);
+      pdf.text('• Monto: Valor total de la transacción en pesos chilenos', 25, fieldsY + 72);
+      pdf.text('• Observaciones: Comentarios adicionales del registro', 25, fieldsY + 80);
+      
+      if (canViewSensitiveData) {
+        pdf.text('• Comprador: Identificación del comprador (solo administradores)', 25, fieldsY + 88);
+        pdf.text('• Vendedor: Identificación del vendedor (solo administradores)', 25, fieldsY + 96);
+      }
       
       pdf.setFontSize(12);
-      pdf.text('Estadísticas del área seleccionada:', 20, 105);
+      const statsHeaderY = canViewSensitiveData ? 145 : 125;
+      pdf.text('Estadísticas del área seleccionada:', 20, statsHeaderY);
       
       pdf.setFontSize(10);
-      const statsY = 115;
+      const statsY = canViewSensitiveData ? 155 : 135;
       pdf.text(`Total de propiedades: ${stats.totalProperties}`, 25, statsY);
-      pdf.text(`Rango de precios: ${formatCurrency(Math.min(...data.map(p => Number(p.monto || 0)).filter(m => m > 0)))} - ${formatCurrency(Math.max(...data.map(p => Number(p.monto || 0))))}`, 25, statsY + 8);
+      pdf.text(`Rango de precios: ${formatFullCurrency(Math.min(...data.map(p => Number(p.monto || 0)).filter(m => m > 0)))} - ${formatFullCurrency(Math.max(...data.map(p => Number(p.monto || 0))))}`, 25, statsY + 8);
       pdf.text(`Rango de superficies: ${Math.min(...data.map(p => p.superficie || 0).filter(s => s > 0))} m² - ${Math.max(...data.map(p => p.superficie || 0))} m²`, 25, statsY + 16);
       
       const comunas = Array.from(new Set(data.map(p => p.comuna).filter((c): c is string => !!c)));
@@ -369,7 +423,7 @@ const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ dat
               tickFormatter={(value) => formatCompactCurrency(value)}
             />
             <Tooltip 
-              formatter={(value: any, name: any, props: any) => {
+              formatter={(value: any, name: any) => {
                 if (name === config.yLabel) return [formatCurrency(value), 'Precio'];
                 if (name === config.xLabel) return [`${value} m²`, 'Superficie'];
                 return [value, name];
