@@ -66,9 +66,7 @@ export async function middleware(req: NextRequest) {
 
   // ✅ IDENTIFICAR RUTAS ADMIN-ONLY
   const adminOnlyPaths = [
-    '/dashboard/referenciales/create',
     '/dashboard/referenciales/edit',
-    '/api/referenciales/create',
     '/api/referenciales/update',
     '/api/referenciales/delete',
   ];

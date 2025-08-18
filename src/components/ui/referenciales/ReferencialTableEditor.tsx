@@ -7,6 +7,7 @@ import { createReferencial } from '@/lib/actions';
 import { validateReferencial } from '@/lib/validation';
 import ComunaAutocomplete from '@/components/ui/forms/ComunaAutocomplete';
 import { validateRolAvaluo } from '@/lib/sii-geocoding';
+import { useAuth } from '@/hooks/useAuth';
 
 interface ReferencialRow {
   id: string;
@@ -74,9 +75,22 @@ interface ReferencialTableEditorProps {
 }
 
 export default function ReferencialTableEditor({ userId, userName }: ReferencialTableEditorProps) {
+  const { userRole, isAdmin, canViewSensitiveData } = useAuth();
   const [rows, setRows] = useState<ReferencialRow[]>([createEmptyRow()]);
   const [validationStates, setValidationStates] = useState<{ [rowId: string]: ValidationState }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Log para debugging en consola
+  React.useEffect(() => {
+    console.log('🔐 [TABLE-EDITOR-AUTH]', {
+      userRole,
+      isAdmin,
+      canViewSensitiveData,
+      userId,
+      userName,
+      timestamp: new Date().toISOString()
+    });
+  }, [userRole, isAdmin, canViewSensitiveData, userId, userName]);
 
   function createEmptyRow(): ReferencialRow {
     return {

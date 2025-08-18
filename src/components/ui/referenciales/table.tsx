@@ -1,5 +1,6 @@
 "use client";
 
+import React from 'react';
 import { formatDateToLocal } from '@/lib/utils';
 import { Referencial } from '@/types/referenciales';
 import { useAuth } from '@/hooks/useAuth';
@@ -54,7 +55,20 @@ export default function ReferencialesTable({
   currentPage,
   referenciales, 
 }: ReferencialTableProps) {
-  const { canViewSensitiveData } = useAuth();
+  const { canViewSensitiveData, userRole, isAdmin } = useAuth();
+
+  // Log para debugging en consola
+  React.useEffect(() => {
+    console.log('🔐 [TABLE-AUTH]', {
+      userRole,
+      isAdmin,
+      canViewSensitiveData,
+      sensitiveFieldsVisible: SENSITIVE_FIELDS.some(field => 
+        ALL_TABLE_HEADERS.some(header => header.key === field)
+      ),
+      timestamp: new Date().toISOString()
+    });
+  }, [userRole, isAdmin, canViewSensitiveData]);
 
   // Filtrar headers basado en permisos del usuario
   const VISIBLE_HEADERS = ALL_TABLE_HEADERS.filter(
@@ -67,6 +81,15 @@ export default function ReferencialesTable({
         <div className="text-sm text-gray-500 mb-2">
           Mostrando página {currentPage} {query ? `con filtro "${query}"` : ""} • Total: {referenciales.length} referenciales
         </div>
+        
+        {/* Mensaje de privilegios de administrador */}
+        {canViewSensitiveData && (
+          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-sm text-blue-700">
+              🔐 <strong>Privilegios de Administrador:</strong> Estás viendo los campos &quot;Vendedor&quot; y &quot;Comprador&quot; porque tienes permisos de administrador.
+            </p>
+          </div>
+        )}
         
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0 w-full">
           {referenciales.length === 0 ? (
