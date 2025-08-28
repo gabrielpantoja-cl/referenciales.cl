@@ -188,7 +188,8 @@ export async function autoGeocode(rol: string, comuna: string): Promise<{lat: nu
 
 // Función para validar rol de avalúo chileno
 export function validateRolAvaluo(rol: string): boolean {
-  // Formato típico: 123-45 o 12345-6
-  const rolRegex = /^\d{1,6}-\d{1,2}$/;
+  // Formato típico: 123-45, 12345-6, 309-280, etc.
+  // Primera cifra: 1-5 dígitos (manzana), Segunda cifra: 1-5 dígitos (predio)
+  const rolRegex = /^\d{1,5}-\d{1,5}$/;
   return rolRegex.test(rol);
 }

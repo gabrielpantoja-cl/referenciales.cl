@@ -63,7 +63,7 @@ const PLACEHOLDERS = {
   anno: '2024',
   cbr: 'Nueva Imperial',
   comuna: 'Temuco',
-  rolAvaluo: '123-45',
+  rolAvaluo: '309-280',
   predio: 'Lote A',
   superficie: '500',
   monto: '85000000',
@@ -240,7 +240,7 @@ export default function ReferencialTableEditor({ userId, userName }: Referencial
         if (value) {
           if (!validateRolAvaluo(value)) {
             validation.isValid = false;
-            validation.error = 'Formato: 123-45 o 12345-6';
+            validation.error = 'Formato: manzana-predio (ej: 309-280, 123-45)';
           }
         }
         break;

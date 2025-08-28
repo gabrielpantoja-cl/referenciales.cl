@@ -16,10 +16,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Validar formato del rol
-    const rolRegex = /^\d{1,6}-\d{1,2}$/;
+    const rolRegex = /^\d{1,5}-\d{1,5}$/;
     if (!rolRegex.test(rol)) {
       return NextResponse.json(
-        { error: 'Formato de rol inválido. Use formato: 123-45' },
+        { error: 'Formato de rol inválido. Use formato: manzana-predio (ej: 309-280)' },
         { status: 400 }
       );
     }
