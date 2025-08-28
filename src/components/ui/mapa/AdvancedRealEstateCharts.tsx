@@ -261,7 +261,7 @@ const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ dat
         
         if (tablePageNum === 0) {
           pdf.setFontSize(16);
-          pdf.text('LISTADO COMPLETO PARA REVISIÓN EN CONSERVADOR DE BIENES RAÍCES', 20, 25);
+          pdf.text('LISTADO PARA REVISIÓN EN CONSERVADOR DE BIENES RAÍCES', 20, 25);
           
           pdf.setFontSize(10);
           pdf.text(`Propiedades en el área seleccionada (${data.length} registros enumerados)`, 20, 35);
