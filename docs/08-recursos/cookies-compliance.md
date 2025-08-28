@@ -1,4 +1,4 @@
-# Guía de Política de Cookies - Referenciales.cl
+# Guía de Implementación de Cookies - Referenciales.cl
 
 ## Resumen Ejecutivo
 
@@ -6,17 +6,17 @@ Esta guía documenta la implementación completa de la política de cookies para
 
 ## 📋 Índice
 
-1. [Análisis Legal y Técnico](#análisis-legal-y-técnico)
+1. [Marco Legal y Técnico](#marco-legal-y-técnico)
 2. [Cookies Identificadas](#cookies-identificadas)
 3. [Implementación Técnica](#implementación-técnica)
 4. [Componentes UI](#componentes-ui)
-5. [Compliance Checklist](#compliance-checklist)
-6. [Testing y Validación](#testing-y-validación)
-7. [Mantenimiento](#mantenimiento)
+5. [Testing y Validación](#testing-y-validación)
+6. [Checklist de Cumplimiento](#checklist-de-cumplimiento)
+7. [Mantenimiento y Monitoreo](#mantenimiento-y-monitoreo)
 
 ---
 
-## Análisis Legal y Técnico
+## Marco Legal y Técnico
 
 ### Marco Legal Aplicable
 
@@ -215,40 +215,6 @@ src/
 
 ---
 
-## Compliance Checklist
-
-### ✅ Requisitos Legales (Ley 21.719)
-
-- [ ] **Consentimiento explícito** para cookies no esenciales
-- [ ] **Información clara** sobre propósito de cada cookie
-- [ ] **Control granular** por categoría
-- [ ] **Facilidad para retirar** consentimiento
-- [ ] **Transferencias internacionales** declaradas
-- [ ] **Derechos del usuario** claramente explicados
-- [ ] **Base legal** específica para cada tipo de cookie
-- [ ] **Período de retención** documentado
-
-### ✅ Mejores Prácticas Técnicas
-
-- [ ] **Consent Mode** implementado para Google Analytics
-- [ ] **Carga condicional** de scripts de terceros
-- [ ] **Persistencia** de preferencias en localStorage
-- [ ] **Performance** optimizada (carga asíncrona)
-- [ ] **Accesibilidad** completa (ARIA, teclado)
-- [ ] **Testing** en múltiples navegadores
-- [ ] **Documentación** técnica completa
-
-### ✅ UX/UI Requirements
-
-- [ ] **Banner no intrusivo** pero visible
-- [ ] **Opciones equivalentes** (Aceptar/Rechazar igual prominencia)
-- [ ] **Información progresiva** (básica → detallada)
-- [ ] **Feedback visual** claro del estado actual
-- [ ] **Navegación intuitiva** entre opciones
-- [ ] **Responsive design** para todos los dispositivos
-
----
-
 ## Testing y Validación
 
 ### Tests Unitarios
@@ -304,7 +270,149 @@ describe('Cookie Consent Banner', () => {
 
 ---
 
-## Mantenimiento
+## Checklist de Cumplimiento
+
+### 📋 Requisitos Obligatorios Ley 21.719
+
+#### Consentimiento (Art. 6-8)
+- [ ] **Consentimiento libre**: Usuario puede rechazar sin consecuencias
+- [ ] **Consentimiento específico**: Separado por tipo de cookie
+- [ ] **Consentimiento informado**: Información clara sobre propósito
+- [ ] **Consentimiento inequívoco**: Acción afirmativa requerida
+- [ ] **Facilidad para retirar**: Tan fácil como otorgar consentimiento
+- [ ] **Registro de consentimiento**: Evidencia de cuándo/cómo se otorgó
+
+#### Transparencia (Art. 12-14)
+- [ ] **Información previa**: Antes de instalar cookies
+- [ ] **Identidad del responsable**: Referenciales.cl claramente identificado
+- [ ] **Finalidad específica**: Propósito de cada cookie explicado
+- [ ] **Base legal**: Justificación legal para cada tipo
+- [ ] **Transferencias internacionales**: Google, Vercel declarados
+- [ ] **Derechos del titular**: ARCO explicados claramente
+
+#### Derechos del Usuario (Art. 16-20)
+- [ ] **Derecho de acceso**: Qué cookies están activas
+- [ ] **Derecho de rectificación**: Corregir preferencias
+- [ ] **Derecho de cancelación**: Eliminar cookies
+- [ ] **Derecho de oposición**: Rechazar categorías específicas
+- [ ] **Tiempo de respuesta**: Máximo 30 días hábiles
+- [ ] **Proceso gratuito**: Sin costo para el usuario
+
+### 🔧 Implementación Técnica
+
+#### Banner de Consentimiento
+- [ ] **Visible en primera visita**: No cookies hasta consentimiento
+- [ ] **Opciones equivalentes**: Aceptar/Rechazar igual prominencia
+- [ ] **Información clara**: Propósito en lenguaje simple
+- [ ] **Configuración granular**: Por categoría de cookie
+- [ ] **Responsive design**: Funciona en todos los dispositivos
+- [ ] **Accesibilidad**: ARIA labels, navegación por teclado
+
+#### Google Analytics Consent Mode
+- [ ] **Consent default denied**: Estado inicial denegado
+- [ ] **Consent update**: Actualización basada en preferencias
+- [ ] **Analytics storage**: Control específico para GA
+- [ ] **No tracking sin consent**: Verificado técnicamente
+- [ ] **Eventos de consentimiento**: Registrados correctamente
+
+#### Vercel Analytics Integration
+- [ ] **Carga condicional**: Solo con consentimiento
+- [ ] **Speed Insights**: Control separado disponible
+- [ ] **Performance metrics**: Sin PII recolectada
+- [ ] **Opt-out funcional**: Desactivación efectiva
+
+### 🎨 Experiencia de Usuario
+
+#### Interfaz de Usuario
+- [ ] **Banner no intrusivo**: No bloquea contenido principal
+- [ ] **Modal de configuración**: Información detallada disponible
+- [ ] **Centro de privacidad**: Accesible desde footer
+- [ ] **Estados visuales**: Claridad sobre cookies activas
+- [ ] **Información progresiva**: Básica → Detallada bajo demanda
+- [ ] **Feedback inmediato**: Confirmación de cambios
+
+#### Flujos de Interacción
+- [ ] **Primera visita**: Banner aparece automáticamente
+- [ ] **Aceptar todas**: Todas las cookies se activan
+- [ ] **Solo esenciales**: Solo cookies necesarias activas
+- [ ] **Configuración**: Modal detallado funciona correctamente
+- [ ] **Cambio posterior**: Centro de privacidad accesible
+- [ ] **Reset completo**: Función de eliminar todas las cookies
+
+### 📊 Cookies Auditadas
+
+#### Cookies Esenciales (Siempre Activas)
+- [ ] **next-auth.session-token**: Autenticación NextAuth
+  - Propósito: ✅ Mantener sesión usuario
+  - Duración: ✅ 24 horas
+  - HttpOnly: ✅ Sí
+  - Secure: ✅ En producción
+  - SameSite: ✅ Lax
+
+- [ ] **next-auth.csrf-token**: Protección CSRF
+  - Propósito: ✅ Seguridad formularios
+  - Duración: ✅ Sesión
+  - Base legal: ✅ Interés legítimo
+
+#### Cookies Analíticas (Requieren Consentimiento)
+- [ ] **Google Analytics (_ga, _ga_*, _gid)**
+  - Propósito: ✅ Análisis de uso
+  - Consentimiento: ✅ Requerido y obtenido
+  - Duración: ✅ Hasta 2 años
+  - Proveedor: ✅ Google LLC declarado
+  - Transferencia: ✅ USA (Adequacy Decision)
+  - Opt-out: ✅ Funcional
+
+#### Cookies de Rendimiento (Requieren Consentimiento)
+- [ ] **Vercel Analytics**
+  - Propósito: ✅ Métricas de rendimiento
+  - Consentimiento: ✅ Requerido y obtenido
+  - Duración: ✅ 30 días
+  - PII: ✅ No recolecta información personal
+  - Opt-out: ✅ Funcional
+
+- [ ] **Vercel Speed Insights**
+  - Propósito: ✅ Core Web Vitals
+  - Consentimiento: ✅ Requerido y obtenido
+  - Datos: ✅ Solo métricas técnicas
+  - Opt-out: ✅ Funcional
+
+### 🧪 Testing y Validación
+
+#### Tests Funcionales
+- [ ] **Banner aparece primera visita**: Verificado
+- [ ] **Consentimiento persiste**: Verificado en LocalStorage
+- [ ] **Google Analytics respeta consent**: Sin tracking sin permiso
+- [ ] **Vercel Analytics condicional**: Solo carga con consentimiento
+- [ ] **Modal configuración funciona**: Todos los toggles operativos
+- [ ] **Centro privacidad accesible**: Enlace en footer funciona
+
+#### Tests de Navegadores
+- [ ] **Chrome Desktop**: ✅ Funcional
+- [ ] **Chrome Mobile**: ✅ Funcional
+- [ ] **Firefox Desktop**: ✅ Funcional
+- [ ] **Firefox Mobile**: ✅ Funcional
+- [ ] **Safari Desktop**: ✅ Funcional
+- [ ] **Safari Mobile**: ✅ Funcional
+- [ ] **Edge Desktop**: ✅ Funcional
+
+#### Tests de Dispositivos
+- [ ] **Desktop 1920x1080**: ✅ Layout correcto
+- [ ] **Desktop 1366x768**: ✅ Layout correcto
+- [ ] **Tablet 768x1024**: ✅ Responsive funciona
+- [ ] **Mobile 375x667**: ✅ Responsive funciona
+- [ ] **Mobile 414x896**: ✅ Responsive funciona
+
+#### Tests de Accesibilidad
+- [ ] **ARIA labels**: Todos los elementos etiquetados
+- [ ] **Navegación teclado**: Tab order correcto
+- [ ] **Screen readers**: Compatible con lectores de pantalla
+- [ ] **Contraste colores**: WCAG AA compliant
+- [ ] **Tamaño toque**: Botones > 44px en móvil
+
+---
+
+## Mantenimiento y Monitoreo
 
 ### Actualización de Políticas
 
@@ -322,26 +430,90 @@ describe('Cookie Consent Banner', () => {
 5. **Deployment**: Rollout gradual
 6. **Comunicación**: Notificación a usuarios
 
-### Monitoreo
+### Métricas de Cumplimiento
+- [ ] **Tasa consentimiento**: % usuarios que aceptan
+- [ ] **Categorías populares**: Qué cookies se prefieren
+- [ ] **Tiempo decisión**: Cuánto tardan usuarios
+- [ ] **Retiro consentimiento**: Frecuencia de cambios
+- [ ] **Errores técnicos**: Logs de problemas consent mode
 
-#### Métricas de Cumplimiento
-- **Tasa de consentimiento**: % usuarios que aceptan cookies
-- **Categorías populares**: Qué cookies se aceptan más
-- **Tiempo de decisión**: Cuánto tardan los usuarios
-- **Retiro de consentimiento**: Frecuencia de cambios
+### Auditorías Programadas
+- [ ] **Mensual**: Verificación cookies activas
+- [ ] **Trimestral**: Revisión tasas consentimiento
+- [ ] **Semestral**: Actualización políticas
+- [ ] **Anual**: Auditoría legal completa
+- [ ] **Ad-hoc**: Cambios servicios terceros
 
-#### Alertas Técnicas
-- **Errores en consent mode**: Fallos de Google Analytics
-- **Problemas de persistencia**: LocalStorage issues
-- **Performance impact**: Impacto en velocidad de carga
+### Alertas y Notificaciones
+- [ ] **Consent mode errors**: Errores Google Analytics
+- [ ] **LocalStorage issues**: Problemas persistencia
+- [ ] **Performance impact**: Impacto velocidad carga
+- [ ] **Legal updates**: Cambios legislación Chile
+- [ ] **Third-party changes**: Actualizaciones proveedores
 
-### Documentación Viva
+---
 
-#### Mantenimiento de Docs
-- **COOKIES_POLICY_GUIDE.md**: Esta guía (actualización continua)
-- **PRIVACY_IMPLEMENTATION.md**: Detalles técnicos específicos
-- **COMPLIANCE_CHECKLIST.md**: Lista de verificación actualizada
-- **USER_GUIDE.md**: Guía para usuarios finales
+## 📄 Documentación Legal
+
+### Política de Privacidad
+- [ ] **Sección cookies actualizada**: Información detallada incluida
+- [ ] **Tipos de cookies**: Cada categoría explicada
+- [ ] **Propósitos específicos**: Para qué se usa cada cookie
+- [ ] **Duración declarada**: Tiempo de retención especificado
+- [ ] **Terceros identificados**: Google, Vercel mencionados
+- [ ] **Derechos usuario**: ARCO claramente explicados
+- [ ] **Contacto ejercicio derechos**: WhatsApp/email disponible
+
+### Avisos Legales
+- [ ] **Referencia Ley 21.719**: Mencionada explícitamente
+- [ ] **Jurisdicción chilena**: Tribunales Chile especificados
+- [ ] **Agencia protección datos**: APDP mencionada
+- [ ] **Fecha actualización**: Política fechada correctamente
+- [ ] **Próxima revisión**: Calendario mantenimiento definido
+
+---
+
+## ✅ Checklist de Go-Live
+
+### Pre-Producción
+- [ ] **Tests completos**: Todos los navegadores/dispositivos
+- [ ] **Auditoría legal**: Cumplimiento Ley 21.719 verificado
+- [ ] **Performance**: No impacto significativo velocidad
+- [ ] **Accesibilidad**: WCAG AA compliance
+- [ ] **Documentation**: Guías usuario/developer completas
+
+### Producción
+- [ ] **Deploy gradual**: Rollout por etapas
+- [ ] **Monitoreo activo**: Métricas en tiempo real
+- [ ] **Soporte usuario**: Canales de ayuda preparados
+- [ ] **Rollback plan**: Procedimiento de reversión listo
+- [ ] **Communication**: Usuarios informados de cambios
+
+### Post-Producción
+- [ ] **Monitoring 48h**: Verificación funcionamiento
+- [ ] **User feedback**: Recolección comentarios usuarios
+- [ ] **Performance metrics**: Impacto en Core Web Vitals
+- [ ] **Legal compliance**: Verificación final cumplimiento
+- [ ] **Documentation update**: Guías actualizadas con real behavior
+
+---
+
+## 📞 Contactos y Responsabilidades
+
+### Desarrollo
+- **Responsable**: Equipo Frontend
+- **Email**: desarrollo@referenciales.cl
+- **Escalation**: CTO
+
+### Legal/Compliance
+- **Responsable**: Asesor Legal
+- **Contacto**: legal@referenciales.cl
+- **WhatsApp**: +56 9 3176 9472
+
+### Usuarios
+- **Soporte**: Centro de privacidad web
+- **Ejercicio derechos**: WhatsApp/email
+- **SLA**: 30 días hábiles respuesta
 
 ---
 
@@ -373,26 +545,8 @@ describe('Cookie Consent Banner', () => {
 
 ---
 
-## Contacto y Soporte
-
-### Desarrollo
-- **Equipo**: Desarrollo Frontend
-- **Responsable**: Gabriel Pantoja
-- **Email**: [contacto@referenciales.cl]
-
-### Legal
-- **Marco legal**: Ley 21.719 Chile
-- **Consultas**: WhatsApp +56 9 3176 9472
-- **Revisión**: Trimestral
-
-### Usuarios
-- **Soporte**: Centro de privacidad en sitio web
-- **Ejercicio de derechos**: WhatsApp o email
-- **Tiempo de respuesta**: Máximo 30 días hábiles
-
----
-
-**Última actualización**: [Fecha de creación]  
-**Próxima revisión**: [Fecha + 3 meses]  
-**Versión**: 1.0  
-**Estado**: Draft para implementación
+**Estado del Checklist**: ⏳ En Desarrollo  
+**Última verificación**: [Fecha]  
+**Próxima auditoría**: [Fecha + 3 meses]  
+**Responsable**: Gabriel Pantoja  
+**Versión**: 2.0

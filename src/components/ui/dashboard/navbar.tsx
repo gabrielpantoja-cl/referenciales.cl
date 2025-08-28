@@ -16,7 +16,8 @@ import {
   BuildingOfficeIcon,
   ArrowUpTrayIcon,
   UserIcon,
-  ChartBarIcon
+  ChartBarIcon,
+  BookOpenIcon
 } from '@heroicons/react/24/outline';
 import { useDeleteAccount } from '@/lib/hooks/useDeleteAccount';
 import { Dialog } from '@/components/ui/dialog';
@@ -30,6 +31,7 @@ const navigationLinks = [
   { name: 'Estadísticas', href: '/dashboard/estadisticas', icon: ChartBarIcon, badge: 'BETA' },
   { name: 'Subir Datos', href: '/dashboard/referenciales/create', icon: ArrowUpTrayIcon },
   { name: 'Conservadores', href: '/dashboard/conservadores', icon: BuildingOfficeIcon },
+  { name: 'Documentación', href: '/dashboard/documentacion', icon: BookOpenIcon },
 ];
 
 export default function Navbar() {
