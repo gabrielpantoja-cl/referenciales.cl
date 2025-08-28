@@ -1,8 +1,8 @@
 "use client";
 
 import { lusitana } from '../../../lib/styles/fonts';
-import { useState, useEffect } from 'react';
-import { BuildingOfficeIcon, MapPinIcon, EnvelopeIcon, PhoneIcon } from '@heroicons/react/24/outline';
+import { useState, useEffect, useMemo } from 'react';
+import { BuildingOfficeIcon, MapPinIcon, EnvelopeIcon, PhoneIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 // Tipo temporal para conservadores - esto debería ser importado de types cuando esté disponible
 interface Conservador {
@@ -21,6 +21,8 @@ export default function ConservadoresPage() {
   const [conservadores, setConservadores] = useState<Conservador[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchConservadores = async () => {
@@ -44,6 +46,40 @@ export default function ConservadoresPage() {
 
     fetchConservadores();
   }, []);
+
+  // Filtrar conservadores basado en el término de búsqueda
+  const filteredConservadores = useMemo(() => {
+    if (!searchTerm.trim()) {
+      return conservadores;
+    }
+    
+    return conservadores.filter(conservador =>
+      conservador.comuna.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      conservador.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [conservadores, searchTerm]);
+
+  // Obtener sugerencias únicas de comunas
+  const comunaSuggestions = useMemo(() => {
+    if (!searchTerm.trim()) return [];
+    
+    const uniqueComunas = [...new Set(conservadores.map(c => c.comuna))];
+    return uniqueComunas
+      .filter(comuna => 
+        comuna.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      .slice(0, 5); // Limitar a 5 sugerencias
+  }, [conservadores, searchTerm]);
+
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    setShowSuggestions(value.trim().length > 0);
+  };
+
+  const handleSuggestionClick = (comuna: string) => {
+    setSearchTerm(comuna);
+    setShowSuggestions(false);
+  };
 
   if (isLoading) {
     return (
@@ -81,6 +117,42 @@ export default function ConservadoresPage() {
         <h1 className={`${lusitana.className} text-2xl`}>Conservadores de Bienes Raíces</h1>
       </div>
 
+      {/* Campo de búsqueda con autocompletado */}
+      <div className="mb-6 relative">
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+          </div>
+          <input
+            type="text"
+            placeholder="Buscar por comuna o nombre del conservador..."
+            value={searchTerm}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            onFocus={() => setShowSuggestions(searchTerm.trim().length > 0)}
+            onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+            className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          />
+        </div>
+
+        {/* Sugerencias de autocompletado */}
+        {showSuggestions && comunaSuggestions.length > 0 && (
+          <div className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
+            {comunaSuggestions.map((comuna, index) => (
+              <div
+                key={index}
+                className="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-blue-50 hover:text-blue-900"
+                onClick={() => handleSuggestionClick(comuna)}
+              >
+                <div className="flex items-center">
+                  <MapPinIcon className="h-4 w-4 text-gray-400 mr-2" />
+                  <span className="font-normal block truncate">{comuna}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       <div className="mb-4 p-4 bg-blue-50 text-blue-700 rounded-md"> 
         <p className="text-sm"> 
           Directorio de Conservadores de Bienes Raíces en Chile. 
@@ -88,7 +160,15 @@ export default function ConservadoresPage() {
         </p>
       </div>
 
-      {conservadores.length === 0 ? (
+      {filteredConservadores.length === 0 && conservadores.length > 0 ? (
+        <div className="text-center py-12">
+          <MagnifyingGlassIcon className="mx-auto h-12 w-12 text-gray-400" />
+          <h3 className="mt-2 text-sm font-medium text-gray-900">No se encontraron resultados</h3>
+          <p className="mt-1 text-sm text-gray-500">
+            Intenta con otro término de búsqueda.
+          </p>
+        </div>
+      ) : conservadores.length === 0 ? (
         <div className="text-center py-12">
           <BuildingOfficeIcon className="mx-auto h-12 w-12 text-gray-400" />
           <h3 className="mt-2 text-sm font-medium text-gray-900">No hay conservadores disponibles</h3>
@@ -98,7 +178,7 @@ export default function ConservadoresPage() {
         </div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {conservadores.map((conservador) => (
+          {filteredConservadores.map((conservador) => (
             <div
               key={conservador.id}
               className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow duration-200"
@@ -160,7 +240,21 @@ export default function ConservadoresPage() {
       )}
       
       <div className="mt-8 text-center text-sm text-gray-500">
-        Total de conservadores: {conservadores.length}
+        {searchTerm ? (
+          <>
+            Mostrando {filteredConservadores.length} de {conservadores.length} conservadores
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                className="ml-2 text-blue-600 hover:text-blue-800 underline"
+              >
+                Limpiar búsqueda
+              </button>
+            )}
+          </>
+        ) : (
+          `Total de conservadores: ${conservadores.length}`
+        )}
       </div>
     </div>
   );
