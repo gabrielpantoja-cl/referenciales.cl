@@ -64,7 +64,7 @@ export default function ConservadoresPage() {
   const comunaSuggestions = useMemo(() => {
     if (!searchTerm.trim()) return [];
     
-    const uniqueComunas = [...new Set(conservadores.map(c => c.comuna))];
+    const uniqueComunas = Array.from(new Set(conservadores.map(c => c.comuna)));
     return uniqueComunas
       .filter(comuna => 
         comuna.toLowerCase().includes(searchTerm.toLowerCase())
