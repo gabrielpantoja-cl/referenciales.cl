@@ -2,7 +2,7 @@
 
 import { lusitana } from '../../../lib/styles/fonts';
 import { useState, useEffect, useMemo } from 'react';
-import { BuildingOfficeIcon, MapPinIcon, EnvelopeIcon, PhoneIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { BuildingOfficeIcon, MapPinIcon, EnvelopeIcon, PhoneIcon, MagnifyingGlassIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
 
 // Tipo temporal para conservadores - esto debería ser importado de types cuando esté disponible
 interface Conservador {
@@ -12,6 +12,7 @@ interface Conservador {
   direccion?: string;
   email?: string;
   telefono?: string;
+  sitioWeb?: string;
   region?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -228,6 +229,20 @@ export default function ConservadoresPage() {
                           className="text-blue-600 hover:text-blue-800"
                         >
                           {conservador.telefono}
+                        </a>
+                      </div>
+                    )}
+                    
+                    {conservador.sitioWeb && (
+                      <div className="flex items-center text-sm text-gray-600">
+                        <GlobeAltIcon className="h-4 w-4 mr-2 flex-shrink-0" />
+                        <a 
+                          href={conservador.sitioWeb.startsWith('http') ? conservador.sitioWeb : `https://${conservador.sitioWeb}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800 truncate"
+                        >
+                          {conservador.sitioWeb.replace(/^https?:\/\//, '')}
                         </a>
                       </div>
                     )}
