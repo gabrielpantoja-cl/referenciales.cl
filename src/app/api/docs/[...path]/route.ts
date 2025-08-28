@@ -4,10 +4,11 @@ import { join } from 'path';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { path: string[] } }
+  { params }: { params: Promise<{ path: string[] }> }
 ) {
   try {
-    const docPath = params.path.join('/');
+    const resolvedParams = await params;
+    const docPath = resolvedParams.path.join('/');
     const filePath = join(process.cwd(), 'docs', `${docPath}.md`);
     
     const content = await readFile(filePath, 'utf-8');
