@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**IMPORTANT**: Referenciales.cl is an open and collaborative database of real estate transactions in Chile, based on data from the Conservador de Bienes Raíces. Its objective is to provide transparency and accessibility to this information for the Chilean real estate market.
+**IMPORTANT**: Referenciales.cl is an open data initiative that democratizes access to real estate information in Chile. We believe that property transaction data, being of public origin (Conservador de Bienes Raíces), should remain accessible to the entire community. Our platform uses modern technology and free software principles to ensure that this vital information is not concentrated in the hands of a few, but serves the informed development of the Chilean real estate market and the exercise of citizen rights.
 
 Referenciales.cl is a Next.js 15 application for managing real estate appraisal references in Chile. It features:
 

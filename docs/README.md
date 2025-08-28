@@ -2,9 +2,9 @@
 
 ## 🎯 Introducción
 
-Bienvenido a la documentación técnica completa de **Referenciales.cl**, la plataforma colaborativa de datos inmobiliarios de Chile. Esta documentación está diseñada para desarrolladores, arquitectos de software y stakeholders técnicos que necesiten comprender, mantener y escalar el proyecto.
+Bienvenido a la documentación técnica completa de **Referenciales.cl**, la iniciativa de datos abiertos que democratiza el acceso a información inmobiliaria en Chile. Esta documentación está diseñada para desarrolladores, arquitectos de software y stakeholders técnicos que necesiten comprender, mantener y escalar el proyecto.
 
-> **¿Qué es Referenciales.cl?** Una base de datos abierta y colaborativa de transacciones inmobiliarias en Chile, basada en datos del Conservador de Bienes Raíces. Su objetivo es proporcionar transparencia y accesibilidad a esta información para el mercado inmobiliario chileno.
+> **¿Qué es Referenciales.cl?** Una plataforma colaborativa de datos abiertos que democratiza el acceso a información inmobiliaria en Chile. Creemos que los datos sobre transacciones de propiedades, siendo de origen público (Conservador de Bienes Raíces), deben permanecer accesibles para toda la comunidad, utilizando tecnología moderna y principios de software libre para garantizar que esta información vital sirva al desarrollo informado del mercado inmobiliario chileno y al ejercicio de derechos ciudadanos.
 
 ---
 
