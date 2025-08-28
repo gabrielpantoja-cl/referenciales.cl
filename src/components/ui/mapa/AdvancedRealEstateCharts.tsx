@@ -228,14 +228,13 @@ const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ dat
         pdf.text(`Rango de años: ${Math.min(...añosRange)} - ${Math.max(...añosRange)}`, 25, statsY + 48);
       }
 
-      // Información de contacto
+      // Información de generación
       pdf.setFontSize(9);
-      pdf.text('Generado por Referenciales.cl - Sistema de Análisis de Mercado Inmobiliario', 20, 305);
       pdf.text(`Fecha de generación: ${new Date().toLocaleString('es-CL')}`, 20, 315);
 
       // ========== LISTADO COMPLETO DE PROPIEDADES AL FINAL (Múltiples páginas en horizontal) ==========
       // Configurar la tabla - Headers y columnas dinámicas basadas en rol
-      const baseHeaders = ['N°', 'Fojas', 'Núm', 'Año', 'CBR', 'Predio', 'Comuna', 'ROL', 'Fecha Escr.', 'Sup.(m²)', 'Monto (CLP)', 'Observaciones'];
+      const baseHeaders = ['N°', 'Fojas', 'Núm', 'Año', 'CBR', 'Predio', 'Comuna', 'ROL', 'Fecha Escr.', 'Sup.(m²)', 'Monto (CLP)', 'Valor Unit.(CLP/m²)', 'Observaciones'];
       const sensitiveHeaders = ['Comprador', 'Vendedor'];
       
       const headers = canViewSensitiveData 
@@ -243,7 +242,7 @@ const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ dat
         : baseHeaders;
       
       // Columnas optimizadas para formato oficio horizontal (297mm ancho útil)
-      const baseColWidths = [10, 14, 12, 12, 15, 32, 20, 25, 22, 18, 30, 35];
+      const baseColWidths = [10, 14, 12, 12, 15, 32, 20, 25, 22, 18, 25, 25, 30];
       const sensitiveColWidths = [28, 28];
       
       const colWidths = canViewSensitiveData 
@@ -306,6 +305,17 @@ const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ dat
           
           currentX = 15;
           
+          // Calcular valor unitario
+          const calcularValorUnitario = (monto: any, superficie: any) => {
+            const montoNum = typeof monto === 'bigint' ? Number(monto) : Number(monto);
+            const superficieNum = Number(superficie);
+            if (montoNum > 0 && superficieNum > 0) {
+              const valorUnitario = montoNum / superficieNum;
+              return formatFullCurrency(valorUnitario);
+            }
+            return '-';
+          };
+
           // Agregar número de enumeración
           const baseRowData = [
             (globalIndex + 1).toString(), // Enumeración
@@ -319,6 +329,7 @@ const AdvancedRealEstateCharts: React.FC<AdvancedRealEstateChartsProps> = ({ dat
             property.fechaescritura ? new Date(property.fechaescritura).toLocaleDateString('es-CL') : '-',
             property.superficie ? `${Math.round(property.superficie)}` : '-',
             property.monto ? formatFullCurrency(property.monto) : '-',
+            calcularValorUnitario(property.monto, property.superficie),
             property.observaciones || '-'
           ];
           
