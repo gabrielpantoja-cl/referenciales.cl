@@ -139,16 +139,17 @@ export default function ConservadoresPage() {
         {showSuggestions && comunaSuggestions.length > 0 && (
           <div className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
             {comunaSuggestions.map((comuna, index) => (
-              <div
+              <button
                 key={index}
-                className="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-blue-50 hover:text-blue-900"
+                type="button"
+                className="w-full text-left cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-blue-50 hover:text-blue-900 focus:bg-blue-50 focus:text-blue-900 focus:outline-none"
                 onClick={() => handleSuggestionClick(comuna)}
               >
                 <div className="flex items-center">
                   <MapPinIcon className="h-4 w-4 text-gray-400 mr-2" />
                   <span className="font-normal block truncate">{comuna}</span>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         )}
