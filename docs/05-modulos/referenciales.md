@@ -235,33 +235,189 @@ const heatMapData = await prisma.referencial.findMany({
 
 ### 📤 Export y Reporting
 
-#### Export a Excel
+#### Sistema de Exportación Mejorado (Septiembre 2025)
+
+##### 🎯 Nuevas Funcionalidades de Exportación
+- **✅ Exportación completa**: Exporta TODOS los registros filtrados, no solo la página actual
+- **✅ Múltiples formatos**: XLSX (Excel nativo) y Google Sheets (CSV compatible)
+- **✅ Filtros avanzados**: Búsqueda general + filtro específico por comuna
+- **✅ Más registros por página**: Incrementado de 10 a 30 registros por página
+- **✅ Nombres dinámicos**: Archivos incluyen filtros aplicados (ej: `referenciales_valdivia_casa.xlsx`)
+
+##### 🔄 Flujo de Exportación Mejorado
 ```typescript
-// Generar reporte Excel con formato CBR
-const exportToExcel = async (filters: ReferencialFilters) => {
-  const data = await getReferenciales(filters);
-  
-  const workbook = new ExcelJS.Workbook();
-  const worksheet = workbook.addWorksheet('Referenciales');
-  
-  // Headers específicos para CBR
-  worksheet.columns = [
-    { header: 'Fojas', key: 'fojas', width: 10 },
-    { header: 'Número', key: 'numero', width: 10 },
-    { header: 'Año', key: 'anio', width: 8 },
-    { header: 'CBR', key: 'cbr', width: 20 },
-    { header: 'Predio', key: 'predio', width: 30 },
-    { header: 'Comuna', key: 'comuna', width: 15 },
-    { header: 'ROL', key: 'rol', width: 12 },
-    { header: 'Fecha Escritura', key: 'fechaescritura', width: 12 },
-    { header: 'Superficie (m²)', key: 'superficie', width: 15 },
-    { header: 'Monto', key: 'monto', width: 15 },
-  ];
-  
-  worksheet.addRows(data);
-  
-  return workbook.xlsx.writeBuffer();
+// 1. El usuario puede filtrar por múltiples criterios
+const searchFilters = {
+  query: 'valdivia',        // Búsqueda general en predio, comprador, vendedor  
+  comuna: 'Valdivia',       // Filtro específico por comuna
+  page: 1
 };
+
+// 2. La exportación obtiene TODOS los registros filtrados
+const allFilteredData = await fetchAllFilteredReferenciales(query, comuna);
+
+// 3. Se preparan los datos con información adicional
+const exportableData = allFilteredData.map((ref) => ({
+  ...ref,
+  conservadorNombre: ref.conservadores?.nombre || '',
+  conservadorComuna: ref.conservadores?.comuna || ''
+}));
+```
+
+#### Export a XLSX (Excel)
+```typescript
+// Exportación completa con todos los registros filtrados
+const exportToXlsx = async () => {
+  // Obtener parámetros de filtros actuales
+  const query = searchParams?.get('query') || '';
+  const comuna = searchParams?.get('comuna') || '';
+
+  // Obtener TODOS los registros que coinciden con filtros
+  const allReferenciales = await fetchAllFilteredReferenciales(query, comuna);
+  
+  // Preparar datos para exportación
+  const exportableData = allReferenciales.map((ref) => ({
+    ...ref,
+    conservadorNombre: ref.conservadores?.nombre || '',
+    conservadorComuna: ref.conservadores?.comuna || ''
+  }));
+
+  const buffer = await exportReferencialesToXlsx(exportableData, VISIBLE_HEADERS);
+  const blob = new Blob([buffer], { 
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+  });
+  
+  // Nombre dinámico basado en filtros aplicados
+  const filename = `referenciales${comuna ? `_${comuna}` : ''}${query ? `_${query}` : ''}.xlsx`;
+  saveAs(blob, filename);
+};
+```
+
+#### Export a Google Sheets (Compatible con Linux)
+```typescript
+// Nueva funcionalidad para usuarios Linux
+const exportToGoogleSheets = async () => {
+  // Obtener filtros y datos completos
+  const query = searchParams?.get('query') || '';
+  const comuna = searchParams?.get('comuna') || '';
+  const allReferenciales = await fetchAllFilteredReferenciales(query, comuna);
+  
+  // Generar CSV compatible con Google Sheets
+  const csvHeaders = headers.map(h => h.label).join(',');
+  const csvRows = allReferenciales.map(ref => {
+    return headers.map(header => {
+      let value = ref[header.key] || '';
+      
+      // Formateo específico para diferentes tipos de datos
+      if (value instanceof Date) {
+        value = value.toLocaleDateString('es-CL');
+      }
+      
+      if (header.key === 'monto' && typeof value === 'number') {
+        value = value.toLocaleString('es-CL');
+      }
+      
+      // Escapar caracteres especiales para CSV
+      if (typeof value === 'string' && (value.includes(',') || value.includes('"') || value.includes('\n'))) {
+        value = `"${value.replace(/"/g, '""')}"`;
+      }
+      
+      return value;
+    }).join(',');
+  });
+  
+  const csvContent = [csvHeaders, ...csvRows].join('\n');
+  
+  // Descargar CSV y mostrar instrucciones
+  const blob = new Blob([csvContent], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'referenciales_para_google_sheets.csv';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+  
+  // Abrir Google Sheets automáticamente si el usuario acepta
+  const openGoogleSheets = confirm("¿Deseas abrir Google Sheets para importar el archivo?");
+  if (openGoogleSheets) {
+    window.open('https://docs.google.com/spreadsheets/create', '_blank');
+  }
+};
+```
+
+##### 🎨 Componente de Exportación Múltiple
+```typescript
+// Nuevo botón flotante con opciones múltiples
+const ExportButton = ({ disabled }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  
+  return (
+    <div className="fixed bottom-4 right-4 z-30">
+      <button onClick={() => setIsOpen(!isOpen)}>
+        <ArrowDownTrayIcon className="h-4 w-4" />
+        Exportar
+        <ChevronDownIcon className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+
+      {isOpen && (
+        <div className="absolute bottom-full right-0 mb-2 min-w-[200px] bg-white border shadow-lg">
+          <button onClick={exportToXlsx} className="w-full text-left px-4 py-3">
+            <div className="h-3 w-3 bg-green-500 rounded-sm"></div>
+            Exportar a XLSX
+          </button>
+          <button onClick={exportToGoogleSheets} className="w-full text-left px-4 py-3">
+            <div className="h-3 w-3 bg-blue-500 rounded-sm"></div>
+            Exportar a Google Sheets
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+```
+
+##### 🔍 Sistema de Filtros Mejorado
+```typescript
+// Nuevo filtro específico por comuna
+const ComunaFilter = ({ placeholder = "Filtrar por comuna" }) => {
+  const [comunas, setComunas] = useState<string[]>([]);
+  const selectedComuna = searchParams?.get('comuna') ?? '';
+
+  // Cargar todas las comunas disponibles
+  useEffect(() => {
+    const loadComunas = async () => {
+      const comunasList = await fetchDistinctComunas();
+      setComunas(comunasList);
+    };
+    loadComunas();
+  }, []);
+
+  const handleComunaSelect = (comuna: string) => {
+    const params = new URLSearchParams(searchParams?.toString() ?? '');
+    params.set('page', '1'); // Reset a primera página
+    
+    if (comuna && comuna !== '') {
+      params.set('comuna', comuna);
+    } else {
+      params.delete('comuna');
+    }
+    
+    replace(`${pathname}?${params.toString()}`);
+  };
+
+  // Dropdown con todas las comunas + opción "Todas"
+  return (
+    <select value={selectedComuna} onChange={(e) => handleComunaSelect(e.target.value)}>
+      <option value="">Todas las comunas</option>
+      {comunas.map((comuna) => (
+        <option key={comuna} value={comuna}>{comuna}</option>
+      ))}
+    </select>
+  );
+};
+```
 ```
 
 ### 📋 Carga Masiva CSV
@@ -511,6 +667,27 @@ test('complete CRUD workflow', async ({ page }) => {
 
 ---
 
-**Última actualización:** 28 de Agosto de 2025  
+## 📋 Historial de Actualizaciones Recientes
+
+### 🚀 Septiembre 2025 - Mejoras de Exportación
+- **✅ Sistema de exportación completamente rediseñado**
+- **✅ Soporte para XLSX y Google Sheets (Linux friendly)**
+- **✅ Exportación de TODOS los registros filtrados**
+- **✅ Filtro específico por comuna**
+- **✅ Incremento a 30 registros por página**
+- **✅ Nombres dinámicos de archivos con filtros aplicados**
+- **✅ Componente de exportación múltiple con UI mejorada**
+- **✅ Sistema de filtros combinados (búsqueda general + comuna)**
+
+### 🔄 Cambios Técnicos Implementados
+- **Nuevo archivo**: `/src/lib/exportToGoogleSheets.ts` - Manejo de CSV para Google Sheets
+- **Nuevo componente**: `/src/components/ui/referenciales/export-button.tsx` - Botón de exportación múltiple
+- **Nuevo componente**: `/src/components/ui/primitives/comuna-filter.tsx` - Filtro por comuna
+- **Función mejorada**: `fetchAllFilteredReferenciales()` - Obtiene todos los registros filtrados
+- **Constante actualizada**: `ITEMS_PER_PAGE = 30` - Más registros por página
+
+---
+
+**Última actualización:** 2 de Septiembre de 2025  
 **Responsable:** Equipo de Desarrollo  
-**Estado:** ✅ Funcional con optimizaciones continuas
+**Estado:** ✅ Funcional con mejoras de exportación implementadas
