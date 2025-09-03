@@ -7,6 +7,7 @@ import { fetchAllFilteredReferenciales } from '@/lib/referenciales';
 import { saveAs } from 'file-saver';
 import toast from 'react-hot-toast';
 import { useSearchParams } from 'next/navigation';
+import { useAuth } from '@/hooks/useAuth';
 
 type ExportableKeys =
   | 'cbr'
@@ -20,9 +21,13 @@ type ExportableKeys =
   | 'monto'
   | 'superficie'
   | 'observaciones'
-  | 'conservadorId';
+  | 'conservadorId'
+  | 'comprador'
+  | 'vendedor'
+  | 'latitud'
+  | 'longitud';
 
-const VISIBLE_HEADERS: { key: ExportableKeys; label: string }[] = [
+const BASE_HEADERS: { key: ExportableKeys; label: string }[] = [
   { key: 'cbr', label: 'CBR' },
   { key: 'fojas', label: 'Fojas' },
   { key: 'numero', label: 'Número' },
@@ -37,6 +42,14 @@ const VISIBLE_HEADERS: { key: ExportableKeys; label: string }[] = [
   { key: 'conservadorId', label: 'ID Conservador' },
 ];
 
+const ADMIN_HEADERS: { key: ExportableKeys; label: string }[] = [
+  ...BASE_HEADERS,
+  { key: 'comprador', label: 'Comprador' },
+  { key: 'vendedor', label: 'Vendedor' },
+  { key: 'latitud', label: 'Latitud' },
+  { key: 'longitud', label: 'Longitud' },
+];
+
 interface ExportButtonProps {
   disabled?: boolean;
 }
@@ -45,6 +58,11 @@ export default function ExportButton({ disabled = false }: ExportButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const searchParams = useSearchParams();
+  const { userRole } = useAuth();
+
+  const getVisibleHeaders = () => {
+    return userRole === 'admin' ? ADMIN_HEADERS : BASE_HEADERS;
+  };
 
   const exportToXlsx = async () => {
     setIsOpen(false);
@@ -71,7 +89,8 @@ export default function ExportButton({ disabled = false }: ExportButtonProps) {
         conservadorComuna: ref.conservadores?.comuna || ''
       }));
 
-      const buffer = await exportReferencialesToXlsx(exportableData, VISIBLE_HEADERS);
+      const visibleHeaders = getVisibleHeaders();
+      const buffer = await exportReferencialesToXlsx(exportableData, visibleHeaders);
       const blob = new Blob([buffer], { 
         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
       });
@@ -113,7 +132,8 @@ export default function ExportButton({ disabled = false }: ExportButtonProps) {
         conservadorComuna: ref.conservadores?.comuna || ''
       }));
 
-      await exportReferencialesToGoogleSheets(exportableData, VISIBLE_HEADERS);
+      const visibleHeaders = getVisibleHeaders();
+      await exportReferencialesToGoogleSheets(exportableData, visibleHeaders);
       
       toast.success(`${allReferenciales.length} registros preparados para Google Sheets.`, { id: toastId });
     } catch (error) {
@@ -122,6 +142,59 @@ export default function ExportButton({ disabled = false }: ExportButtonProps) {
     } finally {
       setIsExporting(false);
     }
+  };
+
+  const exportToCsv = async () => {
+    setIsOpen(false);
+    setIsExporting(true);
+    const toastId = toast.loading('Exportando todos los registros a CSV...');
+
+    try {
+      const query = searchParams?.get('query') || '';
+      const comuna = searchParams?.get('comuna') || '';
+
+      const allReferenciales = await fetchAllFilteredReferenciales(query, comuna);
+      
+      if (allReferenciales.length === 0) {
+        toast.error('No hay datos para exportar con los filtros aplicados.', { id: toastId });
+        return;
+      }
+
+      const exportableData = allReferenciales.map((ref) => ({
+        ...ref,
+        conservadorNombre: ref.conservadores?.nombre || '',
+        conservadorComuna: ref.conservadores?.comuna || ''
+      }));
+
+      const visibleHeaders = getVisibleHeaders();
+      const csvContent = convertToCsv(exportableData, visibleHeaders);
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      
+      const filename = `referenciales${comuna ? `_${comuna}` : ''}${query ? `_${query}` : ''}.csv`;
+      saveAs(blob, filename);
+      
+      toast.success(`${allReferenciales.length} registros exportados correctamente.`, { id: toastId });
+    } catch (error) {
+      console.error("Error exporting to CSV:", error);
+      toast.error('Hubo un error al exportar el archivo CSV.', { id: toastId });
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const convertToCsv = (data: any[], headers: { key: string; label: string }[]): string => {
+    const headerRow = headers.map(h => h.label).join(',');
+    const bodyRows = data.map(row => {
+      return headers.map(h => {
+        let value = row[h.key];
+        if (typeof value === 'string') {
+          // Escape commas and quotes
+          value = `"${value.replace(/"/g, '""')}"`;
+        }
+        return value;
+      }).join(',');
+    });
+    return [headerRow, ...bodyRows].join('\n');
   };
 
   return (
@@ -148,6 +221,14 @@ export default function ExportButton({ disabled = false }: ExportButtonProps) {
             >
               <div className="h-3 w-3 bg-green-500 rounded-sm"></div>
               <span>Exportar a XLSX</span>
+            </button>
+            <button
+              onClick={exportToCsv}
+              disabled={isExporting}
+              className="w-full text-left px-4 py-3 text-sm hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 border-t border-gray-100"
+            >
+              <div className="h-3 w-3 bg-gray-500 rounded-sm"></div>
+              <span>Exportar a CSV</span>
             </button>
             <button
               onClick={exportToGoogleSheets}
