@@ -24,8 +24,8 @@ type ExportableKeys =
   | 'conservadorId'
   | 'comprador'
   | 'vendedor'
-  | 'latitud'
-  | 'longitud';
+  | 'lat'
+  | 'lng';
 
 const BASE_HEADERS: { key: ExportableKeys; label: string }[] = [
   { key: 'cbr', label: 'CBR' },
@@ -46,8 +46,8 @@ const ADMIN_HEADERS: { key: ExportableKeys; label: string }[] = [
   ...BASE_HEADERS,
   { key: 'comprador', label: 'Comprador' },
   { key: 'vendedor', label: 'Vendedor' },
-  { key: 'latitud', label: 'Latitud' },
-  { key: 'longitud', label: 'Longitud' },
+  { key: 'lat', label: 'Latitud' },
+  { key: 'lng', label: 'Longitud' },
 ];
 
 interface ExportButtonProps {
