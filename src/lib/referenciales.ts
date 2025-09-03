@@ -5,7 +5,7 @@ import { Prisma } from '@prisma/client';
 import { formatCurrency } from './utils';
 import { unstable_noStore as noStore } from 'next/cache';
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 30;
 
 export async function fetchLatestReferenciales() {
   noStore();
@@ -40,25 +40,52 @@ export async function fetchLatestReferenciales() {
   }
 }
 
-export async function fetchFilteredReferenciales(query: string | null | undefined, currentPage: number | null | undefined) {
+export async function fetchFilteredReferenciales(query: string | null | undefined, currentPage: number | null | undefined, comuna: string | null | undefined = null) {
   noStore();
 
   const safeQuery = query != null && typeof query === 'string' ? query : '';
+  const safeComuna = comuna != null && typeof comuna === 'string' ? comuna : '';
   const page = currentPage != null ? Number(currentPage) : 1;
   const safePage = Number.isNaN(page) ? 1 : Math.max(1, page);
   const offset = (safePage - 1) * ITEMS_PER_PAGE;
 
   try {
-    const whereCondition: Prisma.referencialesWhereInput = safeQuery.trim()
-      ? {
-          OR: [
-            { comuna: { contains: safeQuery, mode: 'insensitive' } },
-            { predio: { contains: safeQuery, mode: 'insensitive' } },
-            { comprador: { contains: safeQuery, mode: 'insensitive' } },
-            { vendedor: { contains: safeQuery, mode: 'insensitive' } }
-          ]
-        }
-      : {};
+    let whereCondition: Prisma.referencialesWhereInput = {};
+
+    // Si hay filtro de comuna específico
+    if (safeComuna.trim()) {
+      whereCondition = {
+        comuna: { contains: safeComuna, mode: 'insensitive' }
+      };
+    }
+
+    // Si hay búsqueda general y no hay filtro de comuna específico
+    if (safeQuery.trim() && !safeComuna.trim()) {
+      whereCondition = {
+        OR: [
+          { comuna: { contains: safeQuery, mode: 'insensitive' } },
+          { predio: { contains: safeQuery, mode: 'insensitive' } },
+          { comprador: { contains: safeQuery, mode: 'insensitive' } },
+          { vendedor: { contains: safeQuery, mode: 'insensitive' } }
+        ]
+      };
+    }
+
+    // Si hay tanto búsqueda general como filtro de comuna, combinamos
+    if (safeQuery.trim() && safeComuna.trim()) {
+      whereCondition = {
+        AND: [
+          { comuna: { contains: safeComuna, mode: 'insensitive' } },
+          {
+            OR: [
+              { predio: { contains: safeQuery, mode: 'insensitive' } },
+              { comprador: { contains: safeQuery, mode: 'insensitive' } },
+              { vendedor: { contains: safeQuery, mode: 'insensitive' } }
+            ]
+          }
+        ]
+      };
+    }
 
     const referenciales = await prisma.referenciales.findMany({
       where: whereCondition,
@@ -123,21 +150,52 @@ export async function fetchFilteredReferenciales(query: string | null | undefine
   }
 }
 
-export async function fetchReferencialesPages(query: string | null | undefined = '') {
+export async function fetchReferencialesPages(query: string | null | undefined = '', comuna: string | null | undefined = null) {
   noStore();
 
   const safeQuery = query != null && typeof query === 'string' ? query : '';
+  const safeComuna = comuna != null && typeof comuna === 'string' ? comuna : '';
 
   try {
-    const count = await prisma.referenciales.count({
-      where: {
-        OR: safeQuery.trim() ? [
+    let whereCondition: Prisma.referencialesWhereInput = {};
+
+    // Si hay filtro de comuna específico
+    if (safeComuna.trim()) {
+      whereCondition = {
+        comuna: { contains: safeComuna, mode: 'insensitive' }
+      };
+    }
+
+    // Si hay búsqueda general y no hay filtro de comuna específico
+    if (safeQuery.trim() && !safeComuna.trim()) {
+      whereCondition = {
+        OR: [
           { comuna: { contains: safeQuery, mode: 'insensitive' } },
           { predio: { contains: safeQuery, mode: 'insensitive' } },
           { comprador: { contains: safeQuery, mode: 'insensitive' } },
           { vendedor: { contains: safeQuery, mode: 'insensitive' } }
-        ] : undefined
-      },
+        ]
+      };
+    }
+
+    // Si hay tanto búsqueda general como filtro de comuna, combinamos
+    if (safeQuery.trim() && safeComuna.trim()) {
+      whereCondition = {
+        AND: [
+          { comuna: { contains: safeComuna, mode: 'insensitive' } },
+          {
+            OR: [
+              { predio: { contains: safeQuery, mode: 'insensitive' } },
+              { comprador: { contains: safeQuery, mode: 'insensitive' } },
+              { vendedor: { contains: safeQuery, mode: 'insensitive' } }
+            ]
+          }
+        ]
+      };
+    }
+
+    const count = await prisma.referenciales.count({
+      where: whereCondition,
     });
 
     const totalPages = Math.ceil(count / ITEMS_PER_PAGE);
@@ -193,6 +251,134 @@ interface ComunaGroupResult {
 interface FormattedComuna {
   comuna: string;
   count: number;
+}
+
+export async function fetchAllFilteredReferenciales(query: string | null | undefined, comuna: string | null | undefined = null) {
+  noStore();
+
+  const safeQuery = query != null && typeof query === 'string' ? query : '';
+  const safeComuna = comuna != null && typeof comuna === 'string' ? comuna : '';
+
+  try {
+    let whereCondition: Prisma.referencialesWhereInput = {};
+
+    // Si hay filtro de comuna específico
+    if (safeComuna.trim()) {
+      whereCondition = {
+        comuna: { contains: safeComuna, mode: 'insensitive' }
+      };
+    }
+
+    // Si hay búsqueda general y no hay filtro de comuna específico
+    if (safeQuery.trim() && !safeComuna.trim()) {
+      whereCondition = {
+        OR: [
+          { comuna: { contains: safeQuery, mode: 'insensitive' } },
+          { predio: { contains: safeQuery, mode: 'insensitive' } },
+          { comprador: { contains: safeQuery, mode: 'insensitive' } },
+          { vendedor: { contains: safeQuery, mode: 'insensitive' } }
+        ]
+      };
+    }
+
+    // Si hay tanto búsqueda general como filtro de comuna, combinamos
+    if (safeQuery.trim() && safeComuna.trim()) {
+      whereCondition = {
+        AND: [
+          { comuna: { contains: safeComuna, mode: 'insensitive' } },
+          {
+            OR: [
+              { predio: { contains: safeQuery, mode: 'insensitive' } },
+              { comprador: { contains: safeQuery, mode: 'insensitive' } },
+              { vendedor: { contains: safeQuery, mode: 'insensitive' } }
+            ]
+          }
+        ]
+      };
+    }
+
+    const referenciales = await prisma.referenciales.findMany({
+      where: whereCondition,
+      orderBy: { fechaescritura: 'desc' },
+      select: {
+        id: true,
+        lat: true,
+        lng: true,
+        fojas: true,
+        numero: true,
+        anio: true,
+        cbr: true,
+        comprador: true,
+        vendedor: true,
+        predio: true,
+        comuna: true,
+        rol: true,
+        fechaescritura: true,
+        superficie: true,
+        monto: true,
+        observaciones: true,
+        userId: true,
+        conservadorId: true,
+        createdAt: true,
+        updatedAt: true,
+        user: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+        conservadores: {
+          select: {
+            id: true,
+            nombre: true,
+            comuna: true,
+          },
+        },
+      },
+    });
+
+    if (!referenciales || !Array.isArray(referenciales)) {
+      console.error('[fetchAllFilteredReferenciales] Unexpected DB response:', referenciales);
+      return [];
+    }
+
+    // Transform BigInt to Number for JSON serialization
+    const transformedReferenciales = referenciales.map(ref => ({
+      ...ref,
+      monto: ref.monto ? Number(ref.monto) : null
+    }));
+
+    console.log(`[fetchAllFilteredReferenciales] Success, returning ${transformedReferenciales.length} items.`);
+    return transformedReferenciales;
+  } catch (error) {
+    console.error('[fetchAllFilteredReferenciales] Database error caught:', error);
+    return [];
+  }
+}
+
+export async function fetchDistinctComunas() {
+  noStore();
+  try {
+    const comunas = await prisma.referenciales.findMany({
+      select: {
+        comuna: true
+      },
+      where: {
+        comuna: {
+          not: ''
+        }
+      },
+      distinct: ['comuna'],
+      orderBy: {
+        comuna: 'asc'
+      }
+    });
+
+    return comunas.map(item => item.comuna).filter(Boolean);
+  } catch (error) {
+    console.error('Error al obtener comunas:', error);
+    return [];
+  }
 }
 
 export async function fetchTopComunas() {
