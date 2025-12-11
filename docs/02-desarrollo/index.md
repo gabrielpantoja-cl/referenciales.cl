@@ -201,8 +201,15 @@ Para una comprensión profunda de la implementación de la autenticación, la pr
 
 *   [**Guía Definitiva de Autenticación**](./AUTHENTICATION_GUIDE.md)
 
+## 💾 Gestión de Datos
+
+Para operaciones rápidas de inserción y manipulación de datos en la base de datos usando scripts TypeScript:
+
+*   [**Guía de Scripts de Inserción de Datos**](./scripts-insercion-datos.md) - Técnica eficiente con Prisma + tsx
+
 ---
 
-**Fecha de Creación:** 2 de Julio de 2025  
-**Autor:** Claude Assistant  
+**Fecha de Creación:** 2 de Julio de 2025
+**Última Actualización:** 11 de Diciembre de 2025
+**Autor:** Claude Assistant
 **Estado:** Completo
