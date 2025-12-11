@@ -5,13 +5,14 @@
       "Bash(claude marketplace search:*)",
       "Bash(claude mcp add:*)",
       "Bash(claude mcp list)",
-      "Bash(claude skills:*)"
+      "Bash(claude skills:*)",
+      "Bash(claude config:*)"
     ]
   },
+  "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "Neon",
     "context7",
     "github"
-  ],
-  "enableAllProjectMcpServers": true
+  ]
 }
