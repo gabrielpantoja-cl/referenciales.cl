@@ -13,7 +13,12 @@
       "Bash(claude mcp remove:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "mcp__neon__list_projects",
+      "mcp__Neon__list_projects",
+      "mcp__neon__search",
+      "Bash(npm run prisma:studio:*)",
+      "Bash(npx tsx:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
