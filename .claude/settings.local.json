@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(claude marketplace add:*)",
+      "Bash(claude marketplace search:*)"
+    ]
+  }
+}
