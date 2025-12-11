@@ -11,7 +11,9 @@
       "Bash(dir:*)",
       "Bash(findstr:*)",
       "Bash(claude mcp remove:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
