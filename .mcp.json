@@ -1,16 +1,18 @@
 {
   "mcpServers": {
-    "Neon": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "https://mcp.neon.tech/sse"]
-    },
     "context7": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp"]
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ]
     },
     "github": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github@latest"],
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github@latest"
+      ],
       "env": {
         "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
       }

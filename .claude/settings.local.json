@@ -6,7 +6,12 @@
       "Bash(claude mcp add:*)",
       "Bash(claude mcp list)",
       "Bash(claude skills:*)",
-      "Bash(claude config:*)"
+      "Bash(claude config:*)",
+      "Bash(where:*)",
+      "Bash(dir:*)",
+      "Bash(findstr:*)",
+      "Bash(claude mcp remove:*)",
+      "Bash(git add:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
