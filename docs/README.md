@@ -16,9 +16,10 @@ Conceptos fundamentales y visión general del proyecto
 - **Arquitectura General** - Overview técnico de alto nivel
 - **Tecnologías** - Stack tecnológico y justificación
 
-### 💻 [02. Desarrollo](./02-desarrollo/)  
+### 💻 [02. Desarrollo](./02-desarrollo/)
 Guías para configurar y desarrollar en el proyecto
 - **[Guía de Desarrollo](./02-desarrollo/index.md)** - Setup completo y comandos esenciales
+- **[Scripts de Inserción de Datos](./02-desarrollo/scripts-insercion-datos.md)** - Técnica rápida con Prisma + tsx
 - **Configuración de Entorno** - Variables y dependencias
 - **Comandos Esenciales** - npm scripts y utilidades
 - **Convenciones de Código** - Estándares y patterns
