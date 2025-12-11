@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(claude marketplace add:*)",
-      "Bash(claude marketplace search:*)"
+      "Bash(claude marketplace search:*)",
+      "Bash(claude mcp add:*)",
+      "Bash(claude mcp list)",
+      "Bash(claude skills:*)"
     ]
   }
 }
