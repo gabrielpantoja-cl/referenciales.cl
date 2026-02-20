@@ -25,7 +25,8 @@
       "Bash(git cat-file:*)",
       "Bash(ls:*)",
       "Bash(git -C /home/gabriel/Documentos/referenciales-cl count-objects:*)",
-      "Bash(gh repo view:*)"
+      "Bash(gh repo view:*)",
+      "Bash(git remote add:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
