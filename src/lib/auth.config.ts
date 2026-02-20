@@ -163,11 +163,29 @@ export const authOptions: NextAuthOptions = {
       });
     },
     async signIn({ user, account }) {
-      console.log('📥 [AUTH-SIGNIN-EVENT]', { 
-        userId: user.id, 
+      console.log('📥 [AUTH-SIGNIN-EVENT]', {
+        userId: user.id,
         provider: account?.provider,
         timestamp: new Date().toISOString()
       });
+
+      // Notificar login via n8n webhook (fire-and-forget, no bloquea el login)
+      try {
+        fetch(process.env.N8N_LOGIN_WEBHOOK_URL || '', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userName: user.name,
+            userEmail: user.email,
+            userImage: user.image,
+            userId: user.id,
+            provider: account?.provider,
+            timestamp: new Date().toISOString()
+          })
+        }).catch(() => {}); // Silenciar errores de red
+      } catch {
+        // No bloquear el login si falla la notificación
+      }
     }
   },
   
