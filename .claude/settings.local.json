@@ -26,7 +26,14 @@
       "Bash(ls:*)",
       "Bash(git -C /home/gabriel/Documentos/referenciales-cl count-objects:*)",
       "Bash(gh repo view:*)",
-      "Bash(git remote add:*)"
+      "Bash(git remote add:*)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_take_screenshot",
+      "Bash(curl:*)",
+      "mcp__playwright__browser_console_messages",
+      "Bash(python3:*)",
+      "mcp__playwright__browser_close"
     ]
   },
   "enableAllProjectMcpServers": true,
