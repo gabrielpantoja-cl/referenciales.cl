@@ -18,7 +18,9 @@
       "mcp__Neon__list_projects",
       "mcp__neon__search",
       "Bash(npm run prisma:studio:*)",
-      "Bash(npx tsx:*)"
+      "Bash(npx tsx:*)",
+      "Bash(git check-ignore:*)",
+      "Bash(echo:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
