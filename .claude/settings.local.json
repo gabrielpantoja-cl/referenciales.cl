@@ -20,7 +20,12 @@
       "Bash(npm run prisma:studio:*)",
       "Bash(npx tsx:*)",
       "Bash(git check-ignore:*)",
-      "Bash(echo:*)"
+      "Bash(echo:*)",
+      "Bash(git rev-list:*)",
+      "Bash(git cat-file:*)",
+      "Bash(ls:*)",
+      "Bash(git -C /home/gabriel/Documentos/referenciales-cl count-objects:*)",
+      "Bash(gh repo view:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
