@@ -189,6 +189,5 @@ export const authOptions: NextAuthOptions = {
     }
   },
   
-  // ✅ DEBUG HABILITADO PARA IDENTIFICAR PROBLEMAS
-  debug: true // Habilitado tanto en dev como en producción para diagnosticar
+  debug: process.env.NODE_ENV !== 'production'
 }

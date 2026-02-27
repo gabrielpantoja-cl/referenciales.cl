@@ -47,7 +47,9 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:community.cloudflare.com)",
       "Bash(gh api:*)",
-      "WebFetch(domain:raddy.dev)"
+      "WebFetch(domain:raddy.dev)",
+      "Bash(git checkout:*)",
+      "Bash(test:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

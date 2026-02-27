@@ -48,10 +48,13 @@ next-env.d.ts
 *.drawio          
 *.drawio.bkp      
 
-# Archivos de backup de base de datos (¡Importante!)
+# Archivos de backup de base de datos
 *.sql
 *.dump
-backup_produccion.sql
+
+# Archivos temporales
+temp-output.css
+*.backup
 
 # MCP configuration
 .mcp.json
