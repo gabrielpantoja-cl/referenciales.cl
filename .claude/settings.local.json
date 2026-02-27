@@ -33,7 +33,20 @@
       "Bash(curl:*)",
       "mcp__playwright__browser_console_messages",
       "Bash(python3:*)",
-      "mcp__playwright__browser_close"
+      "mcp__playwright__browser_close",
+      "WebSearch",
+      "Bash(openssl:*)",
+      "Bash(dig:*)",
+      "WebFetch(domain:transparencyreport.google.com)",
+      "WebFetch(domain:www.virustotal.com)",
+      "WebFetch(domain:safebrowsing.google.com)",
+      "WebFetch(domain:www.google.com)",
+      "WebFetch(domain:sitecheck.sucuri.net)",
+      "WebFetch(domain:urlhaus.abuse.ch)",
+      "WebFetch(domain:referenciales.cl)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:community.cloudflare.com)",
+      "Bash(gh api:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
