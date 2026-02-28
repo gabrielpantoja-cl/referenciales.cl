@@ -7,6 +7,36 @@ import { unstable_noStore as noStore } from 'next/cache';
 
 const ITEMS_PER_PAGE = 30;
 
+function buildWhereCondition(
+  query: string,
+  comuna: string,
+  rol: string
+): Prisma.referencialesWhereInput {
+  const andConditions: Prisma.referencialesWhereInput[] = [];
+
+  if (comuna.trim()) {
+    andConditions.push({ comuna: { contains: comuna, mode: 'insensitive' } });
+  }
+
+  if (rol.trim()) {
+    andConditions.push({ rol: { startsWith: rol, mode: 'insensitive' } });
+  }
+
+  if (query.trim()) {
+    const orConditions: Prisma.referencialesWhereInput[] = [
+      { predio: { contains: query, mode: 'insensitive' } },
+      { comprador: { contains: query, mode: 'insensitive' } },
+      { vendedor: { contains: query, mode: 'insensitive' } },
+    ];
+    if (!comuna.trim()) {
+      orConditions.unshift({ comuna: { contains: query, mode: 'insensitive' } });
+    }
+    andConditions.push({ OR: orConditions });
+  }
+
+  return andConditions.length > 0 ? { AND: andConditions } : {};
+}
+
 export async function fetchLatestReferenciales() {
   noStore();
   try {
@@ -40,52 +70,18 @@ export async function fetchLatestReferenciales() {
   }
 }
 
-export async function fetchFilteredReferenciales(query: string | null | undefined, currentPage: number | null | undefined, comuna: string | null | undefined = null) {
+export async function fetchFilteredReferenciales(query: string | null | undefined, currentPage: number | null | undefined, comuna: string | null | undefined = null, rol: string | null | undefined = null) {
   noStore();
 
   const safeQuery = query != null && typeof query === 'string' ? query : '';
   const safeComuna = comuna != null && typeof comuna === 'string' ? comuna : '';
+  const safeRol = rol != null && typeof rol === 'string' ? rol : '';
   const page = currentPage != null ? Number(currentPage) : 1;
   const safePage = Number.isNaN(page) ? 1 : Math.max(1, page);
   const offset = (safePage - 1) * ITEMS_PER_PAGE;
 
   try {
-    let whereCondition: Prisma.referencialesWhereInput = {};
-
-    // Si hay filtro de comuna específico
-    if (safeComuna.trim()) {
-      whereCondition = {
-        comuna: { contains: safeComuna, mode: 'insensitive' }
-      };
-    }
-
-    // Si hay búsqueda general y no hay filtro de comuna específico
-    if (safeQuery.trim() && !safeComuna.trim()) {
-      whereCondition = {
-        OR: [
-          { comuna: { contains: safeQuery, mode: 'insensitive' } },
-          { predio: { contains: safeQuery, mode: 'insensitive' } },
-          { comprador: { contains: safeQuery, mode: 'insensitive' } },
-          { vendedor: { contains: safeQuery, mode: 'insensitive' } }
-        ]
-      };
-    }
-
-    // Si hay tanto búsqueda general como filtro de comuna, combinamos
-    if (safeQuery.trim() && safeComuna.trim()) {
-      whereCondition = {
-        AND: [
-          { comuna: { contains: safeComuna, mode: 'insensitive' } },
-          {
-            OR: [
-              { predio: { contains: safeQuery, mode: 'insensitive' } },
-              { comprador: { contains: safeQuery, mode: 'insensitive' } },
-              { vendedor: { contains: safeQuery, mode: 'insensitive' } }
-            ]
-          }
-        ]
-      };
-    }
+    const whereCondition = buildWhereCondition(safeQuery, safeComuna, safeRol);
 
     const referenciales = await prisma.referenciales.findMany({
       where: whereCondition,
@@ -150,49 +146,15 @@ export async function fetchFilteredReferenciales(query: string | null | undefine
   }
 }
 
-export async function fetchReferencialesPages(query: string | null | undefined = '', comuna: string | null | undefined = null) {
+export async function fetchReferencialesPages(query: string | null | undefined = '', comuna: string | null | undefined = null, rol: string | null | undefined = null) {
   noStore();
 
   const safeQuery = query != null && typeof query === 'string' ? query : '';
   const safeComuna = comuna != null && typeof comuna === 'string' ? comuna : '';
+  const safeRol = rol != null && typeof rol === 'string' ? rol : '';
 
   try {
-    let whereCondition: Prisma.referencialesWhereInput = {};
-
-    // Si hay filtro de comuna específico
-    if (safeComuna.trim()) {
-      whereCondition = {
-        comuna: { contains: safeComuna, mode: 'insensitive' }
-      };
-    }
-
-    // Si hay búsqueda general y no hay filtro de comuna específico
-    if (safeQuery.trim() && !safeComuna.trim()) {
-      whereCondition = {
-        OR: [
-          { comuna: { contains: safeQuery, mode: 'insensitive' } },
-          { predio: { contains: safeQuery, mode: 'insensitive' } },
-          { comprador: { contains: safeQuery, mode: 'insensitive' } },
-          { vendedor: { contains: safeQuery, mode: 'insensitive' } }
-        ]
-      };
-    }
-
-    // Si hay tanto búsqueda general como filtro de comuna, combinamos
-    if (safeQuery.trim() && safeComuna.trim()) {
-      whereCondition = {
-        AND: [
-          { comuna: { contains: safeComuna, mode: 'insensitive' } },
-          {
-            OR: [
-              { predio: { contains: safeQuery, mode: 'insensitive' } },
-              { comprador: { contains: safeQuery, mode: 'insensitive' } },
-              { vendedor: { contains: safeQuery, mode: 'insensitive' } }
-            ]
-          }
-        ]
-      };
-    }
+    const whereCondition = buildWhereCondition(safeQuery, safeComuna, safeRol);
 
     const count = await prisma.referenciales.count({
       where: whereCondition,
@@ -253,49 +215,15 @@ interface FormattedComuna {
   count: number;
 }
 
-export async function fetchAllFilteredReferenciales(query: string | null | undefined, comuna: string | null | undefined = null) {
+export async function fetchAllFilteredReferenciales(query: string | null | undefined, comuna: string | null | undefined = null, rol: string | null | undefined = null) {
   noStore();
 
   const safeQuery = query != null && typeof query === 'string' ? query : '';
   const safeComuna = comuna != null && typeof comuna === 'string' ? comuna : '';
+  const safeRol = rol != null && typeof rol === 'string' ? rol : '';
 
   try {
-    let whereCondition: Prisma.referencialesWhereInput = {};
-
-    // Si hay filtro de comuna específico
-    if (safeComuna.trim()) {
-      whereCondition = {
-        comuna: { contains: safeComuna, mode: 'insensitive' }
-      };
-    }
-
-    // Si hay búsqueda general y no hay filtro de comuna específico
-    if (safeQuery.trim() && !safeComuna.trim()) {
-      whereCondition = {
-        OR: [
-          { comuna: { contains: safeQuery, mode: 'insensitive' } },
-          { predio: { contains: safeQuery, mode: 'insensitive' } },
-          { comprador: { contains: safeQuery, mode: 'insensitive' } },
-          { vendedor: { contains: safeQuery, mode: 'insensitive' } }
-        ]
-      };
-    }
-
-    // Si hay tanto búsqueda general como filtro de comuna, combinamos
-    if (safeQuery.trim() && safeComuna.trim()) {
-      whereCondition = {
-        AND: [
-          { comuna: { contains: safeComuna, mode: 'insensitive' } },
-          {
-            OR: [
-              { predio: { contains: safeQuery, mode: 'insensitive' } },
-              { comprador: { contains: safeQuery, mode: 'insensitive' } },
-              { vendedor: { contains: safeQuery, mode: 'insensitive' } }
-            ]
-          }
-        ]
-      };
-    }
+    const whereCondition = buildWhereCondition(safeQuery, safeComuna, safeRol);
 
     const referenciales = await prisma.referenciales.findMany({
       where: whereCondition,

@@ -2,6 +2,7 @@
 
 import Pagination from '@/components/ui/referenciales/pagination';
 import Search from '@/components/ui/primitives/search';
+import RolSearch from '@/components/ui/primitives/rol-search';
 import ComunaFilter from '@/components/ui/primitives/comuna-filter';
 import Table from '@/components/ui/referenciales/table';
 import ExportButton from '@/components/ui/referenciales/export-button';
@@ -30,7 +31,8 @@ function ReferencialesContent() {
     const queryParam = searchParams?.get('query') || '';
     const pageParam = Number(searchParams?.get('page')) || 1;
     const comunaParam = searchParams?.get('comuna') || '';
-    return { queryParam, pageParam, comunaParam };
+    const rolParam = searchParams?.get('rol') || '';
+    return { queryParam, pageParam, comunaParam, rolParam };
   }, [searchParams]);
 
   const fetchData = useCallback(async () => {
@@ -38,12 +40,12 @@ function ReferencialesContent() {
     setError(null);
 
     try {
-      const { queryParam, pageParam, comunaParam } = getSearchParams();
+      const { queryParam, pageParam, comunaParam, rolParam } = getSearchParams();
       setQuery(queryParam);
       setCurrentPage(pageParam);
 
-      const data = await fetchFilteredReferenciales(queryParam, pageParam, comunaParam);
-      
+      const data = await fetchFilteredReferenciales(queryParam, pageParam, comunaParam, rolParam);
+
       if (data && Array.isArray(data)) {
         // Los datos ya vienen transformados desde el backend (BigInt → Number)
         setReferenciales(data as Referencial[]);
@@ -53,7 +55,7 @@ function ReferencialesContent() {
         setError('Error en formato de datos');
       }
 
-      const pages = await fetchReferencialesPages(queryParam, comunaParam);
+      const pages = await fetchReferencialesPages(queryParam, comunaParam, rolParam);
       setTotalPages(typeof pages === 'number' ? pages : 1);
     } catch (error) {
       console.error('Error:', error);
@@ -88,17 +90,30 @@ function ReferencialesContent() {
       </div>
 
       <div className="mt-4 space-y-4 md:mt-8">
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-4 flex-1">
-            <div className="flex-1 max-w-md">
-              <Search placeholder="Buscar referencial..." />
-            </div>
-            <div className="flex-shrink-0">
-              <ComunaFilter placeholder="Filtrar por comuna" />
-            </div>
+        <div className="flex flex-col gap-3 md:flex-row md:items-end md:gap-4">
+          <div className="w-full md:w-auto">
+            <label htmlFor="rol-search" className="block text-xs font-medium text-gray-500 mb-1">
+              ROL de avaluo
+            </label>
+            <RolSearch placeholder="ej: 1634-6" />
           </div>
+
+          <div className="w-full md:w-auto md:min-w-[220px]">
+            <label htmlFor="comuna-filter" className="block text-xs font-medium text-gray-500 mb-1">
+              Comuna
+            </label>
+            <ComunaFilter placeholder="Buscar comuna..." />
+          </div>
+
+          <div className="flex-1 min-w-0">
+            <label htmlFor="search" className="block text-xs font-medium text-gray-500 mb-1">
+              Busqueda general
+            </label>
+            <Search placeholder="Predio, comprador, vendedor..." />
+          </div>
+
           {canCreateReferenciales && (
-            <div className="text-sm text-gray-600 bg-blue-50 px-3 py-1 rounded-md">
+            <div className="text-sm text-gray-600 bg-blue-50 px-3 py-1 rounded-md self-end whitespace-nowrap">
               Rol: {userRole}
             </div>
           )}
