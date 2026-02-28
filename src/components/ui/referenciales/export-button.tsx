@@ -73,9 +73,10 @@ export default function ExportButton({ disabled = false }: ExportButtonProps) {
       // Obtener parámetros de búsqueda actuales
       const query = searchParams?.get('query') || '';
       const comuna = searchParams?.get('comuna') || '';
+      const rol = searchParams?.get('rol') || '';
 
       // Obtener TODOS los registros que coinciden con la búsqueda
-      const allReferenciales = await fetchAllFilteredReferenciales(query, comuna);
+      const allReferenciales = await fetchAllFilteredReferenciales(query, comuna, rol);
       
       if (allReferenciales.length === 0) {
         toast.error('No hay datos para exportar con los filtros aplicados.', { id: toastId });
@@ -116,9 +117,10 @@ export default function ExportButton({ disabled = false }: ExportButtonProps) {
       // Obtener parámetros de búsqueda actuales
       const query = searchParams?.get('query') || '';
       const comuna = searchParams?.get('comuna') || '';
+      const rol = searchParams?.get('rol') || '';
 
       // Obtener TODOS los registros que coinciden con la búsqueda
-      const allReferenciales = await fetchAllFilteredReferenciales(query, comuna);
+      const allReferenciales = await fetchAllFilteredReferenciales(query, comuna, rol);
       
       if (allReferenciales.length === 0) {
         toast.error('No hay datos para exportar con los filtros aplicados.', { id: toastId });

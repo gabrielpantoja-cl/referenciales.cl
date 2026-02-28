@@ -1,1 +1,0 @@
-declare const CACHE_NAME: string;

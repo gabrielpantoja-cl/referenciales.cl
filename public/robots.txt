@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/auth/
+Disallow: /dashboard/
+
+Sitemap: https://referenciales.cl/sitemap.xml

@@ -103,7 +103,7 @@ function Set-VercelProduction {
     # Variables críticas específicas para el fix
     $criticalVars = @{
         "NEXTAUTH_URL" = "https://referenciales.cl"
-        "NEXTAUTH_SECRET" = "IfBvEpoXetsQVqiCAwOTxkdJNSlzYcgm"
+        "NEXTAUTH_SECRET" = "REDACTED_NEXTAUTH_SECRET"
     }
     
     foreach ($var in $criticalVars.GetEnumerator()) {
