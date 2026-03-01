@@ -1,6 +1,6 @@
 # Base de Datos de Referenciales para Tasación 📊
 
-[![Project Status: Active Development](https://img.shields.io/badge/status-active%20development-brightgreen)](https://github.com/TheCuriousSloth/referenciales.cl) 
+[![Project Status: Active Development](https://img.shields.io/badge/status-active%20development-brightgreen)](https://github.com/gabrielpantoja-cl/referenciales.cl) 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![API Status](https://img.shields.io/badge/API%20P%C3%BAblica-Disponible-success)](https://referenciales.cl/api/public/docs)
 [![Statistics Module](https://img.shields.io/badge/Estadísticas%20Avanzadas-Completo-brightgreen)](/dashboard/estadisticas)
@@ -249,7 +249,7 @@ Consulta el archivo `auth-notes.md` para obtener detalles completos sobre la con
 
 1.  **Clonar el repositorio:**
     ```bash
-    git clone https://github.com/TheCuriousSloth/referenciales.cl.git
+    git clone https://github.com/gabrielpantoja-cl/referenciales.cl.git
     cd referenciales.cl
     ```
 
@@ -352,9 +352,9 @@ Usa nuestro sistema de issues para:
 - **🌐 Issues de la API pública**: Problemas de integración externa
 
 ### 🔗 Enlaces Útiles
-- **[Crear nuevo issue](https://github.com/TheCuriousSloth/referenciales.cl/issues/new)**
-- **[Ver issues existentes](https://github.com/TheCuriousSloth/referenciales.cl/issues)**
-- **[Discusiones](https://github.com/TheCuriousSloth/referenciales.cl/discussions)**
+- **[Crear nuevo issue](https://github.com/gabrielpantoja-cl/referenciales.cl/issues/new)**
+- **[Ver issues existentes](https://github.com/gabrielpantoja-cl/referenciales.cl/issues)**
+- **[Discusiones](https://github.com/gabrielpantoja-cl/referenciales.cl/discussions)**
 
 ### 📝 Información a Incluir
 Para reportar problemas efectivamente:

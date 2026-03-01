@@ -123,7 +123,7 @@ Recursos adicionales y compliance
 
 ```bash
 # 1. Clonar repositorio
-git clone https://github.com/TheCuriousSloth/referenciales.cl.git
+git clone https://github.com/gabrielpantoja-cl/referenciales.cl.git
 cd referenciales.cl
 
 # 2. Instalar dependencias
@@ -196,7 +196,7 @@ Acceder al módulo de estadísticas avanzadas:
 - **🔧 Dashboard:** [https://referenciales.cl/dashboard](https://referenciales.cl/dashboard)
 - **📊 Estadísticas:** [https://referenciales.cl/dashboard/estadisticas](https://referenciales.cl/dashboard/estadisticas)
 - **🔌 API Docs:** [https://referenciales.cl/api/public/docs](https://referenciales.cl/api/public/docs)
-- **💾 GitHub:** [https://github.com/TheCuriousSloth/referenciales.cl](https://github.com/TheCuriousSloth/referenciales.cl)
+- **💾 GitHub:** [https://github.com/gabrielpantoja-cl/referenciales.cl](https://github.com/gabrielpantoja-cl/referenciales.cl)
 
 ### 📞 Soporte
 - **📧 Email:** desarrollo@referenciales.cl

@@ -35,7 +35,7 @@ console.log(`Estrellas: ${stars}`);
 ```typescript
 import { fetchGithubStarsEnhanced } from '@/lib/githubStars.enhanced';
 
-const result = await fetchGithubStarsEnhanced('TheCuriousSloth/referenciales.cl', {
+const result = await fetchGithubStarsEnhanced('gabrielpantoja-cl/referenciales.cl', {
   token: process.env.GITHUB_TOKEN, // Opcional pero recomendado
   useCache: true,
   timeout: 5000
@@ -81,7 +81,7 @@ function Footer() {
     <div>
       Dale una estrella a nuestro proyecto: 
       <GitHubStarsSimple 
-        repo="TheCuriousSloth/referenciales.cl"
+        repo="gabrielpantoja-cl/referenciales.cl"
         token={process.env.GITHUB_TOKEN}
         className="ml-2"
       />
@@ -281,7 +281,7 @@ export function Footer() {
         <div className="flex items-center gap-2">
           <span>Star us on GitHub:</span>
           <GitHubStarsSimple 
-            repo="TheCuriousSloth/referenciales.cl"
+            repo="gabrielpantoja-cl/referenciales.cl"
             token={process.env.GITHUB_TOKEN}
           />
         </div>
@@ -297,7 +297,7 @@ export function Footer() {
 import { GitHubStarsDisplay } from '@/components/features/github';
 
 const projects = [
-  'TheCuriousSloth/referenciales.cl',
+  'gabrielpantoja-cl/referenciales.cl',
   'vercel/next.js',
   'facebook/react'
 ];

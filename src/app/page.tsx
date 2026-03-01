@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { fetchGithubStars } from '../lib/githubStars';
 
 // Agregar icono de GitHub y contador de estrellas
-const GITHUB_REPO_URL = 'https://github.com/TheCuriousSloth/referenciales.cl';
+const GITHUB_REPO_URL = 'https://github.com/gabrielpantoja-cl/referenciales.cl';
 const GITHUB_STARS = 1; // Actualizar dinámicamente si se desea
 
 export default function Page() {
@@ -23,7 +23,7 @@ export default function Page() {
   const [githubStars, setGithubStars] = useState<number | null>(null);
 
   useEffect(() => {
-    fetchGithubStars('TheCuriousSloth/referenciales.cl').then(setGithubStars);
+    fetchGithubStars('gabrielpantoja-cl/referenciales.cl').then(setGithubStars);
   }, []);
 
   // ✅ ELIMINADO: useEffect que causaba redirects automáticos
