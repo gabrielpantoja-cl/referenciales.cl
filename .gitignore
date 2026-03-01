@@ -56,6 +56,9 @@ next-env.d.ts
 temp-output.css
 *.backup
 
+# Screenshots sueltos en raiz
+/*.png
+
 # MCP configuration
 .mcp.json
 
