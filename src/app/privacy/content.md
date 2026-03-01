@@ -52,7 +52,7 @@ Referenciales.cl se compromete a cumplir con Ley de Protección de la Vida Priva
 
 ### 📞 Proceso de Reclamación
 Para ejercer estos derechos o realizar consultas privadas:
-> **WhatsApp:** [`+56 9 3176 9472`](https://wa.me/56931769472)
+> **Email:** desarrollo@referenciales.cl
 
 ### 🛡️ Medidas de Seguridad
 Implementamos protecciones contra:
@@ -186,7 +186,7 @@ Esta política de cookies puede actualizarse para reflejar:
 ### 6.8 Contacto y Ejercicio de Derechos
 
 Para consultas sobre cookies o ejercer sus derechos:
-- **WhatsApp**: [+56 9 3176 9472](https://wa.me/56931769472)
+- **Email**: desarrollo@referenciales.cl
 - **Tiempo de respuesta**: Máximo 30 días hábiles
 
 ---

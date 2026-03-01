@@ -111,10 +111,9 @@ Recursos adicionales y compliance
 - 🚧 **Mobile App:** Planeado para v2.0
 
 ### 👥 Equipo y Contacto
-- **Lead Developer:** Gabriel Pantoja
-- **Repositorio:** [GitHub](https://github.com/TheCuriousSloth/referenciales.cl)
-- **Issues:** [GitHub Issues](https://github.com/TheCuriousSloth/referenciales.cl/issues)
-- **WhatsApp:** +56 9 3176 9472
+- **Repositorio:** [GitHub](https://github.com/gabrielpantoja-cl/referenciales.cl)
+- **Issues:** [GitHub Issues](https://github.com/gabrielpantoja-cl/referenciales.cl/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/gabrielpantoja-cl/referenciales.cl/discussions)
 
 ---
 
@@ -201,8 +200,8 @@ Acceder al módulo de estadísticas avanzadas:
 
 ### 📞 Soporte
 - **📧 Email:** desarrollo@referenciales.cl
-- **💬 WhatsApp:** +56 9 3176 9472  
-- **🐛 Issues:** [GitHub Issues](https://github.com/TheCuriousSloth/referenciales.cl/issues)
+- **🐛 Issues:** [GitHub Issues](https://github.com/gabrielpantoja-cl/referenciales.cl/issues)
+- **💬 Discussions:** [GitHub Discussions](https://github.com/gabrielpantoja-cl/referenciales.cl/discussions)
 - **📖 Docs:** Esta documentación (siempre actualizada)
 
 ---

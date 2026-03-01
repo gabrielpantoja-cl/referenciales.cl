@@ -17,7 +17,7 @@ const faqs: FAQs = {
   "¿De qué se trata referenciales.cl?": "Referenciales.cl es una base de datos colaborativa para peritos tasadores.",
   "¿Cómo puedo registrarme?": "Al iniciar sesión con Google te registras automáticamente en nuestra aplicación.",
   "¿Cuáles son los servicios que ofrecen?": "Ofrecemos acceso a una base de datos colaborativa, incluyendo consultas personalizadas, vista por mapa y más.",
-  "¿Cuál es el correo o teléfono de contacto?": "El canal oficial de comunicación es el WhatsApp: +56 9 3176 9472."
+  "¿Cuál es el correo o teléfono de contacto?": "Puedes contactarnos a través de GitHub Discussions en nuestro repositorio."
 };
 
 // Prompt inicial para orientar al asistente

@@ -508,7 +508,6 @@ describe('Cookie Consent Banner', () => {
 ### Legal/Compliance
 - **Responsable**: Asesor Legal
 - **Contacto**: legal@referenciales.cl
-- **WhatsApp**: +56 9 3176 9472
 
 ### Usuarios
 - **Soporte**: Centro de privacidad web
@@ -548,5 +547,5 @@ describe('Cookie Consent Banner', () => {
 **Estado del Checklist**: ⏳ En Desarrollo  
 **Última verificación**: [Fecha]  
 **Próxima auditoría**: [Fecha + 3 meses]  
-**Responsable**: Gabriel Pantoja  
+**Responsable**: Equipo referenciales.cl
 **Versión**: 2.0
