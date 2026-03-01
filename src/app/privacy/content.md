@@ -29,7 +29,7 @@ El acceso y uso del sitio web Referenciales.cl se rige por las leyes de la Repú
 * **<a href="https://www.bcn.cl/leychile/navegar?idNorma=61438" target="_blank" rel="noopener noreferrer">Ley N° 19.496</a>** - Establece Normas sobre Protección de los Derechos de los Consumidores (Última versión: 20-ABR-2021).
 * **<a href="https://www.bcn.cl/leychile/navegar?idNorma=276363" target="_blank" rel="noopener noreferrer">Ley N° 20.285</a>** - Sobre Acceso a la Información Pública (Última modificación: 05-ENE-2016 - Ley 20880).
 * **<a href="https://www.bcn.cl/leychile/navegar?idNorma=1119730" target="_blank" rel="noopener noreferrer">Ley N° 21.096</a>** - Consagración Constitucional del Derecho a la Protección de Datos Personales (2018).
-* **<a href="https://www.bcn.cl/leychile/navegar?idNorma=1209272" target="_blank" rel="noopener noreferrer">Ley N° 21.719</a>** - Nueva Ley que regula la Protección y Tratamiento de Datos Personales y crea la Agencia de Protección de Datos Personales (vigencia: diciembre 2026).
+* **<a href="https://www.bcn.cl/leychile/navegar?idNorma=1209272" target="_blank" rel="noopener noreferrer">Ley N° 21.719</a>** - Ley que regula la Protección y Tratamiento de Datos Personales y crea la Agencia de Protección de Datos Personales (vigencia: 1 de diciembre de 2026).
 
 En caso de cualquier controversia relacionada con el uso de la plataforma, esta será sometida a la jurisdicción de los tribunales de justicia de la República de Chile.
 
@@ -180,8 +180,8 @@ Esta política de cookies puede actualizarse para reflejar:
 - Nuevas tecnologías implementadas
 - Modificaciones en servicios de terceros
 
-**Última actualización**: Diciembre 2024  
-**Próxima revisión**: Marzo 2025
+**Última actualización**: Marzo 2026
+**Próxima revisión**: Noviembre 2026 (antes de entrada en vigencia Ley 21.719)
 
 ### 6.8 Contacto y Ejercicio de Derechos
 

@@ -70,3 +70,7 @@ Los usuarios tienen derecho a solicitar la eliminación de su cuenta en cualquie
 
 > **Nota:** La eliminación de una cuenta es irreversible. Asegúrate de haber transferido o respaldado toda la información necesaria antes de proceder.
 
+---
+
+**Última actualización**: Marzo 2026
+
