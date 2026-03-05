@@ -1,7 +1,6 @@
 // API endpoint para geocodificación automática usando rol de avalúo
 import { NextRequest, NextResponse } from 'next/server';
 import { autoGeocode } from '@/lib/sii-geocoding';
-import { scrapePropertyFromSII, canScrape } from '@/lib/sii-scraper';
 
 export async function POST(request: NextRequest) {
   try {
@@ -27,7 +26,7 @@ export async function POST(request: NextRequest) {
     // Método 1: Intentar con API de SimpleAPI + geocodificación
     try {
       const geocodeResult = await autoGeocode(rol, comuna);
-      
+
       if (geocodeResult) {
         return NextResponse.json({
           success: true,
@@ -44,35 +43,10 @@ export async function POST(request: NextRequest) {
       console.log('Error en método API:', error);
     }
 
-    // Método 2: Scraping directo del SII (solo si está habilitado)
-    if (canScrape()) {
-      try {
-        const scrapingResult = await scrapePropertyFromSII(rol, comuna);
-        
-        if (scrapingResult.success) {
-          return NextResponse.json({
-            success: true,
-            method: 'scraping',
-            data: {
-              lat: scrapingResult.lat,
-              lng: scrapingResult.lng,
-              rol,
-              comuna,
-              address: scrapingResult.address,
-              surface: scrapingResult.surface,
-              avaluo: scrapingResult.avaluo
-            }
-          });
-        }
-      } catch (error) {
-        console.log('Error en scraping:', error);
-      }
-    }
-
-    // Método 3: Fallback usando geocodificación aproximada
+    // Método 2: Fallback usando geocodificación aproximada por comuna
     try {
       const fallbackResult = await geocodeFallback(rol, comuna);
-      
+
       if (fallbackResult) {
         return NextResponse.json({
           success: true,
@@ -100,7 +74,7 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Error en API geocode-sii:', error);
-    
+
     return NextResponse.json(
       { error: 'Error interno del servidor' },
       { status: 500 }
@@ -112,7 +86,7 @@ export async function POST(request: NextRequest) {
 async function geocodeFallback(rol: string, comuna: string): Promise<{lat: number, lng: number} | null> {
   try {
     const googleApiKey = process.env.GOOGLE_MAPS_API_KEY;
-    
+
     if (!googleApiKey) {
       console.log('GOOGLE_MAPS_API_KEY no configurada - usando coordenadas aproximadas');
       // Coordenadas aproximadas para algunas comunas principales
@@ -130,18 +104,18 @@ async function geocodeFallback(rol: string, comuna: string): Promise<{lat: numbe
         'Puerto Montt': { lat: -41.4693, lng: -72.9424 },
         'Punta Arenas': { lat: -53.1638, lng: -70.9171 }
       };
-      
+
       if (comunasCoords[comuna]) {
         const coords = comunasCoords[comuna];
         const latVariation = (Math.random() - 0.5) * 0.01;
         const lngVariation = (Math.random() - 0.5) * 0.01;
-        
+
         return {
           lat: coords.lat + latVariation,
           lng: coords.lng + lngVariation
         };
       }
-      
+
       return null;
     }
 
@@ -150,15 +124,13 @@ async function geocodeFallback(rol: string, comuna: string): Promise<{lat: numbe
     );
 
     const data = await response.json();
-    
+
     if (data.status === 'OK' && data.results.length > 0) {
       const location = data.results[0].geometry.location;
-      
-      // Agregar una pequeña variación aleatoria para evitar que todas las propiedades
-      // de la misma comuna tengan exactamente las mismas coordenadas
-      const latVariation = (Math.random() - 0.5) * 0.01; // ±0.005 grados
+
+      const latVariation = (Math.random() - 0.5) * 0.01;
       const lngVariation = (Math.random() - 0.5) * 0.01;
-      
+
       return {
         lat: location.lat + latVariation,
         lng: location.lng + lngVariation
