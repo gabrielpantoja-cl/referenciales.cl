@@ -24,8 +24,8 @@
   },
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
-    "Neon",
     "context7",
-    "github"
+    "github",
+    "playwright"
   ]
 }
