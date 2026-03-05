@@ -2,85 +2,152 @@
 
 ## 1. Introducción
 
-**Referenciales.cl** es una aplicación web de código abierto diseñada para proporcionar una base de datos colaborativa relacionada con transacciones de suelo en Chile. Basada en información recolectada por personas voluntarias, esta plataforma fomenta la transparencia y colaboración, permitiendo a desarrolladores y usuarios contribuir al desarrollo del proyecto.
+**Referenciales.cl** es una aplicación web de código abierto diseñada para proporcionar una base de datos colaborativa relacionada con transacciones de suelo en Chile. Esta política describe cómo recopilamos, utilizamos y protegemos la información de nuestros usuarios.
 
 > **Importante:** Referenciales.cl es una iniciativa sin fines de lucro que busca contribuir al acceso libre de información. No garantizamos la exactitud, completitud o actualidad de los datos, ni nos responsabilizamos por el uso que los usuarios hagan de esta información.
 
-### Nuestro Objetivo
-En Referenciales.cl, buscamos generar un sistema de acceso de información sobre transacciones de suelo en Chile para peritos tasadores.
+---
+
+## 2. Datos que Recopilamos
+
+### 2.1. Datos Personales de Usuarios Registrados
+Al autenticarse mediante Google OAuth, recopilamos:
+
+* **Nombre completo** asociado a la cuenta de Google.
+* **Dirección de correo electrónico** de la cuenta de Google.
+* **Imagen de perfil** de la cuenta de Google.
+* **Identificador único** de la cuenta de Google (no incluye contraseña).
+
+> **Nota:** Referenciales.cl **no almacena contraseñas**. La autenticación es gestionada íntegramente por Google según sus propios términos y políticas de privacidad.
+
+### 2.2. Datos de Transacciones Inmobiliarias
+Los datos de transacciones publicados en la plataforma incluyen:
+
+* Fojas, número y año de inscripción.
+* Nombre del Conservador de Bienes Raíces (CBR).
+* Rol de avalúo, comuna, predio.
+* Superficie y monto de la transacción.
+* Coordenadas geográficas aproximadas.
+* Nombres de compradores y vendedores según constan en los registros públicos.
+
+**Estos datos provienen de fuentes de acceso público** (Conservador de Bienes Raíces, SII) y no constituyen datos personales sensibles conforme a la legislación chilena. Su tratamiento se fundamenta en la <a href="https://www.bcn.cl/leychile/navegar?idNorma=276363" target="_blank" rel="noopener noreferrer">Ley N° 20.285 sobre Acceso a la Información Pública</a>.
+
+### 2.3. Datos de Navegación
+Recopilamos automáticamente:
+
+* Dirección IP (anonimizada).
+* Tipo de navegador y dispositivo.
+* Páginas visitadas y tiempo de permanencia.
+* Datos de rendimiento del sitio.
 
 ---
 
-## 2. Autenticación y Uso de Servicios de Terceros
+## 3. Autenticación y Servicios de Terceros
 
-**Sistema de Autenticación:** Referenciales.cl utiliza Google como único autenticador.
+**Sistema de Autenticación:** Referenciales.cl utiliza Google como único proveedor de autenticación (Google OAuth 2.0).
 
-> **Nota:** Los usuarios deben iniciar sesión con su cuenta de Google, delegando la gestión de seguridad y datos a Google según sus términos y políticas.
-
-🔒 **Seguridad:** Referenciales.cl no almacena contraseñas y sigue las mejores prácticas de seguridad.
-
----
-
-## 3. Marco Legal y Jurisdicción
-
-El acceso y uso del sitio web Referenciales.cl se rige por las leyes de la República de Chile, incluyendo, pero no limitado a, las siguientes normativas:
-
-* **<a href="https://www.bcn.cl/leychile/navegar?idNorma=141599" target="_blank" rel="noopener noreferrer">Ley N° 19.628</a>** - Protección de la Vida Privada (1999).
-* **<a href="https://www.bcn.cl/leychile/navegar?idNorma=61438" target="_blank" rel="noopener noreferrer">Ley N° 19.496</a>** - Establece Normas sobre Protección de los Derechos de los Consumidores (Última versión: 20-ABR-2021).
-* **<a href="https://www.bcn.cl/leychile/navegar?idNorma=276363" target="_blank" rel="noopener noreferrer">Ley N° 20.285</a>** - Sobre Acceso a la Información Pública (Última modificación: 05-ENE-2016 - Ley 20880).
-* **<a href="https://www.bcn.cl/leychile/navegar?idNorma=1119730" target="_blank" rel="noopener noreferrer">Ley N° 21.096</a>** - Consagración Constitucional del Derecho a la Protección de Datos Personales (2018).
-* **<a href="https://www.bcn.cl/leychile/navegar?idNorma=1209272" target="_blank" rel="noopener noreferrer">Ley N° 21.719</a>** - Ley que regula la Protección y Tratamiento de Datos Personales y crea la Agencia de Protección de Datos Personales (vigencia: 1 de diciembre de 2026).
-
-En caso de cualquier controversia relacionada con el uso de la plataforma, esta será sometida a la jurisdicción de los tribunales de justicia de la República de Chile.
+* Los usuarios deben iniciar sesión con su cuenta de Google.
+* La gestión de credenciales y seguridad de acceso es delegada a Google.
+* Las sesiones tienen una duración máxima de 24 horas.
+* No se almacenan tokens de acceso de Google más allá de lo necesario para la sesión activa.
 
 ---
 
-## 4. Derechos y Protección de Datos
+## 4. Finalidad del Tratamiento de Datos
 
-Referenciales.cl se compromete a cumplir con Ley de Protección de la Vida Privada, que regula el tratamiento de datos personales en Chile, asegurando que todos los datos personales recolectados y procesados en la plataforma sean tratados de manera segura y conforme a la ley. Esto incluye, pero no se limita a, los siguientes aspectos:
+### 4.1. Datos Personales
+Utilizamos los datos personales de usuarios registrados para:
+
+* Identificar al usuario dentro de la plataforma.
+* Asociar las contribuciones de datos a su autor.
+* Comunicar actualizaciones relevantes sobre la plataforma.
+* Cumplir con obligaciones legales aplicables.
+
+### 4.2. Datos de Transacciones Inmobiliarias
+Estos datos se utilizan para:
+
+* Facilitar el acceso ciudadano a información pública sobre transacciones de suelo.
+* Generar estadísticas e indicadores del mercado inmobiliario.
+* Alimentar la API pública de la plataforma.
+* Visualización cartográfica en mapas interactivos.
+
+---
+
+## 5. Marco Legal y Jurisdicción
+
+El acceso y uso del sitio web Referenciales.cl se rige por las leyes de la República de Chile, incluyendo:
+
+* **<a href="https://www.bcn.cl/leychile/navegar?idNorma=141599" target="_blank" rel="noopener noreferrer">Ley N° 19.628</a>** – Protección de la Vida Privada (1999).
+* **<a href="https://www.bcn.cl/leychile/navegar?idNorma=61438" target="_blank" rel="noopener noreferrer">Ley N° 19.496</a>** – Protección de los Derechos de los Consumidores.
+* **<a href="https://www.bcn.cl/leychile/navegar?idNorma=276363" target="_blank" rel="noopener noreferrer">Ley N° 20.285</a>** – Sobre Acceso a la Información Pública.
+* **<a href="https://www.bcn.cl/leychile/navegar?idNorma=1119730" target="_blank" rel="noopener noreferrer">Ley N° 21.096</a>** – Consagración Constitucional del Derecho a la Protección de Datos Personales (2018).
+* **<a href="https://www.bcn.cl/leychile/navegar?idNorma=1209272" target="_blank" rel="noopener noreferrer">Ley N° 21.719</a>** – Protección y Tratamiento de Datos Personales y creación de la Agencia de Protección de Datos Personales (vigencia: 1 de diciembre de 2026).
+
+En caso de cualquier controversia, esta será sometida a la jurisdicción de los tribunales de justicia de la República de Chile.
+
+---
+
+## 6. Derechos y Protección de Datos
+
+Referenciales.cl se compromete a cumplir con la legislación chilena de protección de datos personales. Los usuarios registrados tienen los siguientes derechos:
 
 ### Derechos Fundamentales
 
-* ✅ **Derecho de Acceso:** 
-  - Los usuarios tienen el derecho a acceder a sus datos personales almacenados en la plataforma.
-* ✅ **Derecho de Rectificación:** 
-  - Los usuarios pueden solicitar la corrección de sus datos personales si estos son inexactos o están desactualizados.
-* ✅ **Derecho de Cancelación:** 
-  - Los usuarios tienen el derecho a solicitar la eliminación de sus datos personales cuando estos ya no sean necesarios para los fines para los que fueron recolectados, o cuando el usuario retire su consentimiento.
-* ✅ **Derecho de Oposición:** 
-  - En casos específicos, los usuarios pueden oponerse al tratamiento de sus datos personales.
+* **Derecho de Acceso:** Los usuarios pueden solicitar información sobre qué datos personales suyos están almacenados en la plataforma.
+* **Derecho de Rectificación:** Los usuarios pueden solicitar la corrección de sus datos personales si estos son inexactos o están desactualizados.
+* **Derecho de Cancelación:** Los usuarios pueden solicitar la eliminación de sus datos personales cuando ya no sean necesarios para los fines para los que fueron recolectados.
+* **Derecho de Oposición:** Los usuarios pueden oponerse al tratamiento de sus datos personales en casos específicos previstos por la ley.
 
-### 📞 Proceso de Reclamación
-Para ejercer estos derechos o realizar consultas privadas:
+### Proceso de Ejercicio de Derechos
+Para ejercer estos derechos o realizar consultas:
 > **Email:** desarrollo@referenciales.cl
+> **Tiempo de respuesta:** Máximo 30 días hábiles.
 
-### 🛡️ Medidas de Seguridad
-Implementamos protecciones contra:
-* 🔒 Acceso no autorizado.
-* 🔒 Divulgación indebida.
-* 🔒 Alteración de datos.
-* 🔒 Destrucción de información.
-
----
-
-## 5. Almacenamiento de Datos
-
-**Base de Datos:** Los referenciales se almacenan en una base de datos PostgreSQL, un sistema de gestión de bases de datos relacional, conocido por su estabilidad, robustez y soporte para características avanzadas.
+### Medidas de Seguridad
+Implementamos medidas técnicas y organizativas para proteger los datos personales contra:
+* Acceso no autorizado.
+* Divulgación indebida.
+* Alteración de datos.
+* Destrucción de información.
 
 ---
 
-## 6. Cookies y Tecnologías de Seguimiento
+## 7. Retención de Datos
+
+### 7.1. Datos Personales de Usuarios
+* **Cuenta activa:** Los datos se conservan mientras la cuenta permanezca activa.
+* **Cuenta eliminada:** Los datos personales se eliminan dentro de los 30 días siguientes a la solicitud, salvo obligaciones legales de retención.
+
+### 7.2. Datos de Transacciones Inmobiliarias
+* Los datos de transacciones, al ser de origen público e interés colectivo, se conservan de manera indefinida como parte del registro histórico de la plataforma.
+
+### 7.3. Datos de Navegación
+* Logs de acceso: 90 días.
+* Datos analíticos: según las políticas de cada proveedor (ver sección de Cookies).
+
+---
+
+## 8. Almacenamiento y Seguridad
+
+Los datos de la plataforma se almacenan en servidores seguros con las siguientes medidas:
+
+* Conexiones cifradas mediante HTTPS/TLS.
+* Acceso a base de datos restringido y autenticado.
+* Respaldos periódicos de la información.
+* Monitoreo de accesos y actividad inusual.
+
+---
+
+## 9. Cookies y Tecnologías de Seguimiento
 
 ### ¿Qué son las cookies?
 
-Las cookies son pequeños archivos de texto que se descargan y almacenan en su dispositivo cuando visita nuestro sitio web. Estas nos permiten reconocer su dispositivo en visitas posteriores y mejorar su experiencia de usuario.
+Las cookies son pequeños archivos de texto que se almacenan en su dispositivo cuando visita nuestro sitio web. Nos permiten reconocer su dispositivo en visitas posteriores y mejorar su experiencia de usuario.
 
-### Cookies que utilizamos específicamente
+### 9.1. Cookies Estrictamente Necesarias
+Estas cookies son esenciales para el funcionamiento del sitio y no se pueden desactivar.
 
-#### 6.1 Cookies Estrictamente Necesarias
-Estas cookies son esenciales para que el sitio web funcione correctamente y no se pueden desactivar.
-
-**🔐 Autenticación (NextAuth.js)**
+**Autenticación (NextAuth.js)**
 - **Nombre**: `next-auth.session-token` (desarrollo) / `__Secure-next-auth.session-token` (producción)
 - **Propósito**: Mantener su sesión activa tras autenticarse con Google
 - **Duración**: 24 horas
@@ -88,112 +155,103 @@ Estas cookies son esenciales para que el sitio web funcione correctamente y no s
 - **Tipo**: Esencial
 - **Base legal**: Interés legítimo (funcionalidad del sitio)
 
-**🔧 Cookies de Funcionalidad**
-- **Propósito**: Recordar sus preferencias de interfaz y configuración
-- **Duración**: Hasta que las elimine manualmente
+**Cookies de Funcionalidad**
+- **Propósito**: Recordar preferencias de interfaz y configuración
+- **Duración**: Hasta eliminación manual
 - **Tipo**: Funcional
 
-#### 6.2 Cookies Analíticas (Requieren Consentimiento)
+### 9.2. Cookies Analíticas (Requieren Consentimiento)
 
-**📊 Google Analytics 4**
+**Google Analytics 4**
 - **Nombres**: `_ga`, `_ga_*`, `_gid`, `_gat`
 - **Propósito**: Analizar el uso del sitio, páginas más visitadas, tiempo de permanencia
 - **Duración**: Hasta 2 años
 - **Proveedor**: Google LLC
-- **Datos recopilados**: 
-  - Páginas visitadas
-  - Tiempo en el sitio
-  - Ubicación geográfica aproximada
-  - Tipo de dispositivo y navegador
-- **Transferencia internacional**: Estados Unidos (adequacy decision)
-- **Política de privacidad**: [https://policies.google.com/privacy](https://policies.google.com/privacy)
+- **Datos recopilados**: Páginas visitadas, tiempo en el sitio, ubicación geográfica aproximada, tipo de dispositivo y navegador
+- **Transferencia internacional**: Estados Unidos
+- **Política de privacidad**: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">policies.google.com/privacy</a>
 
-**⚡ Vercel Analytics**
+**Vercel Analytics**
 - **Propósito**: Métricas de rendimiento del sitio web
 - **Duración**: 30 días
 - **Proveedor**: Vercel Inc.
-- **Datos recopilados**: 
-  - Velocidad de carga de páginas
-  - Errores técnicos
-  - Métricas de rendimiento
-- **Política de privacidad**: [https://vercel.com/legal/privacy-policy](https://vercel.com/legal/privacy-policy)
+- **Datos recopilados**: Velocidad de carga, errores técnicos, métricas de rendimiento
+- **Política de privacidad**: <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">vercel.com/legal/privacy-policy</a>
 
-**🚀 Vercel Speed Insights**
+**Vercel Speed Insights**
 - **Propósito**: Optimización de velocidad del sitio
 - **Duración**: 30 días
 - **Proveedor**: Vercel Inc.
-- **Datos recopilados**: Core Web Vitals, métricas de performance
+- **Datos recopilados**: Core Web Vitals, métricas de rendimiento
 
-### 6.3 Sus Derechos sobre las Cookies
+### 9.3. Sus Derechos sobre las Cookies
 
-Conforme a la **Ley 21.719 de Protección de Datos Personales de Chile** y las mejores prácticas internacionales, usted tiene derecho a:
+Conforme a la legislación chilena y las mejores prácticas internacionales, usted tiene derecho a:
 
-#### ✅ Control Granular
-- **Aceptar todas** las cookies
-- **Rechazar cookies** no esenciales
-- **Configurar categorías** específicas de cookies
-- **Cambiar sus preferencias** en cualquier momento
+* **Aceptar todas** las cookies.
+* **Rechazar cookies** no esenciales.
+* **Configurar categorías** específicas de cookies.
+* **Cambiar sus preferencias** en cualquier momento.
+* **Retirar consentimiento** tan fácilmente como lo otorgó.
 
-#### 🔄 Gestión de Consentimiento
-- **Retirar consentimiento** tan fácilmente como lo otorgó
-- **Modificar preferencias** desde nuestro centro de privacidad
-- **Recibir información clara** sobre el impacto de rechazar cookies
+### 9.4. Cómo Gestionar sus Cookies
 
-### 6.4 Cómo Gestionar sus Cookies
+**En nuestro sitio web:**
+1. Banner de consentimiento en su primera visita.
+2. Centro de privacidad accesible desde el footer.
+3. Configuración granular por categoría de cookie.
 
-#### En Nuestro Sitio Web
-1. **Banner de consentimiento**: Aparece en su primera visita
-2. **Centro de privacidad**: Accesible desde el footer
-3. **Configuración granular**: Por categoría de cookie
+**En su navegador:**
+* **Chrome**: Configuración > Privacidad y seguridad > Cookies
+* **Firefox**: Opciones > Privacidad y seguridad
+* **Safari**: Preferencias > Privacidad
+* **Edge**: Configuración > Cookies y permisos del sitio
 
-#### En su Navegador
-**Chrome**: Configuración > Privacidad y seguridad > Cookies  
-**Firefox**: Opciones > Privacidad y seguridad  
-**Safari**: Preferencias > Privacidad  
-**Edge**: Configuración > Cookies y permisos del sitio
+**Impacto de deshabilitar cookies:**
+* Cookies esenciales: El sitio no funcionará correctamente.
+* Cookies analíticas: No afecta la funcionalidad del sitio.
 
-#### ⚠️ Impacto de Deshabilitar Cookies
-- **Cookies esenciales**: El sitio no funcionará correctamente
-- **Cookies analíticas**: No afecta la funcionalidad, pero limita nuestras mejoras
-- **Cookies de rendimiento**: Puede reducir la optimización del sitio
-
-### 6.5 Cookies de Terceros
-
-Los siguientes servicios de terceros pueden establecer cookies cuando utiliza nuestro sitio:
+### 9.5. Cookies de Terceros
 
 | Servicio | Propósito | Política de Privacidad |
 |----------|-----------|------------------------|
-| Google Analytics | Análisis de uso | [Ver política](https://policies.google.com/privacy) |
-| Google OAuth | Autenticación | [Ver política](https://policies.google.com/privacy) |
-| Vercel | Hosting y analytics | [Ver política](https://vercel.com/legal/privacy-policy) |
+| Google Analytics | Análisis de uso | <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Ver política</a> |
+| Google OAuth | Autenticación | <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Ver política</a> |
+| Vercel | Hosting y analytics | <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">Ver política</a> |
 
-### 6.6 Transferencias Internacionales
+### 9.6. Transferencias Internacionales
 
-Algunos de nuestros proveedores de cookies están ubicados fuera de Chile:
-- **Google**: Estados Unidos (Decision de Adequacy UE-US)
-- **Vercel**: Estados Unidos (Cláusulas Contractuales Estándar)
-
-### 6.7 Actualizaciones de esta Política
-
-Esta política de cookies puede actualizarse para reflejar:
-- Cambios en la legislación chilena
-- Nuevas tecnologías implementadas
-- Modificaciones en servicios de terceros
-
-**Última actualización**: Marzo 2026
-**Próxima revisión**: Noviembre 2026 (antes de entrada en vigencia Ley 21.719)
-
-### 6.8 Contacto y Ejercicio de Derechos
-
-Para consultas sobre cookies o ejercer sus derechos:
-- **Email**: desarrollo@referenciales.cl
-- **Tiempo de respuesta**: Máximo 30 días hábiles
+Algunos de nuestros proveedores están ubicados fuera de Chile:
+* **Google**: Estados Unidos
+* **Vercel**: Estados Unidos
 
 ---
 
-**⚖️ Marco Legal Aplicable**  
-Esta política cumple con:
-- Ley 21.719 de Protección de Datos Personales (Chile)
-- Ley 19.628 sobre Protección de la Vida Privada (Chile)
-- Principios del GDPR (UE) como referencia de buenas prácticas
+## 10. Actualizaciones de esta Política
 
+Esta política puede actualizarse para reflejar:
+* Cambios en la legislación chilena.
+* Nuevas tecnologías implementadas.
+* Modificaciones en servicios de terceros.
+
+Se notificará a los usuarios registrados sobre cambios sustanciales a través de la plataforma.
+
+---
+
+## 11. Contacto y Ejercicio de Derechos
+
+Para consultas sobre privacidad, cookies o ejercer sus derechos:
+* **Email:** desarrollo@referenciales.cl
+* **Tiempo de respuesta:** Máximo 30 días hábiles
+
+---
+
+**Marco Legal Aplicable**
+Esta política cumple con:
+* Ley 19.628 sobre Protección de la Vida Privada (Chile)
+* Ley 20.285 sobre Acceso a la Información Pública (Chile)
+* Ley 21.719 de Protección de Datos Personales (Chile, vigencia diciembre 2026)
+* Principios del GDPR (UE) como referencia de buenas prácticas
+
+**Última actualización**: Marzo 2026
+**Próxima revisión**: Noviembre 2026 (antes de entrada en vigencia Ley 21.719)
