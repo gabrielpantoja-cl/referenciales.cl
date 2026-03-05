@@ -1,0 +1,28 @@
+Mapa Inmobiliario en Chile: lanzan plataforma interactiva con valores comerciales de todas las casas y departamentos en el país
+
+Fuente: Mercados Inmobiliarios
+Fecha: 8 de enero de 2026
+URL: https://mercadosinmobiliarios.cl/mapa-inmobiliario-en-chile-lanzan-plataforma-interactiva-con-valores-comerciales-de-todas-las-casas-y-departamentos-en-el-pais/
+
+La proptech chilena Propiteq lanzó una nueva función denominada Mapa Inmobiliario, que integra información catastral y de mercado a nivel nacional en una interfaz interactiva única. Esta herramienta permite a usuarios conocer el valor real de propiedades, comparando precios por comuna y barrio.
+
+Características Principales
+
+La plataforma utiliza datos provenientes del SII, Conservadores de Bienes Raíces y portales inmobiliarios para proporcionar información como avalúos fiscales, contribuciones, y valores estimados de venta y arriendo.
+
+Según Felipe Respaldiza, CEO de Propiteq: "En Chile, gran parte de los datos sobre propiedades, precios y transacciones reales están fragmentados o son difíciles de acceder".
+
+Tecnología Utilizada
+
+El desarrollo se basó en modelos predictivos de Inteligencia Artificial, infraestructura Big Data y analítica avanzada sobre millones de registros. Utiliza tecnologías geoespaciales de código abierto.
+
+Objetivo
+
+Democratizar la información inmobiliaria para reducir asimetría informativa y facilitar compras, ventas e inversiones más informadas. La plataforma es gratuita y está disponible en www.propiteq.com/servicios/mapa-predio.
+
+---
+Relevancia para referenciales.cl:
+- Competidor/referente directo en democratización de datos inmobiliarios
+- Usan tecnologías geoespaciales de código abierto (similar a nuestro stack PostGIS + Leaflet)
+- Integran datos de SII y CBR, mismas fuentes que referenciales.cl
+- Validan la necesidad del mercado: la información está fragmentada y es difícil de acceder

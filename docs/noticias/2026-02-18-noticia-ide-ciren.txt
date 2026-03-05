@@ -1,0 +1,25 @@
+
+CIREN fortalece el geoportal IDE Minagri con una actualización orientada a interoperabilidad y escalabilidad
+ Secretaría Ejecutiva del SNIT
+Segunda noticia
+18 Febrero 2026
+CIREN fortalece el geoportal IDE Minagri con una actualización orientada a interoperabilidad y escalabilidad
+Más que una actualización visual, la nueva versión del geoportal permitirá optimizar la experiencia de usuario, facilitar el descubrimiento de datos geoespaciales y fortalecer el acceso a información territorial del sector agrícola, en un contexto de creciente demanda por datos abiertos y confiables.
+
+Como una forma de responder a un escenario de crecimiento sostenido de las necesidades de información y servicios geoespaciales, la Subgerencia de Infraestructura de Datos Espaciales (IDE) del Centro de Información de Recursos Naturales, CIREN, implementó una nueva versión del geoportal de la Infraestructura de Datos Espaciales del Ministerio de Agricultura (IDE Minagri), con foco en modernización tecnológica, mejoras de arquitectura y fortalecimiento de los mecanismos de descubrimiento y acceso a datos territoriales del sector agro.
+
+Se trata de una actualizaicón más amigable y de fácil acceso que permite también el mayor consumo de visualizaciones en línea por parte de instituciones públicas, consultoras y desarrolladores.
+
+Tal como señaló la directora ejecutiva de CIREN, Katherne Araya Matus, “el rediseño del sitio responde a la necesidad de simplificar la navegación, ordenar los accesos a herramientas clave y reducir las barreras técnicas para usuarios con distintos niveles de experiencia, desde profesionales del sector público y privado hasta ciudadanía interesada en el territorio rural”.
+
+Uno de los focos centrales del trabajo fue el descubrimiento de datos. La nueva estructura del sitio permite identificar con mayor claridad los distintos productos disponibles, visualizadores, reportes, catálogo de metadatos, descarga de capas, capacitaciones, API y servicios interoperables, favoreciendo un uso más eficiente de la información geoespacial publicada por los servicios del Ministerio de Agricultura.
+
+Desde el punto de vista técnico, esta versión consolida mejoras en la arquitectura de la plataforma, preparando el entorno para futuras ampliaciones, mayor estabilidad operativa y un mejor desempeño frente al crecimiento sostenido de consultas y visualizaciones.
+
+“Esta actualización fue resultado de un trabajo técnico coordinado entre CIREN y los servicios del Ministerio que integran IDE Minagri. El foco estuvo en asegurar la continuidad operativa de la plataforma y fortalecer los estándares de gestión y publicación de información geoespacial”, señaló la subgerenta de Infraestructura de Datos Espaciales (IDE), María Graciela Barrera.
+
+
+
+La actualización del geoportal refuerza el rol de IDE Minagri como infraestructura habilitante para la toma de decisiones, facilitando el acceso a datos territoriales que apoyan la planificación agrícola, la gestión de emergencias, el análisis ambiental y el diseño de políticas públicas.
+
+Al mismo tiempo, refleja un compromiso permanente del equipo técnico por mejorar la experiencia de uso, entendiendo que el valor de los datos también depende de qué tan fácil es encontrarlos y utilizarlos.

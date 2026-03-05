@@ -1,0 +1,27 @@
+Monitoreo de Incendios Forestales 2025 en Chile: Datos Geoespaciales para la Gestión de Emergencias
+
+Fuente: IDE Chile
+Fecha: 27 de febrero de 2025
+Autor: Juan Pablo Meza
+URL: https://www.ide.cl/index.php/noticias/monitoreo-de-incendios-forestales-2025-en-chile-datos-geoespaciales-para-la-gestion-de-emergencias
+
+La región Centro-Sur de Chile enfrenta una crisis por incendios forestales. La IDE Chile ha implementado un panel interactivo en www.miratuterritorio.cl para monitorear la situación en tiempo real.
+
+El sistema integra datos de dos instituciones clave:
+
+- SENAPRED: Clasifica alertas en tres niveles (Alerta Roja, Amarilla y Temprana Preventiva) para identificar comunas bajo amenaza.
+- CONAF: Proporciona pronósticos de cinco días sobre la probabilidad de incendios.
+
+"Contar con información actualizada y confiable es fundamental para una respuesta efectiva y la mitigación de riesgos", señala el artículo.
+
+Esta herramienta permite que autoridades, equipos de emergencia y ciudadanía accedan a información territorial oficial para tomar decisiones informadas.
+
+El cuadro de mando se actualiza periódicamente y está disponible en:
+https://idechile.maps.arcgis.com/apps/dashboards/d63ad2b1e6214db6947629a298b6077f
+
+---
+Relevancia para referenciales.cl:
+- Demuestra el poder de los datos geoespaciales abiertos para la toma de decisiones en Chile
+- IDE Chile usa ArcGIS dashboards; referenciales.cl podría ofrecer dashboards similares con Leaflet/PostGIS
+- Ejemplo de interoperabilidad entre instituciones públicas (SENAPRED, CONAF)
+- Referente para futuras integraciones de capas de riesgo territorial en la plataforma
