@@ -292,6 +292,45 @@ const referenciales = await prisma.referencial.findMany({
 
 ---
 
+## 🔴 Google Safe Browsing - "Sitio Peligroso"
+
+### Problema
+Chrome muestra advertencia roja "Peligroso" en referenciales.cl. Google Safe Browsing flaggea el sitio como "Páginas engañosas".
+
+### Causa
+Falso positivo: el algoritmo de Google detecta la página `/auth/signin` con un botón "Iniciar sesión con Google" en un dominio no-Google y lo interpreta como phishing, aunque es un flujo OAuth 2.0 legítimo via NextAuth.js.
+
+### Solución aplicada (marzo 2026)
+
+**1. Mejorar página de signin** (`src/app/auth/signin/page.tsx`):
+- Agregar descripción clara del sitio antes del botón OAuth
+- Aviso explícito: "Serás redirigido a accounts.google.com"
+- Logo de Google con colores oficiales (4 colores) en lugar de monocromo
+- Botón estilo OAuth estándar (fondo blanco, borde gris)
+- Link al repositorio open-source para transparencia
+- Eliminar banners internos de debug visibles a usuarios
+
+**2. Registrar sitio en Google Search Console**:
+- Ir a `search.google.com/search-console`
+- Agregar propiedad de dominio `referenciales.cl`
+- Verificar via registro DNS TXT en Cloudflare
+
+**3. Solicitar revisión manual**:
+- Search Console → Seguridad y Acciones Manuales → Problemas de seguridad
+- Hacer clic en "Solicitar Revisión"
+- Explicar que es OAuth 2.0 legítimo (NextAuth.js), no phishing
+
+### Tiempo de resolución
+Google tarda **1-3 días hábiles** en revisar. Chrome quita la advertencia pocas horas después de aprobación.
+
+### Prevención futura
+Si Google vuelve a flaggear el sitio:
+1. Verificar en `https://transparencyreport.google.com/safe-browsing/search?url=referenciales.cl`
+2. Solicitar revisión directamente desde Search Console
+3. El sitio ya está verificado en Search Console — no necesitas re-verificar
+
+---
+
 ## 📞 Escalation y Soporte
 
 ### Niveles de Soporte
@@ -350,6 +389,6 @@ echo "DATABASE_URL: ${DATABASE_URL:0:20}... (truncated)"
 
 ---
 
-**Última actualización:** 28 de Agosto de 2025  
-**Responsable:** Equipo de Desarrollo  
+**Última actualización:** 19 de Marzo de 2026
+**Responsable:** Equipo de Desarrollo
 **Estado:** ✅ Errores críticos resueltos
