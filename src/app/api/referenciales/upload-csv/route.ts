@@ -23,26 +23,45 @@ function extractConservadorName(cbrValue: string): string {
 
 export async function POST(request: NextRequest) {
   try {
-    // ✅ VERIFICAR AUTENTICACIÓN Y PERMISOS ADMIN
-    const session = await getServerSession(authOptions);
-    
-    if (!session?.user) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
-    }
+    // ✅ VERIFICAR AUTENTICACIÓN: sesión OAuth o API key de bot
+    let userId: string;
 
-    if (session.user.role !== 'admin' && session.user.role !== 'superadmin') {
-      return NextResponse.json(
-        { error: 'Admin access required for CSV upload' },
-        { status: 403 }
-      );
+    const authHeader = request.headers.get('authorization');
+    const isBotRequest =
+      authHeader?.startsWith('Bearer ') &&
+      !!process.env.BOT_API_KEY &&
+      authHeader.slice(7) === process.env.BOT_API_KEY;
+
+    if (isBotRequest) {
+      if (!process.env.BOT_USER_ID) {
+        return NextResponse.json(
+          { error: 'BOT_USER_ID no configurado en el servidor' },
+          { status: 500 }
+        );
+      }
+      userId = process.env.BOT_USER_ID;
+    } else {
+      const session = await getServerSession(authOptions);
+
+      if (!session?.user) {
+        return NextResponse.json(
+          { error: 'Authentication required' },
+          { status: 401 }
+        );
+      }
+
+      if (session.user.role !== 'admin' && session.user.role !== 'superadmin') {
+        return NextResponse.json(
+          { error: 'Admin access required for CSV upload' },
+          { status: 403 }
+        );
+      }
+
+      userId = session.user.id;
     }
 
     const formData = await request.formData();
     const file = formData.get('file') as File;
-    const userId = session.user.id; // Usar el ID del usuario autenticado
 
     if (!file) {
       return NextResponse.json(

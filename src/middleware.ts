@@ -43,12 +43,22 @@ export async function middleware(req: NextRequest) {
 
   const isProtectedApi = protectedApiPaths.some(path => pathname.startsWith(path));
 
+  // ✅ PASO 2.5: BOT API KEY — permitir acceso programático sin sesión
+  const authHeader = req.headers.get('authorization');
+  if (authHeader?.startsWith('Bearer ') && process.env.BOT_API_KEY) {
+    const incomingKey = authHeader.slice(7);
+    if (incomingKey === process.env.BOT_API_KEY) {
+      console.log(`🤖 [MIDDLEWARE] Bot API key válida: ${pathname}`);
+      return NextResponse.next();
+    }
+  }
+
   // ✅ PASO 3: OBTENER TOKEN CON MANEJO ROBUSTO DE ERRORES
   let token = null;
   try {
-    token = await getToken({ 
-      req, 
-      secret: process.env.NEXTAUTH_SECRET 
+    token = await getToken({
+      req,
+      secret: process.env.NEXTAUTH_SECRET
     });
     console.log(`🛡️ [MIDDLEWARE] Token status: ${token ? 'VALID' : 'NONE'}, Role: ${token?.role || 'none'}`);
   } catch (error) {
