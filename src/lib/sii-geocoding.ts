@@ -27,7 +27,7 @@ interface SimpleAPIResponse {
 }
 
 export class SIIGeocodingService {
-  private baseURL = 'https://api.simpleapi.cl';
+  private baseURL = process.env.SII_API_BASE_URL ?? 'https://api.simpleapi.cl';
   private apiKey: string;
 
   constructor(apiKey: string) {

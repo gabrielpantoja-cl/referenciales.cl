@@ -8,7 +8,7 @@ async function seed() {
     console.log("Datos existentes eliminados");
 
     // ID del usuario existente en la tabla "User"
-    const userId = "cm7q0t1yi0000jw039rkrmhty"; // ID real del usuario creado con Google REVISA ID !!!
+    const userId = "REPLACE_WITH_YOUR_USER_ID"; // Reemplaza con el ID de un usuario existente en tu base de datos
 
     // ID del conservador de Valdivia proporcionado
     const conservadorId = "550e8400-e29b-41d8-a98c-22d0b8f8f1f0";

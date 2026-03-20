@@ -641,7 +641,7 @@ test('complete CRUD workflow', async ({ page }) => {
 
 #### v2.2 - Integración Externa  
 - [ ] **API CBR**: Integración directa con Conservadores
-- [ ] **Scraping automatizado**: Actualización desde fuentes oficiales
+- [ ] **Integración oficial**: Importación desde datos abiertos (Ley de Transparencia)
 - [ ] **Integración SII**: Validación automática de ROL
 - [ ] **Portal Inmobiliario**: Import desde portales públicos
 

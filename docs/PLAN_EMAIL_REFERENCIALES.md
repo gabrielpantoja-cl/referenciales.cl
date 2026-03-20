@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Configurar `desarrollo@referenciales.cl` para que los correos se reciban y administren desde `peritajes@gabrielpantoja.cl`, permitiendo tambien **enviar** correos como `desarrollo@referenciales.cl`.
+Configurar `desarrollo@referenciales.cl` para que los correos se reciban y administren desde `[email-admin-privado]`, permitiendo tambien **enviar** correos como `desarrollo@referenciales.cl`.
 
 ---
 
@@ -10,8 +10,8 @@ Configurar `desarrollo@referenciales.cl` para que los correos se reciban y admin
 
 | Aspecto | Estado | Detalle |
 |---|---|---|
-| **Recepcion de correos** | COMPLETADO | desarrollo@referenciales.cl → peritajes@gabrielpantoja.cl |
-| **Catch-all** | COMPLETADO | *@referenciales.cl → peritajes@gabrielpantoja.cl |
+| **Recepcion de correos** | COMPLETADO | desarrollo@referenciales.cl → [email-admin-privado] |
+| **Catch-all** | COMPLETADO | *@referenciales.cl → [email-admin-privado] |
 | **Envio como alias** | PARCIAL | Funciona, pero con advertencia de autenticidad (ver Fase 4) |
 | **Registros MX** | COMPLETADO | 3 registros Cloudflare (route1/2/3.mx.cloudflare.net) |
 | **Registro SPF** | COMPLETADO | Incluye Google + Cloudflare |
@@ -37,12 +37,12 @@ Configurar `desarrollo@referenciales.cl` para que los correos se reciban y admin
 ```
                     RECIBIR                              ENVIAR
 
-[Internet] ──→ desarrollo@referenciales.cl        peritajes@gabrielpantoja.cl
+[Internet] ──→ desarrollo@referenciales.cl        [email-admin-privado]
                       │                                    │
                       │ Cloudflare Email Routing            │ Gmail "Enviar como"
                       │ (reenvio automatico)                │ (alias de envio)
                       ▼                                    ▼
-              peritajes@gabrielpantoja.cl          desarrollo@referenciales.cl
+              [email-admin-privado]          desarrollo@referenciales.cl
               (bandeja de entrada en Gmail)        (el destinatario ve este remitente)
 ```
 
@@ -59,12 +59,12 @@ Configurar `desarrollo@referenciales.cl` para que los correos se reciban y admin
 
 ### Paso 1.2: Direccion de destino verificada
 
-- `peritajes@gabrielpantoja.cl` verificada via email de confirmacion de Cloudflare
+- `[email-admin-privado]` verificada via email de confirmacion de Cloudflare
 
 ### Paso 1.3: Regla de enrutamiento creada
 
 - **Custom address:** `desarrollo@referenciales.cl`
-- **Action:** Send to → `peritajes@gabrielpantoja.cl`
+- **Action:** Send to → `[email-admin-privado]`
 - **Status:** Active
 
 ### Paso 1.4: Registros DNS configurados automaticamente
@@ -78,7 +78,7 @@ MX      referenciales.cl    route3.mx.cloudflare.net           46
 
 ### Paso 1.5: Verificacion exitosa
 
-- Correo de prueba enviado y recibido correctamente en peritajes@gabrielpantoja.cl
+- Correo de prueba enviado y recibido correctamente en [email-admin-privado]
 
 ---
 
@@ -126,7 +126,7 @@ Los correos enviados como `desarrollo@referenciales.cl` llegan al destinatario p
 
 ### Paso 3.1: Catch-all — ACTIVADO
 
-- **Regla:** `*@referenciales.cl` → `peritajes@gabrielpantoja.cl`
+- **Regla:** `*@referenciales.cl` → `[email-admin-privado]`
 - **Efecto:** Cualquier correo a info@, admin@, contacto@, etc. llega a tu bandeja
 - Util para capturar correos a direcciones mal escritas
 
@@ -134,10 +134,10 @@ Los correos enviados como `desarrollo@referenciales.cl` llegan al destinatario p
 
 ```
 Tipo    Nombre    Contenido
-TXT     _dmarc    v=DMARC1; p=none; rua=mailto:peritajes@gabrielpantoja.cl
+TXT     _dmarc    v=DMARC1; p=none; rua=mailto:[email-admin-privado]
 ```
 
-> **NOTA:** DMARC esta en `p=none` temporalmente. Esto significa que los correos que fallen autenticacion se entregan igual (sin bloqueo ni cuarentena), pero se envian reportes a peritajes@gabrielpantoja.cl. Una vez resuelta la alineacion DKIM (Fase 4), cambiar a `p=quarantine`.
+> **NOTA:** DMARC esta en `p=none` temporalmente. Esto significa que los correos que fallen autenticacion se entregan igual (sin bloqueo ni cuarentena), pero se envian reportes a [email-admin-privado]. Una vez resuelta la alineacion DKIM (Fase 4), cambiar a `p=quarantine`.
 
 ### Paso 3.3: DKIM — AUTOMATICO
 
@@ -185,7 +185,7 @@ Esto permite que Google firme DKIM con `d=referenciales.cl` y use el envelope se
    - DMARC alineara correctamente
 8. **Cambiar DMARC** de `p=none` a `p=quarantine`:
    ```
-   TXT   _dmarc    v=DMARC1; p=quarantine; rua=mailto:peritajes@gabrielpantoja.cl
+   TXT   _dmarc    v=DMARC1; p=quarantine; rua=mailto:[email-admin-privado]
    ```
 
 **Costo:** Gratis (los domain aliases no tienen costo adicional en Google Workspace).
@@ -213,10 +213,10 @@ MX      referenciales.cl                route3.mx.cloudflare.net    46
 # Email Authentication
 TXT     referenciales.cl                v=spf1 include:_spf.google.com include:_spf.mx.cloudflare.net ~all
 TXT     cf2024-1._domainkey             v=DKIM1; h=sha256; k=rsa; p=MIIBIjAN... (Cloudflare DKIM)
-TXT     _dmarc                          v=DMARC1; p=none; rua=mailto:peritajes@gabrielpantoja.cl
+TXT     _dmarc                          v=DMARC1; p=none; rua=mailto:[email-admin-privado]
 
 # Verificacion
-TXT     referenciales.cl                google-site-verification=ATgE2hTaJ1pe4jsn6mUUj8gq1tj3iHU8wF4Jb_4Slzw
+TXT     referenciales.cl                [token-privado]
 ```
 
 ---
@@ -224,8 +224,8 @@ TXT     referenciales.cl                google-site-verification=ATgE2hTaJ1pe4js
 ## Checklist de Verificacion
 
 - [x] Cloudflare Email Routing habilitado para referenciales.cl
-- [x] Direccion de destino verificada (peritajes@gabrielpantoja.cl)
-- [x] Regla creada: desarrollo@ → peritajes@gabrielpantoja.cl
+- [x] Direccion de destino verificada ([email-admin-privado])
+- [x] Regla creada: desarrollo@ → [email-admin-privado]
 - [x] Registros MX configurados automaticamente por Cloudflare
 - [x] Registro SPF configurado (Google + Cloudflare)
 - [x] Registro DKIM configurado (Cloudflare, automatico)
