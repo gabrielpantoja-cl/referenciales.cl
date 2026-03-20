@@ -1,0 +1,24 @@
+1. Verifica la conexión con el servidor (Usando tu NUEVA clave)
+Ejecuta el comando curl que te sugiere el diagnóstico en tu terminal para confirmar que Neon no está bloqueando tu conexión
+. Asegúrate de usar la nueva API key:
+curl -s -o /dev/null -w "%{http_code}" \
+  -H "Authorization: Bearer <TU_NUEVA_API_KEY>" \
+  https://mcp.neon.tech/mcp
+Si devuelve 200 o 405, el endpoint de Neon está funcionando perfectamente y el problema está en cómo Claude Code lee el archivo local.
+Si devuelve 401, significa que la API Key es inválida.
+2. La solución: Mover a la Configuración Global
+El problema principal (Causa 1 y 3) suele ocurrir porque Claude Code a veces tiene dificultades para registrar correctamente el archivo .mcp.json local en un directorio específico, o la sesión requiere un reinicio completo.
+La documentación oficial de Neon respalda la sugerencia de tu log: añadir el servidor de forma global usando el transporte HTTP
+. Para hacerlo, ejecuta este comando en tu terminal (reemplazando con tu nueva clave):
+claude mcp add --transport http neon https://mcp.neon.tech/mcp --header "Authorization: Bearer <TU_NUEVA_API_KEY>"
+Esto registrará el servidor directamente en los ajustes globales de Claude Code, asegurando que las herramientas de Neon estén siempre disponibles en cualquier directorio en el que abras una sesión
+.
+3. Alternativa sin API Keys (Recomendada)
+Si prefieres no volver a lidiar con gestionar las API Keys manualmente y evitar por completo el riesgo de filtrarlas en archivos de texto, la forma más recomendada y automatizada de configurar el servidor MCP remoto en Claude Code es mediante el flujo de OAuth
+.
+Simplemente ejecuta:
+npx neonctl@latest init
+Este comando configurará Claude Code automáticamente, autenticará vía web (OAuth) y generará los accesos seguros sin que tengas que copiar y pegar tokens
+.
+4. Verificación final
+Una vez que hayas aplicado la configuración global (o el comando de inicialización), cierra tu sesión actual y abre una nueva escribiendo claude. Dentro del chat, escribe: /mcp Esto abrirá la lista de servidores y deberías ver neon activo y con todas las herramientas cargadas
